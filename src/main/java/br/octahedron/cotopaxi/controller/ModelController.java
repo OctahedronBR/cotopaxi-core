@@ -35,10 +35,9 @@ import br.octahedron.cotopaxi.model.ExceptionActionResponse;
 import br.octahedron.cotopaxi.model.InputAdapter;
 import br.octahedron.cotopaxi.model.InvalidActionResponse;
 import br.octahedron.cotopaxi.model.SuccessActionResponse;
+import br.octahedron.cotopaxi.model.attribute.InvalidAttributeException;
 import br.octahedron.cotopaxi.model.attribute.ModelAttribute;
 import br.octahedron.cotopaxi.model.attribute.converter.ConversionException;
-import br.octahedron.cotopaxi.model.attribute.converter.TypeConverter;
-import br.octahedron.cotopaxi.model.attribute.validator.Validator;
 import br.octahedron.util.reflect.InstanceHandler;
 
 /**
@@ -58,7 +57,6 @@ class ModelController {
 	private final Logger logger = Logger.getLogger(ModelController.class.getName());
 	private CotopaxiConfigView config;
 	private InstanceHandler<Filter> filters = new InstanceHandler<Filter>();
-	private InstanceHandler<TypeConverter<?>> converters = new InstanceHandler<TypeConverter<?>>();
 	private InstanceHandler<Object> facades = new InstanceHandler<Object>();
 
 	protected ModelController(CotopaxiConfigView config) {
@@ -137,9 +135,8 @@ class ModelController {
 	 * Converts, validates and returns the ModelAttributes array. This array will be used to invoke,
 	 * the model method. It throws an {@link ValidationException} if some attribute isn't valid.
 	 */
-	@SuppressWarnings("unchecked")
-	private <T> Object[] getModelParams(InputAdapter mapping, RequestWrapper request) throws ValidationException {
-		if (mapping.hasAttributes()) {
+	private <T> Object[] getModelParams(InputAdapter adapter, RequestWrapper request) throws ValidationException {
+		if (adapter.hasAttributes()) {
 			// create result structures
 			LinkedList<String> invalidAttributes = new LinkedList<String>();
 			ArrayList<Object> params = new ArrayList<Object>();
@@ -149,45 +146,23 @@ class ModelController {
 			 * if the attribute is valid (it means, can be converted and validated) adds to params
 			 * otherwise, adds to invalidAttributes
 			 */
-			for (ModelAttribute<?> att : mapping.getAttributes()) {
+			for (ModelAttribute<?> att : adapter.getAttributes()) {
 				try {
-					String strAttValue = request.getRequestParameter(att.getName());
-					if (strAttValue == null) {
-						// if parameter was not passed, use default value
-						strAttValue = att.getDefaultValue();
-					}
-
-					// try to convert
-					TypeConverter<T> converter = (TypeConverter<T>) this.converters.getInstance(att.getTypeConverterClass());
-					T converted = converter.convert(strAttValue);
-					// check if there's a validator register for the att
-					if (att.hasValidator()) {
-						// try validate
-						Validator<T> validator = (Validator<T>) att.getValidator();
-						if (validator.isValid(converted)) {
-							// that's okay, add it to params!
-							params.add(converted);
-						} else {
-							// invalid due a validator
-							invalidAttributes.add(att.getName());
-						}
-					} else {
-						// if there isn't a validator, just add the converted att to params list
-						params.add(converted);
-					}
+					params.add(att.getAttributeValue(request));
 				} catch (ConversionException e) {
 					// invalid due a conversion exception
 					invalidAttributes.add(att.getName());
+				} catch (InvalidAttributeException ex) {
+					// attribute is not valid
+					invalidAttributes.add(att.getName());
 				}
 			}
-
 			if (invalidAttributes.isEmpty()) {
 				// all attributes are valid!
 				return params.toArray();
 			} else {
 				throw new ValidationException(invalidAttributes);
 			}
-
 		} else {
 			// there's no attributes!
 			return null;
@@ -223,7 +198,7 @@ class ModelController {
 	}
 
 	/**
-	 * Execute the {@link Filter#doAfter(RequestWrapper, Response)}
+	 * Execute the {@link Filter#doAfter(RequestWrapper, ActionResponse))}
 	 */
 	private void executeFiltersAfter(Collection<Class<? extends Filter>> filters, RequestWrapper request, ActionResponse response)
 			throws FilterException {

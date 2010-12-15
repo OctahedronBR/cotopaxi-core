@@ -18,7 +18,6 @@ package br.octahedron.cotopaxi.controller;
 
 import java.util.Date;
 
-import br.octahedron.cotopaxi.controller.adapters.DefaultAdapter;
 import br.octahedron.cotopaxi.controller.adapters.IntAdapter;
 import br.octahedron.cotopaxi.controller.adapters.ManyAdapter;
 import br.octahedron.cotopaxi.controller.adapters.VarargsAdapter;
@@ -41,11 +40,6 @@ public class FacadeTwo {
 
 	@Action(adapter = IntAdapter.class, url = "/two/int")
 	public void integer(int number) {
-
-	}
-
-	@Action(adapter = DefaultAdapter.class, url = "/two/default")
-	public void otherOne(String name, int number) {
 
 	}
 }

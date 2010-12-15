@@ -31,7 +31,7 @@ import br.octahedron.cotopaxi.metadata.annotation.Action.HTTPMethod;
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class RequestWrapper {
+public class RequestWrapper implements InputHandler {
 
 	private static final Pattern FORMAT_SUFFIX = Pattern.compile(".+\\.[a-z]{3,4}$");
 	private static final Pattern LOCALE_PREFIX = Pattern.compile("^/[a-z]{2}(_[A-Z]{2})?/.*");

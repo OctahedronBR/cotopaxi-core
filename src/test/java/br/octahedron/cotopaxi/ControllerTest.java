@@ -369,52 +369,6 @@ public class ControllerTest {
 	public void controllerTest13() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
 			PageNotFoundExeption {
 		/*
-		 * This test checks the att default value for primitive type
-		 */
-		// prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/two/default").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		expect(request.getRequestParameter("name")).andReturn("name");
-		expect(request.getRequestParameter("number")).andReturn(null);
-		replay(request);
-
-		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
-
-		// check test results
-		verify(request);
-		assertEquals(Result.SUCCESS, resp.getResult());
-	}
-
-	@Test
-	public void controllerTest14() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
-		/*
-		 * This test checks the att default value for non-primitive type
-		 */
-		// prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/two/default").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		expect(request.getRequestParameter("name")).andReturn("name");
-		expect(request.getRequestParameter("number")).andReturn("42");
-		replay(request);
-
-		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
-
-		// check test results
-		verify(request);
-		assertEquals(Result.SUCCESS, resp.getResult());
-	}
-
-	@Test
-	public void controllerTest15() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
-		/*
 		 * This test checks non given parameter
 		 */
 		// Prepare test
@@ -435,7 +389,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest16() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
+	public void controllerTest14() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks no logged user
 		 */
@@ -459,7 +413,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest17() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
+	public void controllerTest15() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks no logged user, diferent loging url
 		 */
@@ -483,7 +437,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest18() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
+	public void controllerTest16() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
 			PageNotFoundExeption {
 		/*
 		 * This test an logged user
@@ -506,7 +460,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest19() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
+	public void controllerTest17() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test an logged user but with wrong role
 		 */
@@ -532,7 +486,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest20() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
+	public void controllerTest18() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
 			PageNotFoundExeption {
 		/*
 		 * This test an logged user but with wrong role

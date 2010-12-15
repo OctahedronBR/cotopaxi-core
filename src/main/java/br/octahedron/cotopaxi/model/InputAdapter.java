@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import br.octahedron.cotopaxi.model.attribute.ModelAttribute;
+import br.octahedron.cotopaxi.model.attribute.RequestModelAttribute;
 import br.octahedron.cotopaxi.model.attribute.converter.SafeStringConverter;
 import br.octahedron.cotopaxi.model.attribute.converter.TypeConverter;
 import br.octahedron.cotopaxi.model.attribute.validator.Validator;
@@ -53,7 +54,7 @@ public class InputAdapter {
 		this.addAttribute(USERNAME_ATTRIBUTE_NAME, SafeStringConverter.class);
 	}
 
-	public void addAttribute(ModelAttribute<?> attribute) {
+	public void addAttribute(RequestModelAttribute<?> attribute) {
 		if (this.attributes == null) {
 			this.attributes = new LinkedList<ModelAttribute<?>>();
 		}
@@ -61,18 +62,10 @@ public class InputAdapter {
 	}
 
 	public <T> void addAttribute(String name, Class<? extends TypeConverter<T>> typeConverter) {
-		this.addAttribute(new ModelAttribute<T>(name, typeConverter));
+		this.addAttribute(new RequestModelAttribute<T>(name, typeConverter));
 	}
 
 	public <T> void addAttribute(String name, Class<? extends TypeConverter<T>> typeConverter, Validator<T> validator) {
-		this.addAttribute(new ModelAttribute<T>(name, typeConverter, validator));
-	}
-
-	public <T> void addAttribute(String name, Class<? extends TypeConverter<T>> typeConverter, String defaultValue) {
-		this.addAttribute(new ModelAttribute<T>(name, typeConverter, defaultValue));
-	}
-
-	public <T> void addAttribute(String name, Class<? extends TypeConverter<T>> typeConverter, Validator<T> validator, String defaultValue) {
-		this.addAttribute(new ModelAttribute<T>(name, typeConverter, validator, defaultValue));
+		this.addAttribute(new RequestModelAttribute<T>(name, typeConverter, validator));
 	}
 }

@@ -14,21 +14,31 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.controller.adapters;
-
-import br.octahedron.cotopaxi.model.InputAdapter;
-import br.octahedron.cotopaxi.model.attribute.converter.IntegerConverter;
-import br.octahedron.cotopaxi.model.attribute.converter.SafeStringConverter;
+package br.octahedron.cotopaxi.model.attribute;
 
 /**
- * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
+ * Indicates that a {@link RequestModelAttribute} is invalid.
  * 
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
+ *
  */
-public class DefaultAdapter extends InputAdapter {
+public class InvalidAttributeException extends Exception {
 
-	public DefaultAdapter() {
-		this.addAttribute("name", SafeStringConverter.class, "test");
-		this.addAttribute("number", IntegerConverter.class, "0");
+	private static final long serialVersionUID = 1L;
+
+	public InvalidAttributeException() {
+	}
+
+	public InvalidAttributeException(String message) {
+		super(message);
+	}
+
+	public InvalidAttributeException(Throwable cause) {
+		super(cause);
+	}
+
+	public InvalidAttributeException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }
