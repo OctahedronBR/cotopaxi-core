@@ -1,0 +1,4 @@
+Return name:
+	If user has defined the returnName, using the ModelMethod, the given name is used as key at the attributes Map.
+	Otherwise, its used the Method return type SimpleName (@see Class.getSimpleName()), in LOWER case. If the return type be an Array, it will append "[]" to the end of the returnName.
+		Eg.: If the method returns a java.lang.String, the return name will be "string", if the method returns a java.lang.String array, the return name will be "string[]".
