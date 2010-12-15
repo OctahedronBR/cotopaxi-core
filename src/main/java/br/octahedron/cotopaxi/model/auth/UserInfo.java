@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import flexjson.JSON;
+
 /**
  * Encapsulates the user's informations used by the Login mechanism
  * 
@@ -27,8 +29,8 @@ import java.util.Set;
  */
 public class UserInfo implements Serializable {
 
-	public static final String USERNAME_ATTRIBUTE_NAME = "USERNAME";
-	public static final String USER_INFO_ATTRIBUTE = "USER_INFO";
+	public static final String USERNAME_ATTRIBUTE_NAME = "username";
+	public static final String USER_INFO_ATTRIBUTE = "user_info";
 
 	private static final long serialVersionUID = -2985274865291979315L;
 	private String username;
@@ -48,10 +50,12 @@ public class UserInfo implements Serializable {
 		}
 	}
 
+	@JSON
 	public String getUsername() {
 		return this.username;
 	}
 
+	@JSON
 	public Set<String> getRoles() {
 		return this.roles;
 	}

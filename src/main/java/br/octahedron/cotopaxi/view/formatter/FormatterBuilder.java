@@ -36,6 +36,7 @@ public class FormatterBuilder {
 	public FormatterBuilder(CotopaxiConfigView config) {
 		this.config = config;
 		this.registerDefaultFormatter(Formatter.HTML_FORMAT, VelocityFormatter.class);
+		this.registerDefaultFormatter(Formatter.JSON_FORMAT, SimpleJSONFormatter.class);
 	}
 
 	protected void registerDefaultFormatter(String format, Class<? extends Formatter> formatterClass) {
