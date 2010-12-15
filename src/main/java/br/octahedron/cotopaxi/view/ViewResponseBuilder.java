@@ -120,7 +120,7 @@ public class ViewResponseBuilder {
 			fmt.setAttributes(attributes);
 			if (!fmt.isReady()) {
 				// hum... is it not ready yet? I guess that it's a template formatter! ;-)
-				((TemplateFormatter)fmt).setTemplate(metadata.getTemplateMetadata().getOnSuccess());
+				((TemplateFormatter)fmt).setTemplate(metadata.getTemplateMetadata().getOnValidationFail());
 			}
 			// return formatter view
 			return new FormatterViewResponse(fmt, ResultCode.BAD_REQUEST);
@@ -135,7 +135,7 @@ public class ViewResponseBuilder {
 			fmt.setAttributes(attributes);
 			if (!fmt.isReady()) {
 				// hum... is it not ready yet? I guess that it's a template formatter! ;-)
-				((TemplateFormatter)fmt).setTemplate(metadata.getTemplateMetadata().getOnSuccess());
+				((TemplateFormatter)fmt).setTemplate(metadata.getTemplateMetadata().getOnError());
 			}
 			// return formatter view
 			return new FormatterViewResponse(fmt, ResultCode.INTERNAL_ERROR);
