@@ -98,9 +98,9 @@ public @interface Template {
 
 		public TemplateMetadata(Method method) {
 			// try load from annotation
-			Template template = method.getAnnotation(Template.class);
 			String onSuccessTPL, onErrorTPL, onValidationFailTPL;
 			onSuccessTPL = onErrorTPL = onValidationFailTPL = null;
+			Template template = method.getAnnotation(Template.class);
 			if (template != null) {
 				onSuccessTPL = template.onSuccess();
 				onErrorTPL = template.onError();

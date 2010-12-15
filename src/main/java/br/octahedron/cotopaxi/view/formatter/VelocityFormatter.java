@@ -35,8 +35,6 @@ import br.octahedron.util.StringBuilderWriter;
  */
 public class VelocityFormatter extends TemplateFormatter {
 
-	private String template;
-	
 	public VelocityFormatter() {
 		super(ContentType.HTML);
 	}

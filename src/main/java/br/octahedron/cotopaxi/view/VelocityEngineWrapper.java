@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi.view;
 
+import java.util.logging.Logger;
+
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ParseErrorException;
@@ -32,6 +34,7 @@ import br.octahedron.cotopaxi.config.CotopaxiConfigView;
  */
 public final class VelocityEngineWrapper {
 
+	private static final Logger logger = Logger.getLogger(VelocityEngineWrapper.class.getName());
 	private static final VelocityEngine engine = new VelocityEngine();
 	private static boolean init = false;
 
@@ -41,11 +44,11 @@ public final class VelocityEngineWrapper {
 	protected static void init() {
 		if (!init) {
 			CotopaxiConfigView config = CotopaxiConfigView.Handler.getConfigView();
+			String templateRoot = config.getTemplateRoot();
+			logger.fine("Loading velocity engine. Templates root folder: " + templateRoot);			
 			engine.setProperty("resource.loader", "file");
 			engine.setProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
-			engine.setProperty("file.resource.loader.path", config.getTemplateRoot());
-			// engine.setProperty("runtime.log.logsystem.class",
-			// "org.apache.velocity.runtime.log.NullLogChute");
+			engine.setProperty("file.resource.loader.path", templateRoot);
 			engine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.Log4JLogChute");
 			engine.setProperty("runtime.log.logsystem.log4j.logger", VelocityEngineWrapper.class.getName());
 			engine.init();
@@ -67,6 +70,7 @@ public final class VelocityEngineWrapper {
 		if (!init) {
 			init();
 		}
+		logger.fine("Trying to load template: " + template);
 		return engine.getTemplate(template);
 	}
 }
