@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: br.octahedron.cotopaxi.metadata.MapperTest
--------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.299 sec
