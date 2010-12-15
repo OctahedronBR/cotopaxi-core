@@ -183,8 +183,12 @@ public class CotopaxiServlet extends HttpServlet {
 		try {
 			ResponseWrapper response = new ResponseWrapper(resp);
 			viewResponse.dispatch(response);
-		} catch (IOException ioex) {
-			logger.log(Level.SEVERE, "Can't dispatch response due an IOException: " + ioex.getMessage(), ioex);
+		} catch (Exception e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
+			Locale lc = this.localeManager.getLocale(request);
+			viewResponse = this.view.getViewResponse(lc, e);
+			ResponseWrapper response = new ResponseWrapper(resp);
+			viewResponse.dispatch(response);
 		}
 	}
 

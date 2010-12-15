@@ -215,13 +215,13 @@ public class ViewResponseBuilder {
 	 */
 	private ViewResponse createErrorResponse(Locale lc, Exception ex) {
 		// generate attributes map to be rendered
-		Writer stackTrace = new StringBuilderWriter();
+		StringBuilderWriter stackTrace = new StringBuilderWriter();
 		ex.printStackTrace(new PrintWriter(stackTrace));
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put(EXCEPTION_ATTRIBUTE.getAttributeKey(), ex);
 		attributes.put(EXCEPTION_CLASS_ATTRIBUTE.getAttributeKey(), ex.getClass().getName());
 		attributes.put(EXCEPTION_MESSAGE_ATTRIBUTE.getAttributeKey(), ex.getMessage());
-		attributes.put(EXCEPTION_STACK_TRACE_ATTRIBUTE.getAttributeKey(), stackTrace.toString());
+		attributes.put(EXCEPTION_STACK_TRACE_ATTRIBUTE.getAttributeKey(), stackTrace.getBuffer().toString());
 		// get and prepare formatter
 		TemplateFormatter formatter = new VelocityFormatter(this.config.getErrorTemplate(), attributes, lc);
 		return new FormatterViewResponse(formatter, ResultCode.INTERNAL_ERROR);
