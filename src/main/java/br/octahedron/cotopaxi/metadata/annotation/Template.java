@@ -49,6 +49,8 @@ import br.octahedron.cotopaxi.model.SuccessActionResponse;
 @Target(ElementType.METHOD)
 public @interface Template {
 
+	public static final String DEFAULT_TEMPLATE_NAME = "[default]";
+
 	public static final String TEMPLATE_EXTENSION = ".vm";
 
 	public static final String ERROR_TEMPLATE_SUFFIX = "_error";
@@ -58,35 +60,17 @@ public @interface Template {
 	/**
 	 * @return The template to be used on model successful execution
 	 */
-	String onSuccess();
+	String onSuccess() default DEFAULT_TEMPLATE_NAME;
 
 	/**
 	 * @return The template to be used on model error execution.
 	 */
-	String onError();
+	String onError() default DEFAULT_TEMPLATE_NAME;
 
 	/**
 	 * @return The template to be used on model input validation fails.
 	 */
-	String onValidationFails();
-
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.METHOD)
-	public @interface TemplateOnError {
-		String template();
-	}
-
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.METHOD)
-	public @interface TemplateOnSuccess {
-		String template();
-	}
-
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.METHOD)
-	public @interface TemplateOnValidationFails {
-		String template();
-	}
+	String onValidationFails() default DEFAULT_TEMPLATE_NAME;
 
 	/**
 	 * A wrapper for Template metatada
@@ -97,34 +81,28 @@ public @interface Template {
 		private String onValidationFail;
 
 		public TemplateMetadata(Method method) {
-			// try load from annotation
-			String onSuccessTPL, onErrorTPL, onValidationFailTPL;
-			onSuccessTPL = onErrorTPL = onValidationFailTPL = null;
+			// set defaults
+			String prefix = method.getDeclaringClass().getSimpleName() + "_" + method.getName();
+			this.onSuccess = prefix + TEMPLATE_EXTENSION;
+			this.onError = prefix + ERROR_TEMPLATE_SUFFIX + TEMPLATE_EXTENSION;
+			this.onValidationFail = prefix + VALIDATION_FAILED_TEMPLATE_SUFFIX + TEMPLATE_EXTENSION;
+
+			// try load from annotation and override defaults
 			Template template = method.getAnnotation(Template.class);
-			if (template != null) {
-				onSuccessTPL = template.onSuccess();
-				onErrorTPL = template.onError();
-				onValidationFailTPL = template.onValidationFails();
-			} else {
-				TemplateOnSuccess success = method.getAnnotation(TemplateOnSuccess.class);
-				if (success != null) {
-					onSuccessTPL = success.template();
+			if ( template != null) {
+				// on success
+				if (!template.onSuccess().equals(DEFAULT_TEMPLATE_NAME)) {
+					onSuccess = template.onSuccess();
 				}
-				TemplateOnError error = method.getAnnotation(TemplateOnError.class);
-				if (error != null) {
-					onErrorTPL = error.template();
+				// on error
+				if (!template.onError().equals(DEFAULT_TEMPLATE_NAME)) {
+					onError = template.onError();
 				}
-				TemplateOnValidationFails validation = method.getAnnotation(TemplateOnValidationFails.class);
-				if (validation != null) {
-					onValidationFailTPL = validation.template();
+				// on validationFails
+				if (!template.onValidationFails().equals(DEFAULT_TEMPLATE_NAME)) {
+					onError = template.onValidationFails();
 				}
 			}
-			// check and set default, if needed
-			String prefix = method.getDeclaringClass().getSimpleName() + "_" + method.getName();
-			this.onSuccess = (onSuccessTPL != null) ? onSuccessTPL : prefix + TEMPLATE_EXTENSION;
-			this.onError = (onErrorTPL != null) ? onErrorTPL : prefix + ERROR_TEMPLATE_SUFFIX + TEMPLATE_EXTENSION;
-			this.onValidationFail = (onValidationFailTPL != null) ? onValidationFailTPL : prefix + VALIDATION_FAILED_TEMPLATE_SUFFIX
-					+ TEMPLATE_EXTENSION;
 		}
 
 		public String getOnSuccess() {
