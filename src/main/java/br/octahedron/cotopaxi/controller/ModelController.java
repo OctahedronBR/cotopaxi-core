@@ -135,7 +135,7 @@ class ModelController {
 	 * Converts, validates and returns the ModelAttributes array. This array will be used to invoke,
 	 * the model method. It throws an {@link ValidationException} if some attribute isn't valid.
 	 */
-	private <T> Object[] getModelParams(InputAdapter adapter, RequestWrapper request) throws ValidationException {
+	protected <T> Object[] getModelParams(InputAdapter adapter, RequestWrapper request) throws ValidationException {
 		if (adapter.hasAttributes()) {
 			// create result structures
 			LinkedList<String> invalidAttributes = new LinkedList<String>();
@@ -211,7 +211,7 @@ class ModelController {
 	/**
 	 * Thrown to indicate and validation exception while getting model params.
 	 */
-	private static class ValidationException extends Exception {
+	protected static class ValidationException extends Exception {
 
 		private static final long serialVersionUID = -1072466743781926291L;
 		private Collection<String> invalidAttributes;

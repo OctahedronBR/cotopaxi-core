@@ -31,14 +31,27 @@ import java.util.LinkedList;
  */
 public class ReflectionUtil {
 
+	/**
+	 * Creates a new instance of the given class. It's necessary that the given class have an empty
+	 * constructor.
+	 */
 	public static Object createInstance(Class<?> clazz) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		return clazz.newInstance();
 	}
 
+	/**
+	 * Creates a new instance of the given class (by name). The className should be the full class
+	 * name. Eg.: java.lang.String
+	 * 
+	 * @see ReflectionUtil#createInstance(Class)
+	 */
 	public static Object createInstance(String className) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		return createInstance(Class.forName(className));
 	}
 
+	/**
+	 * Gets all the {@link Method}s annotated with the given {@link Annotation}.
+	 */
 	public static <T extends Annotation> Collection<AnnotatedMethod<T>> getAnnotatedMethods(Class<?> klass, Class<T> annClass) {
 		final Collection<AnnotatedMethod<T>> result = new LinkedList<AnnotatedMethod<T>>();
 		AnnotatedMethodListener<T> listener = new AnnotatedMethodListener<T>() {
@@ -51,6 +64,12 @@ public class ReflectionUtil {
 		return result;
 	}
 
+	/**
+	 * Gets all the {@link Method}s annotated with the given {@link Annotation}. The result is
+	 * returned using the given {@link AnnotatedMethodListener}.
+	 * 
+	 * @see ReflectionUtil#getAnnotatedMethods(Class, Class)
+	 */
 	public static <T extends Annotation> void getAnnotatedMethods(Class<?> klass, Class<T> annClass, AnnotatedMethodListener<T> listener) {
 		Method[] methods = klass.getMethods();
 		for (Method met : methods) {
@@ -61,6 +80,9 @@ public class ReflectionUtil {
 		}
 	}
 
+	/**
+	 * Get all {@link Field}s annotated with the given {@link Annotation}
+	 */
 	public static <T extends Annotation> Collection<Field> getAnnotatedFields(Class<?> klass, Class<T> annClass) {
 		Field[] fields = klass.getDeclaredFields();
 		Collection<Field> result = new LinkedList<Field>();
@@ -72,6 +94,19 @@ public class ReflectionUtil {
 		return result;
 	}
 
+	/**
+	 * Gets the "set" method for a field with the given name. Eg.: if the given field name is
+	 * "name", it will look for a method called setName.
+	 */
+	public static Method getSetMethod(String fieldName, Class<?> klass, Class<?> paramType) throws SecurityException, NoSuchMethodException {
+		String name = (fieldName.length() > 2) ? "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1) : fieldName.toUpperCase();
+		return klass.getMethod(name, paramType);
+	}
+
+	/**
+	 * Gets a field's value using the "get" method. Eg.: for a field named "name" it will use the
+	 * method getName to recover the field's value.
+	 */
 	public static Object getFieldValue(Field field, Object instance) {
 		// getField method name
 		String lower = field.getName();
@@ -88,6 +123,10 @@ public class ReflectionUtil {
 		}
 	}
 
+	/**
+	 * Get an annotated field's value.
+	 * @see ReflectionUtil#getFieldValue(Field, Object)
+	 */
 	public static <T extends Annotation> Object getAnnotatedFieldValue(Object instance, Class<T> annClass) {
 		Object result = null;
 		Collection<Field> fields = getAnnotatedFields(instance.getClass(), annClass);
@@ -98,11 +137,17 @@ public class ReflectionUtil {
 		return result;
 	}
 
-	public static Object invoke(Object instance, Method method, Object... args) throws IllegalArgumentException, IllegalAccessException,
+	/**
+	 * Invokes the given object {@link Method}.
+	 */
+	public static Object invoke(Object instance, Method method, Object... params) throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
-		return method.invoke(instance, args);
+		return method.invoke(instance, params);
 	}
 
+	/**
+	 * Gets an {@link Class} by name.
+	 */
 	public static Class<?> getClass(String className) throws ClassNotFoundException {
 		return Class.forName(className);
 	}

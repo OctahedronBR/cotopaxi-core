@@ -17,14 +17,11 @@
 package br.octahedron.cotopaxi.view;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Test;
 
 import br.octahedron.cotopaxi.model.auth.UserInfo;
-import br.octahedron.cotopaxi.view.formatter.Formatter;
-import br.octahedron.cotopaxi.view.formatter.SimpleJSONFormatter;
 
 
 /**
@@ -36,7 +33,7 @@ public class JSONTest {
 	public void testJSON1() {
 		Map<String, Object> atts = new HashMap<String, Object>();
 		atts.put("name", "Danilo");
-		Formatter fmt = new SimpleJSONFormatter(atts, Locale.US);
+//		Formatter fmt = new SimpleJSONFormatter(atts, Locale.US);
 //		System.out.println(fmt.format());
 		// TODO TEST!
 	}
@@ -46,7 +43,7 @@ public class JSONTest {
 		Map<String, Object> atts = new HashMap<String, Object>();
 		atts.put(UserInfo.USERNAME_ATTRIBUTE_NAME, new String("Danilo"));
 		atts.put(UserInfo.USER_INFO_ATTRIBUTE, new UserInfo("Danilo", "Developer", "Tester"));
-		Formatter fmt = new SimpleJSONFormatter(atts, Locale.US);
+//		Formatter fmt = new SimpleJSONFormatter(atts, Locale.US);
 //		System.out.println(fmt.format());
 		// TODO TEST!
 	}
