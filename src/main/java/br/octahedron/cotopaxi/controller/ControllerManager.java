@@ -22,10 +22,9 @@ import br.octahedron.cotopaxi.config.CotopaxiConfigView;
 import br.octahedron.cotopaxi.controller.filter.FilterException;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
 import br.octahedron.cotopaxi.metadata.annotation.LoginRequired.LoginRequiredMetadata;
-import br.octahedron.cotopaxi.model.ActionResponse;
-import br.octahedron.cotopaxi.model.SuccessActionResponse;
 import br.octahedron.cotopaxi.model.auth.UserInfo;
-import br.octahedron.util.ThreadProperties;
+import br.octahedron.cotopaxi.model.response.ActionResponse;
+import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
 
 /**
  * The Cotopaxi Controller. This is application/requests entry point.
@@ -95,10 +94,9 @@ public class ControllerManager {
 		LoginRequiredMetadata loginMetadata = metadata.getLoginMetadata();
 		if (loginMetadata.isLoginRequired()) {
 			// gets the current user
-			UserInfo user = (UserInfo) ThreadProperties.getProperty(USER_INFO_ATTRIBUTE);
+			UserInfo user = (UserInfo) request.getSessionParameter(USER_INFO_ATTRIBUTE);
 			if (user != null) {
 				String username = user.getUsername();
-				request.setRequestParameter(UserInfo.USERNAME_ATTRIBUTE_NAME, username);
 				if (!user.satisfyRole(loginMetadata.getRequiredRole())) {
 					throw new AuthorizationException("The user " + username + " doesn't has the required role: " + loginMetadata.getRequiredRole(),
 							loginMetadata.getForbiddenURL());

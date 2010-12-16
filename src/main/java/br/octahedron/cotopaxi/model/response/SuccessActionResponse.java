@@ -14,19 +14,23 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi;
+package br.octahedron.cotopaxi.model.response;
 
 /**
+ * Represents a SUCCESSFUL {@link ActionResponse}.
  * 
- * TODO comment
- * @author Name - email@octahedron.com.br
- *
+ * @author Danilo Penna Queiroz - email@octahedron.com.br
  */
-public interface InputHandler {
+public class SuccessActionResponse extends AbstractActionResponse {
 
-	public String getRequestParameter(String name);
+	private Object returnValue;
 
-	public Object getSessionParameter(String name);
-	
-	
+	public SuccessActionResponse(Object returnValue) {
+		super(Result.SUCCESS);
+		this.returnValue = returnValue;
+	}
+
+	public Object getReturnValue() {
+		return this.returnValue;
+	}
 }

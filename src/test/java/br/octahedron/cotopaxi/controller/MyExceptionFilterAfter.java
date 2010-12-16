@@ -19,7 +19,7 @@ package br.octahedron.cotopaxi.controller;
 import br.octahedron.cotopaxi.RequestWrapper;
 import br.octahedron.cotopaxi.controller.filter.Filter;
 import br.octahedron.cotopaxi.controller.filter.FilterException;
-import br.octahedron.cotopaxi.model.ActionResponse;
+import br.octahedron.cotopaxi.model.response.ActionResponse;
 
 /**
  * @author nome - email@octahedron.com.br

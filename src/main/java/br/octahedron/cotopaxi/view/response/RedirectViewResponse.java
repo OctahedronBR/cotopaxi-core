@@ -14,19 +14,30 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi;
+package br.octahedron.cotopaxi.view.response;
+
+import java.io.IOException;
+
+import br.octahedron.cotopaxi.ResponseWrapper;
 
 /**
- * 
- * TODO comment
- * @author Name - email@octahedron.com.br
+ * @author nome - email@octahedron.com.br
  *
  */
-public interface InputHandler {
+public class RedirectViewResponse implements ViewResponse {
 
-	public String getRequestParameter(String name);
+	private String redirectURL;
 
-	public Object getSessionParameter(String name);
-	
-	
+	protected RedirectViewResponse(String redirectURL) {
+		this.redirectURL = redirectURL;
+	}
+
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.view.ViewResponse#dispatch(br.octahedron.cotopaxi.ResponseWrapper)
+	 */
+	@Override
+	public void dispatch(ResponseWrapper response) throws IOException {
+		response.redirect(this.redirectURL);
+	}
+
 }

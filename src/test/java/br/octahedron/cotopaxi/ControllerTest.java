@@ -36,17 +36,16 @@ import br.octahedron.cotopaxi.controller.MyExceptionFilterAfter;
 import br.octahedron.cotopaxi.controller.MyExceptionFilterBefore;
 import br.octahedron.cotopaxi.controller.MyFilter;
 import br.octahedron.cotopaxi.controller.filter.FilterException;
-import br.octahedron.cotopaxi.metadata.MetatadaMapper;
+import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
 import br.octahedron.cotopaxi.metadata.annotation.Action.HTTPMethod;
-import br.octahedron.cotopaxi.model.ActionResponse;
-import br.octahedron.cotopaxi.model.ExceptionActionResponse;
-import br.octahedron.cotopaxi.model.InvalidActionResponse;
-import br.octahedron.cotopaxi.model.SuccessActionResponse;
-import br.octahedron.cotopaxi.model.ActionResponse.Result;
 import br.octahedron.cotopaxi.model.attribute.converter.DateConverter;
 import br.octahedron.cotopaxi.model.auth.UserInfo;
-import br.octahedron.util.ThreadProperties;
+import br.octahedron.cotopaxi.model.response.ActionResponse;
+import br.octahedron.cotopaxi.model.response.ExceptionActionResponse;
+import br.octahedron.cotopaxi.model.response.InvalidActionResponse;
+import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
+import br.octahedron.cotopaxi.model.response.ActionResponse.Result;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
@@ -56,12 +55,12 @@ public class ControllerTest {
 	private static final String[] FACADES = { "br.octahedron.cotopaxi.controller.FacadeOne", "br.octahedron.cotopaxi.controller.FacadeTwo",
 			"br.octahedron.cotopaxi.controller.FacadeThree" };
 	private ControllerManager controller;
-	private MetatadaMapper mapper;
+	private MetadataMapper mapper;
 
 	@Before
 	public void setUp() throws SecurityException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException {
 		FiltersHelper.reset();
-		this.mapper = new MetatadaMapper(FACADES);
+		this.mapper = new MetadataMapper(FACADES);
 		CotopaxiConfigView.Handler.reset();
 		this.controller = new ControllerManager(CotopaxiConfigView.Handler.getConfigView());
 		DateConverter.setDateFormat("dd/MM/yyyy");
@@ -397,6 +396,7 @@ public class ControllerTest {
 		RequestWrapper request = createMock(RequestWrapper.class);
 		expect(request.getURL()).andReturn("/restricted1").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
+		expect(request.getSessionParameter(UserInfo.USER_INFO_ATTRIBUTE)).andReturn(null).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
 
@@ -421,6 +421,7 @@ public class ControllerTest {
 		RequestWrapper request = createMock(RequestWrapper.class);
 		expect(request.getURL()).andReturn("/restricted2").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
+		expect(request.getSessionParameter(UserInfo.USER_INFO_ATTRIBUTE)).andReturn(null).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
 
@@ -447,9 +448,8 @@ public class ControllerTest {
 		expect(request.getURL()).andReturn("/restricted1").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
-		request.setRequestParameter(UserInfo.USERNAME_ATTRIBUTE_NAME, "danilo");
+		expect(request.getSessionParameter(UserInfo.USER_INFO_ATTRIBUTE)).andReturn(new UserInfo("danilo", "developer")).atLeastOnce();
 		replay(request);
-		ThreadProperties.setProperty(UserInfo.USER_INFO_ATTRIBUTE, new UserInfo("danilo", "developer"));
 
 		// invoking the controller
 		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
@@ -468,10 +468,9 @@ public class ControllerTest {
 		RequestWrapper request = createMock(RequestWrapper.class);
 		expect(request.getURL()).andReturn("/restricted3").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
+		expect(request.getSessionParameter(UserInfo.USER_INFO_ATTRIBUTE)).andReturn(new UserInfo("danilo", "developer")).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
-		request.setRequestParameter(UserInfo.USERNAME_ATTRIBUTE_NAME, "danilo");
 		replay(request);
-		ThreadProperties.setProperty(UserInfo.USER_INFO_ATTRIBUTE, new UserInfo("danilo", "developer"));
 
 		try {
 			// invoking the controller
@@ -495,10 +494,9 @@ public class ControllerTest {
 		RequestWrapper request = createMock(RequestWrapper.class);
 		expect(request.getURL()).andReturn("/restricted3").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
+		expect(request.getSessionParameter(UserInfo.USER_INFO_ATTRIBUTE)).andReturn(new UserInfo("danilo", "admin")).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
-		request.setRequestParameter(UserInfo.USERNAME_ATTRIBUTE_NAME, "danilo");
 		replay(request);
-		ThreadProperties.setProperty(UserInfo.USER_INFO_ATTRIBUTE, new UserInfo("danilo", "admin"));
 
 		// invoking the controller
 		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));

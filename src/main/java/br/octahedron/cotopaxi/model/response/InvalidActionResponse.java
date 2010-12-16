@@ -14,25 +14,32 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.view;
+package br.octahedron.cotopaxi.model.response;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
+ * Represents a VALIDATION_FAILED {@link ActionResponse}.
+ * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-public enum TemplatesAttributes {
+public class InvalidActionResponse extends AbstractActionResponse {
 
-	URL_NOT_FOUND_ATTRIBUTE("pageNotFound"), URL_NOT_FOUND_METHOD_ATTRIBUTE("pageNotFoundMethod"), INVALIDATION_FIELDS_ATTRIBUTE("invalidFields"), EXCEPTION_ATTRIBUTE(
-			"exception"), EXCEPTION_CLASS_ATTRIBUTE("exceptionClass"), EXCEPTION_MESSAGE_ATTRIBUTE("exceptionMessage"), EXCEPTION_STACK_TRACE_ATTRIBUTE(
-			"exceptionStackTrace"), MESSAGE_ON_SUCCESS("successMessage"), MESSAGE_ON_ERROR("errorMessage"), MESSAGE_ON_VALIDATION_FAILS("validationMessage");
+	private Collection<String> invalidAttributes;
 
-	private String attributeKey;
-
-	private TemplatesAttributes(String attributeKey) {
-		this.attributeKey = attributeKey;
+	public InvalidActionResponse(String ... invalidAttributes) {
+		super(Result.VALIDATION_FAILED);
+		this.invalidAttributes = Arrays.asList(invalidAttributes);
+	}
+	
+	public InvalidActionResponse(Collection<String> invalidAttributes) {
+		super(Result.VALIDATION_FAILED);
+		this.invalidAttributes = invalidAttributes;
 	}
 
-	public String getAttributeKey() {
-		return this.attributeKey;
+	public Collection<String> getInvalidAttributes() {
+		return this.invalidAttributes;
 	}
 }

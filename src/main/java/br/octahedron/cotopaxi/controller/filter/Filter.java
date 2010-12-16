@@ -17,7 +17,7 @@
 package br.octahedron.cotopaxi.controller.filter;
 
 import br.octahedron.cotopaxi.RequestWrapper;
-import br.octahedron.cotopaxi.model.ActionResponse;
+import br.octahedron.cotopaxi.model.response.ActionResponse;
 
 /**
  * A Request filter. It specify methods to be executed before or after the model execution. It can

@@ -30,14 +30,14 @@ import br.octahedron.cotopaxi.config.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.controller.filter.Filter;
 import br.octahedron.cotopaxi.controller.filter.FilterException;
 import br.octahedron.cotopaxi.metadata.annotation.Action.ActionMetadata;
-import br.octahedron.cotopaxi.model.ActionResponse;
-import br.octahedron.cotopaxi.model.ExceptionActionResponse;
 import br.octahedron.cotopaxi.model.InputAdapter;
-import br.octahedron.cotopaxi.model.InvalidActionResponse;
-import br.octahedron.cotopaxi.model.SuccessActionResponse;
 import br.octahedron.cotopaxi.model.attribute.InvalidAttributeException;
 import br.octahedron.cotopaxi.model.attribute.ModelAttribute;
 import br.octahedron.cotopaxi.model.attribute.converter.ConversionException;
+import br.octahedron.cotopaxi.model.response.ActionResponse;
+import br.octahedron.cotopaxi.model.response.ExceptionActionResponse;
+import br.octahedron.cotopaxi.model.response.InvalidActionResponse;
+import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
 import br.octahedron.util.reflect.InstanceHandler;
 
 /**

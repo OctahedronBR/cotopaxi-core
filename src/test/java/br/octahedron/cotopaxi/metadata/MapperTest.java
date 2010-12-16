@@ -40,14 +40,14 @@ import br.octahedron.cotopaxi.model.InputAdapter;
  */
 public class MapperTest {
 
-	private MetatadaMapper mapper;
+	private MetadataMapper mapper;
 	private RequestWrapper request;
 
 	@Before
 	public void setup() throws SecurityException, ClassNotFoundException, NoSuchMethodException {
 		this.request = createMock(RequestWrapper.class);
 		String[] facades = { "br.octahedron.cotopaxi.controller.FakeModelFacade" };
-		this.mapper = new MetatadaMapper(facades);
+		this.mapper = new MetadataMapper(facades);
 
 	}
 
@@ -58,7 +58,7 @@ public class MapperTest {
 		 * Facade Mimimi doesn't exists
 		 */
 		String[] facades = { "Mimimi" };
-		new MetatadaMapper(facades);
+		new MetadataMapper(facades);
 	}
 
 	@Test(expected = NoSuchMethodException.class)
@@ -68,7 +68,7 @@ public class MapperTest {
 		 * Facade didn't has an empty constructor
 		 */
 		String[] facades = { "br.octahedron.cotopaxi.controller.InvalidFacade" };
-		new MetatadaMapper(facades);
+		new MetadataMapper(facades);
 	}
 
 	@Test(expected = PageNotFoundExeption.class)

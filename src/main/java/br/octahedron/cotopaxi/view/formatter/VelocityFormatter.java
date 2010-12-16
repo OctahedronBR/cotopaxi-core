@@ -16,7 +16,7 @@
  */
 package br.octahedron.cotopaxi.view.formatter;
 
-import static br.octahedron.cotopaxi.view.VelocityEngineWrapper.getTemplate;
+import static br.octahedron.cotopaxi.view.formatter.VelocityEngineWrapper.getVelocityTemplate;
 
 import java.util.Locale;
 import java.util.Map;
@@ -45,12 +45,20 @@ public class VelocityFormatter extends TemplateFormatter {
 		this.setAttributes(attributes);
 		this.setLocale(lc);
 	}
+	
+	public String getTemplate() {
+		return this.template;
+	}
+	
+	public Map<String, Object> getAttributes() {
+		return this.attributes;
+	}
 
 	@Override
 	protected String doFormat() {
 		// TODO locale
 		VelocityContext context = new VelocityContext(this.attributes);
-		Template template = getTemplate(this.template);
+		Template template = getVelocityTemplate(this.template);
 		StringBuilderWriter writer = new StringBuilderWriter();
 		template.merge(context, writer);
 		return writer.getBuffer().toString();

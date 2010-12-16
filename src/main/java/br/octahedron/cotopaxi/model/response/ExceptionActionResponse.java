@@ -14,19 +14,22 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi;
+package br.octahedron.cotopaxi.model.response;
 
 /**
+ * @author nome - email@octahedron.com.br
  * 
- * TODO comment
- * @author Name - email@octahedron.com.br
- *
  */
-public interface InputHandler {
+public class ExceptionActionResponse extends AbstractActionResponse {
 
-	public String getRequestParameter(String name);
+	private Throwable cause;
 
-	public Object getSessionParameter(String name);
-	
-	
+	public ExceptionActionResponse(Throwable cause) {
+		super(Result.EXCEPTION);
+		this.cause = cause;
+	}
+
+	public Throwable getCause() {
+		return this.cause;
+	}
 }

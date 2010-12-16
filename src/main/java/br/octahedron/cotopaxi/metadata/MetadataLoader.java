@@ -31,9 +31,9 @@ import br.octahedron.util.reflect.AnnotatedMethodListener;
  */
 class MetadataLoader implements AnnotatedMethodListener<Action> {
 
-	private MetatadaMapper mapper;
+	private MetadataMapper mapper;
 
-	public MetadataLoader(MetatadaMapper mapper) {
+	public MetadataLoader(MetadataMapper mapper) {
 		this.mapper = mapper;
 	}
 

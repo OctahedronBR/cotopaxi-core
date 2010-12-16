@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import br.octahedron.cotopaxi.metadata.annotation.Action.HTTPMethod;
 
@@ -61,8 +62,8 @@ public class RequestWrapper implements InputHandler {
 		}
 		// get locale
 		this.locale = this.request.getLocale();
-		if ( LOCALE_PREFIX.matcher(url).matches() ) {
-			int index = this.url.indexOf('/',1);
+		if (LOCALE_PREFIX.matcher(this.url).matches()) {
+			int index = this.url.indexOf('/', 1);
 			String strLocale = this.url.substring(1, index);
 			String[] params = strLocale.split("_");
 			if (params.length == 1) {
@@ -73,12 +74,12 @@ public class RequestWrapper implements InputHandler {
 			}
 			this.url = this.url.substring(index);
 		}
-		
+
 		// get format
-		if ( FORMAT_SUFFIX.matcher(url).matches() ) {
+		if (FORMAT_SUFFIX.matcher(this.url).matches()) {
 			int index = this.url.lastIndexOf('.');
-			this.format = this.url.substring(index+1);
-			this.url = this.url.substring(0,index);
+			this.format = this.url.substring(index + 1);
+			this.url = this.url.substring(0, index);
 		}
 	}
 
@@ -102,13 +103,15 @@ public class RequestWrapper implements InputHandler {
 	public Locale getLocale() {
 		return this.locale;
 	}
-	
+
 	/**
 	 * Indicates if request locale was specified on URL, or using the Accept-Language header.
-	 * @return <code>true</code> if the locale was specified on URL, and <code>false</code> if it was specified on Header (or by server language).
+	 * 
+	 * @return <code>true</code> if the locale was specified on URL, and <code>false</code> if it
+	 *         was specified on Header (or by server language).
 	 */
 	public boolean isLocaleFromURL() {
-		return localeFromURL;
+		return this.localeFromURL;
 	}
 
 	public String getDomain() {
@@ -138,5 +141,15 @@ public class RequestWrapper implements InputHandler {
 			this.requestParameters = new HashMap<String, String>();
 		}
 		this.requestParameters.put(key, value);
+	}
+
+	@Override
+	public Object getSessionParameter(String name) {
+		HttpSession session = this.request.getSession(false);
+		if (session != null) {
+			return this.request.getAttribute(name);
+		} else {
+			return null;
+		}
 	}
 }

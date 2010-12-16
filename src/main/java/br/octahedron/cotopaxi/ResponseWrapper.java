@@ -22,8 +22,8 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletResponse;
 
 import br.octahedron.cotopaxi.view.ContentType;
-import br.octahedron.cotopaxi.view.ResultCode;
 import br.octahedron.cotopaxi.view.formatter.Formatter;
+import br.octahedron.cotopaxi.view.response.ResultCode;
 
 /**
  * Encapsulates the response and provides access to all methods necessary to deliver the response to

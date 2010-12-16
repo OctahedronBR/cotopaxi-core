@@ -14,32 +14,23 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.metadata;
+package br.octahedron.cotopaxi.view.response;
 
-import br.octahedron.cotopaxi.metadata.annotation.Action.HTTPMethod;
+import java.io.IOException;
+
+import br.octahedron.cotopaxi.ResponseWrapper;
 
 /**
- * Indicates that the {@link MetadataMapper} could not found a handler for an URL.
+ * A response to be dispatched to user.  
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class PageNotFoundExeption extends Exception {
+public interface ViewResponse {
+	
+	/**
+	 * Dispatches this response to client.
+	 * @param response the servler response wrapper
+	 */
+	public void dispatch(ResponseWrapper response) throws IOException;
 
-	private static final long serialVersionUID = -3510525396178721090L;
-	private String url;
-	private HTTPMethod httpMethod;
-
-	protected PageNotFoundExeption(String url, HTTPMethod httpMethod) {
-		super("Not found page for " + url + " - " + httpMethod.toString());
-		this.url = url;
-		this.httpMethod = httpMethod;
-	}
-
-	public String getUrl() {
-		return this.url;
-	}
-
-	public HTTPMethod getHttpMethod() {
-		return this.httpMethod;
-	}
 }

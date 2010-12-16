@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 
 import br.octahedron.cotopaxi.config.CotopaxiConfigView;
 import br.octahedron.cotopaxi.config.CotopaxiConfigurator;
-import br.octahedron.cotopaxi.model.SuccessActionResponse;
+import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
 
 /**
  * Annotation to be used to specify a template to be used to present the action response.

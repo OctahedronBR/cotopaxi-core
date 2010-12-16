@@ -24,6 +24,7 @@ import br.octahedron.cotopaxi.metadata.annotation.Response;
 import br.octahedron.cotopaxi.metadata.annotation.Template;
 import br.octahedron.cotopaxi.metadata.annotation.Action.ActionMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.LoginRequired.LoginRequiredMetadata;
+import br.octahedron.cotopaxi.metadata.annotation.Message.MessageMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.Response.ResponseMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.Template.TemplateMetadata;
 
@@ -34,25 +35,27 @@ import br.octahedron.cotopaxi.metadata.annotation.Template.TemplateMetadata;
  * @see LoginRequired
  * @see Response
  * @see Template
- * 
+ * @see Message
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
 public class MetadataHandler {
 
-	private ActionMetadata actionMetadata;
-	private LoginRequiredMetadata loginMetadata;
-	private TemplateMetadata templateMetadata;
-	private ResponseMetadata responseMetadata;
+	protected ActionMetadata actionMetadata;
+	protected LoginRequiredMetadata loginMetadata;
+	protected TemplateMetadata templateMetadata;
+	protected ResponseMetadata responseMetadata;
+	protected MessageMetadata messageMetadata;
 
 	protected MetadataHandler(Method met) {
 		this.actionMetadata = new ActionMetadata(met);
 		this.loginMetadata = new LoginRequiredMetadata(met);
 		this.templateMetadata = new TemplateMetadata(met);
 		this.responseMetadata = new ResponseMetadata(met);
+		this.messageMetadata = new MessageMetadata(met);
 	}
-
+	
 	public ActionMetadata getActionMetadata() {
 		return this.actionMetadata;
 	}
@@ -67,5 +70,9 @@ public class MetadataHandler {
 
 	public ResponseMetadata getResponseMetadata() {
 		return this.responseMetadata;
+	}
+
+	public MessageMetadata getMessageMetadata() {
+		return this.messageMetadata;
 	}
 }

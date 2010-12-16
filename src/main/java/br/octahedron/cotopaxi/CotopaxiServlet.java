@@ -36,12 +36,12 @@ import br.octahedron.cotopaxi.config.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.controller.AuthorizationException;
 import br.octahedron.cotopaxi.controller.ControllerManager;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
-import br.octahedron.cotopaxi.metadata.MetatadaMapper;
+import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
-import br.octahedron.cotopaxi.model.SuccessActionResponse;
-import br.octahedron.cotopaxi.view.ViewResponse;
-import br.octahedron.cotopaxi.view.ViewResponseBuilder;
+import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
 import br.octahedron.cotopaxi.view.i18n.LocaleManager;
+import br.octahedron.cotopaxi.view.response.ViewResponse;
+import br.octahedron.cotopaxi.view.response.ViewResponseBuilder;
 import br.octahedron.util.ThreadProperties;
 import br.octahedron.util.reflect.ReflectionUtil;
 
@@ -77,7 +77,7 @@ public class CotopaxiServlet extends HttpServlet {
 	private static final Logger logger = Logger.getLogger(CotopaxiServlet.class.getName());
 	private transient ControllerManager controller;
 	private transient ViewResponseBuilder view;
-	private transient MetatadaMapper mapper;
+	private transient MetadataMapper mapper;
 	private CotopaxiConfigViewImpl config;
 
 	private LocaleManager localeManager;
@@ -92,7 +92,7 @@ public class CotopaxiServlet extends HttpServlet {
 			// creating mapper
 			logger.info("Creating Mapper and loading Model Metadata [2/4]...");
 			String[] modelFacadesClassesNames = servletConfig.getInitParameter(MODEL_FACADES_PROPERTY).split(",");
-			this.mapper = new MetatadaMapper(modelFacadesClassesNames);
+			this.mapper = new MetadataMapper(modelFacadesClassesNames);
 			// create the ControllerManager
 			logger.info("Creating Controller Manager [3/4]");
 			this.controller = new ControllerManager(this.config);

@@ -14,19 +14,21 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi;
+package br.octahedron.cotopaxi.view;
+
+import br.octahedron.cotopaxi.metadata.annotation.Action;
+import br.octahedron.cotopaxi.metadata.annotation.Message;
 
 /**
- * 
- * TODO comment
- * @author Name - email@octahedron.com.br
- *
+ * @author Danilo Penna Queiroz - email@octahedron.com.br
  */
-public interface InputHandler {
+public class FakeFacade {
 
-	public String getRequestParameter(String name);
-
-	public Object getSessionParameter(String name);
+	@Action(url="/test1")
+	@Message(onSuccess="OK", onError="FAILED", onValidationFails="INVALID")
+	public void lalala() {
+		
+	}
 	
 	
 }

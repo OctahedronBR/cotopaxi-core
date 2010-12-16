@@ -14,19 +14,18 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi;
+package br.octahedron.cotopaxi.view.response;
 
-/**
- * 
- * TODO comment
- * @author Name - email@octahedron.com.br
- *
- */
-public interface InputHandler {
+public enum ResultCode {
+	SUCCESS(200), NOT_FOUND(404), INTERNAL_ERROR(500), REDIRECT(302), FORBIDDEN(403), BAD_REQUEST(400);
 
-	public String getRequestParameter(String name);
+	private int code;
 
-	public Object getSessionParameter(String name);
-	
-	
+	private ResultCode(int code) {
+		this.code = code;
+	}
+
+	public int getIntCode() {
+		return this.code;
+	}
 }

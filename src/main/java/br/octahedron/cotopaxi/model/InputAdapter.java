@@ -16,14 +16,12 @@
  */
 package br.octahedron.cotopaxi.model;
 
-import static br.octahedron.cotopaxi.model.auth.UserInfo.USERNAME_ATTRIBUTE_NAME;
-
 import java.util.Collection;
 import java.util.LinkedList;
 
 import br.octahedron.cotopaxi.model.attribute.ModelAttribute;
 import br.octahedron.cotopaxi.model.attribute.RequestModelAttribute;
-import br.octahedron.cotopaxi.model.attribute.converter.SafeStringConverter;
+import br.octahedron.cotopaxi.model.attribute.SessionModelAttribute;
 import br.octahedron.cotopaxi.model.attribute.converter.TypeConverter;
 import br.octahedron.cotopaxi.model.attribute.validator.Validator;
 
@@ -50,22 +48,48 @@ public class InputAdapter {
 		return this.attributes;
 	}
 
-	public void addUserNameAttribute() {
-		this.addAttribute(USERNAME_ATTRIBUTE_NAME, SafeStringConverter.class);
-	}
-
-	public void addAttribute(RequestModelAttribute<?> attribute) {
+	/**
+	 * TODO DOCUMENT
+	 * @param attribute
+	 */
+	public void addAttribute(ModelAttribute<?> attribute) {
 		if (this.attributes == null) {
 			this.attributes = new LinkedList<ModelAttribute<?>>();
 		}
 		this.attributes.add(attribute);
 	}
 
+	/**
+	 * TODO DOCUMENT
+	 * @param <T>
+	 * @param name
+	 * @param typeConverter
+	 */
 	public <T> void addAttribute(String name, Class<? extends TypeConverter<T>> typeConverter) {
 		this.addAttribute(new RequestModelAttribute<T>(name, typeConverter));
 	}
 
+	/**
+	 * TODO DOCUMENT
+	 * @param <T>
+	 * @param name
+	 * @param typeConverter
+	 * @param validator
+	 */
 	public <T> void addAttribute(String name, Class<? extends TypeConverter<T>> typeConverter, Validator<T> validator) {
 		this.addAttribute(new RequestModelAttribute<T>(name, typeConverter, validator));
+	}
+	
+	// TODO create and test add user_info attribute
+
+	/**
+	 * TODO DOCUMENT
+	 * @param <T>
+	 * @param name
+	 * @param klass
+	 */
+	public <T> void addSessionAttribute(String name, Class<T> klass) {
+		// TODO test session attribute
+		this.addAttribute(new SessionModelAttribute<T>(name));
 	}
 }
