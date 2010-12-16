@@ -24,9 +24,9 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import br.octahedron.cotopaxi.CotopaxiConfigView;
+import br.octahedron.cotopaxi.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.RequestWrapper;
-import br.octahedron.cotopaxi.config.CotopaxiConfigView;
-import br.octahedron.cotopaxi.config.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.controller.filter.Filter;
 import br.octahedron.cotopaxi.controller.filter.FilterException;
 import br.octahedron.cotopaxi.metadata.annotation.Action.ActionMetadata;

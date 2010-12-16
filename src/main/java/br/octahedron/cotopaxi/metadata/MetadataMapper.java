@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.cotopaxi.RequestWrapper;
 import br.octahedron.cotopaxi.metadata.annotation.Action;
 import br.octahedron.cotopaxi.metadata.annotation.Action.HTTPMethod;
@@ -70,10 +71,9 @@ public class MetadataMapper {
 	// reverse Map: ModelMapping Class vs. Mapping URL
 	private Map<MetadataHandler, String> urlMapping = new HashMap<MetadataHandler, String>();
 
-	public MetadataMapper(String... modelFacadesClassesNames) throws ClassNotFoundException, SecurityException, NoSuchMethodException {
+	public MetadataMapper(CotopaxiConfigView configView) throws SecurityException, NoSuchMethodException {
 		// loads the model metadata to mapper
-		for (String modelFacadeClassName : modelFacadesClassesNames) {
-			Class<?> facade = ReflectionUtil.getClass(modelFacadeClassName);
+		for (Class<?> facade: configView.getModelFacades()) {
 			facade.getConstructor(new Class<?>[0]);
 			ReflectionUtil.getAnnotatedMethods(facade, Action.class, new MetadataLoader(this));
 		}

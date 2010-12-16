@@ -22,6 +22,7 @@ import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
@@ -30,9 +31,9 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.cotopaxi.RequestWrapper;
 import br.octahedron.cotopaxi.ResponseWrapper;
-import br.octahedron.cotopaxi.config.CotopaxiConfigView;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
 import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
@@ -55,10 +56,15 @@ public class ViewResponseBuilderTest {
 	private MetadataMapper mapper;
 	private ViewResponseBuilder builder;
 
+	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws SecurityException, ClassNotFoundException, NoSuchMethodException {
-		this.mapper = new MetadataMapper("br.octahedron.cotopaxi.view.FakeFacade");
-		this.builder = new ViewResponseBuilder(CotopaxiConfigView.Handler.getConfigView());
+		CotopaxiConfigView configMock = createMock(CotopaxiConfigView.class);
+		Collection facade = Arrays.asList(FakeFacade.class); 
+		expect(configMock.getModelFacades()).andReturn(facade);
+		replay(configMock);
+		this.mapper = new MetadataMapper(configMock);
+		this.builder = new ViewResponseBuilder(CotopaxiConfigView.getInstance());
 	}
 	
 	@Test

@@ -16,8 +16,6 @@
  */
 package br.octahedron.cotopaxi;
 
-import br.octahedron.cotopaxi.config.CotopaxiConfig;
-import br.octahedron.cotopaxi.config.CotopaxiConfigurator;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br

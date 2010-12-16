@@ -22,8 +22,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 
-import br.octahedron.cotopaxi.config.CotopaxiConfigView;
-import br.octahedron.cotopaxi.config.CotopaxiConfigurator;
+import br.octahedron.cotopaxi.CotopaxiConfigView;
+import br.octahedron.cotopaxi.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
 
 /**

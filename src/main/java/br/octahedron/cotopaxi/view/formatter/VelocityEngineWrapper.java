@@ -23,7 +23,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 
-import br.octahedron.cotopaxi.config.CotopaxiConfigView;
+import br.octahedron.cotopaxi.CotopaxiConfigView;
 
 /**
  * A simple wrapper for {@link VelocityEngine}. It load and configure the velocity engine and
@@ -43,7 +43,7 @@ public final class VelocityEngineWrapper {
 	 */
 	protected static void init() {
 		if (!init) {
-			CotopaxiConfigView config = CotopaxiConfigView.Handler.getConfigView();
+			CotopaxiConfigView config = CotopaxiConfigView.getInstance();
 			String templateRoot = config.getTemplateRoot();
 			logger.fine("Loading velocity engine. Templates root folder: " + templateRoot);			
 			engine.setProperty("resource.loader", "file");

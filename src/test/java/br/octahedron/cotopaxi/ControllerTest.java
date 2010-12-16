@@ -26,11 +26,11 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.octahedron.cotopaxi.config.CotopaxiConfig;
-import br.octahedron.cotopaxi.config.CotopaxiConfigView;
-import br.octahedron.cotopaxi.config.CotopaxiConfigViewImpl;
 import br.octahedron.cotopaxi.controller.AuthorizationException;
 import br.octahedron.cotopaxi.controller.ControllerManager;
+import br.octahedron.cotopaxi.controller.FacadeOne;
+import br.octahedron.cotopaxi.controller.FacadeThree;
+import br.octahedron.cotopaxi.controller.FacadeTwo;
 import br.octahedron.cotopaxi.controller.FiltersHelper;
 import br.octahedron.cotopaxi.controller.MyExceptionFilterAfter;
 import br.octahedron.cotopaxi.controller.MyExceptionFilterBefore;
@@ -52,17 +52,17 @@ import br.octahedron.cotopaxi.model.response.ActionResponse.Result;
  */
 public class ControllerTest {
 
-	private static final String[] FACADES = { "br.octahedron.cotopaxi.controller.FacadeOne", "br.octahedron.cotopaxi.controller.FacadeTwo",
-			"br.octahedron.cotopaxi.controller.FacadeThree" };
 	private ControllerManager controller;
 	private MetadataMapper mapper;
 
 	@Before
 	public void setUp() throws SecurityException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException {
 		FiltersHelper.reset();
-		this.mapper = new MetadataMapper(FACADES);
-		CotopaxiConfigView.Handler.reset();
-		this.controller = new ControllerManager(CotopaxiConfigView.Handler.getConfigView());
+		CotopaxiConfigView.reset();
+		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
+		config.addModelFacade(FacadeOne.class, FacadeTwo.class, FacadeThree.class);
+		this.mapper = new MetadataMapper(CotopaxiConfigView.getInstance());
+		this.controller = new ControllerManager(CotopaxiConfigView.getInstance());
 		DateConverter.setDateFormat("dd/MM/yyyy");
 	}
 
@@ -269,7 +269,7 @@ public class ControllerTest {
 		expect(request.getFormat()).andReturn(null);
 		expect(request.getRequestParameter("str")).andReturn("name1,name2,name3,name4");
 		replay(request);
-		CotopaxiConfig config = ((CotopaxiConfigViewImpl) CotopaxiConfigView.Handler.getConfigView()).getControllerConfig();
+		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
 		config.addGlobalFilter(MyFilter.class);
 
 		// invoking the controller
@@ -298,7 +298,7 @@ public class ControllerTest {
 		expect(request.getRequestParameter("when")).andReturn("06/11/2010");
 		expect(request.getRequestParameter("int")).andReturn("5");
 		replay(request);
-		CotopaxiConfig config = ((CotopaxiConfigViewImpl) CotopaxiConfigView.Handler.getConfigView()).getControllerConfig();
+		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
 		config.addGlobalFilter(MyFilter.class);
 
 		// invoking the controller
@@ -323,7 +323,7 @@ public class ControllerTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		CotopaxiConfig config = ((CotopaxiConfigViewImpl) CotopaxiConfigView.Handler.getConfigView()).getControllerConfig();
+		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
 		config.addGlobalFilter(MyExceptionFilterBefore.class);
 		try {
 			// invoking the controller
@@ -351,7 +351,7 @@ public class ControllerTest {
 		expect(request.getRequestParameter("when")).andReturn("06/11/2010");
 		expect(request.getRequestParameter("int")).andReturn("5");
 		replay(request);
-		CotopaxiConfig config = ((CotopaxiConfigViewImpl) CotopaxiConfigView.Handler.getConfigView()).getControllerConfig();
+		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
 		config.addGlobalFilter(MyExceptionFilterAfter.class);
 		try {
 			// invoking the controller

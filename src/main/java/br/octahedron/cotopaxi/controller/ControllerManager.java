@@ -17,8 +17,8 @@
 package br.octahedron.cotopaxi.controller;
 
 import static br.octahedron.cotopaxi.model.auth.UserInfo.USER_INFO_ATTRIBUTE;
+import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.cotopaxi.RequestWrapper;
-import br.octahedron.cotopaxi.config.CotopaxiConfigView;
 import br.octahedron.cotopaxi.controller.filter.FilterException;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
 import br.octahedron.cotopaxi.metadata.annotation.LoginRequired.LoginRequiredMetadata;

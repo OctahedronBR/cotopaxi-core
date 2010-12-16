@@ -29,10 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import br.octahedron.cotopaxi.config.CotopaxiConfig;
-import br.octahedron.cotopaxi.config.CotopaxiConfigView;
-import br.octahedron.cotopaxi.config.CotopaxiConfigViewImpl;
-import br.octahedron.cotopaxi.config.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.controller.AuthorizationException;
 import br.octahedron.cotopaxi.controller.ControllerManager;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
@@ -64,11 +60,6 @@ public class CotopaxiServlet extends HttpServlet {
 	 * must be defined at "web.xml" file.
 	 */
 	private static final String MODEL_CONFIGURATOR_PROPERTY = "CONFIGURATOR";
-	/**
-	 * Property used to define the facades (separated by commas) to used. This property must be
-	 * defined at "web.xml" file.
-	 */
-	private static final String MODEL_FACADES_PROPERTY = "MODELFACADES";
 
 	// private static final Class<? extends Formatter> DEFAULT_HTML_FORMATTER =
 	// VelocityFormatter.class;
@@ -78,10 +69,9 @@ public class CotopaxiServlet extends HttpServlet {
 	private transient ControllerManager controller;
 	private transient ViewResponseBuilder view;
 	private transient MetadataMapper mapper;
-	private CotopaxiConfigViewImpl config;
+	private CotopaxiConfigView config;
 
 	private LocaleManager localeManager;
-	
 
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
@@ -91,8 +81,7 @@ public class CotopaxiServlet extends HttpServlet {
 			this.configure(servletConfig.getInitParameter(MODEL_CONFIGURATOR_PROPERTY));
 			// creating mapper
 			logger.info("Creating Mapper and loading Model Metadata [2/4]...");
-			String[] modelFacadesClassesNames = servletConfig.getInitParameter(MODEL_FACADES_PROPERTY).split(",");
-			this.mapper = new MetadataMapper(modelFacadesClassesNames);
+			this.mapper = new MetadataMapper(this.config);
 			// create the ControllerManager
 			logger.info("Creating Controller Manager [3/4]");
 			this.controller = new ControllerManager(this.config);
@@ -120,11 +109,13 @@ public class CotopaxiServlet extends HttpServlet {
 	 * Used by tests. Create and calls the {@link CotopaxiConfigurator}
 	 */
 	protected void configure(String configuratorClassName) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		this.config = (CotopaxiConfigViewImpl) CotopaxiConfigView.Handler.getConfigView();
+		this.config = CotopaxiConfigView.getInstance();
 		if (configuratorClassName != null) {
-			CotopaxiConfig configurable = this.config.getControllerConfig();
+			CotopaxiConfig configurable = this.config.getCotopaxiConfig();
 			CotopaxiConfigurator configurator = (CotopaxiConfigurator) ReflectionUtil.createInstance(configuratorClassName);
 			configurator.configure(configurable);
+		} else {
+			throw new ClassNotFoundException(null);
 		}
 	}
 
@@ -161,10 +152,10 @@ public class CotopaxiServlet extends HttpServlet {
 			viewResponse = this.view.getViewResponse(requestedURL);
 		} else {
 			this.prepareThreadProperties(req);
-			Locale lc = this.localeManager.getLocale(request); 
+			Locale lc = this.localeManager.getLocale(request);
 			try {
 				MetadataHandler metadata = this.mapper.getMapping(request);
-				viewResponse =  this.view.getViewResponse(lc, request.getFormat(), this.controller.process(request, metadata), metadata);
+				viewResponse = this.view.getViewResponse(lc, request.getFormat(), this.controller.process(request, metadata), metadata);
 			} catch (AuthorizationException e) {
 				logger.fine("Request for " + requestedURL + " failed due authorization restrictions! Redirecting to " + e.getRedirectURL());
 				viewResponse = this.view.getViewResponse(lc, e);
@@ -178,7 +169,7 @@ public class CotopaxiServlet extends HttpServlet {
 				this.finalizeThreadProperties(req);
 			}
 		}
-		
+
 		// dispatch the view response
 		try {
 			ResponseWrapper response = new ResponseWrapper(resp);

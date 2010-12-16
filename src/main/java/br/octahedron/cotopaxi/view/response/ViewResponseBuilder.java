@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import br.octahedron.cotopaxi.config.CotopaxiConfigView;
+import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.cotopaxi.controller.AuthorizationException;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;

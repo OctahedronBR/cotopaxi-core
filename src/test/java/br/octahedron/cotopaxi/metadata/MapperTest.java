@@ -24,10 +24,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.cotopaxi.RequestWrapper;
+import br.octahedron.cotopaxi.controller.FakeModelFacade;
+import br.octahedron.cotopaxi.controller.InvalidFacade;
 import br.octahedron.cotopaxi.controller.adapters.MappingBoth;
 import br.octahedron.cotopaxi.controller.adapters.MappingGet;
 import br.octahedron.cotopaxi.controller.adapters.MappingGetAtts;
@@ -43,32 +49,28 @@ public class MapperTest {
 	private MetadataMapper mapper;
 	private RequestWrapper request;
 
+	@SuppressWarnings("unchecked")
 	@Before
 	public void setup() throws SecurityException, ClassNotFoundException, NoSuchMethodException {
 		this.request = createMock(RequestWrapper.class);
-		String[] facades = { "br.octahedron.cotopaxi.controller.FakeModelFacade" };
-		this.mapper = new MetadataMapper(facades);
-
+		CotopaxiConfigView configMock = createMock(CotopaxiConfigView.class);
+		Collection facade = Arrays.asList(FakeModelFacade.class); 
+		expect(configMock.getModelFacades()).andReturn(facade);
+		replay(configMock);
+		this.mapper = new MetadataMapper(configMock);
 	}
-
-	@Test(expected = ClassNotFoundException.class)
-	public void controllerMissingFacades() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SecurityException,
-			NoSuchMethodException {
-		/*
-		 * Facade Mimimi doesn't exists
-		 */
-		String[] facades = { "Mimimi" };
-		new MetadataMapper(facades);
-	}
-
+	@SuppressWarnings("unchecked")
 	@Test(expected = NoSuchMethodException.class)
 	public void controllerInvalidFacades() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SecurityException,
 			NoSuchMethodException {
 		/*
 		 * Facade didn't has an empty constructor
 		 */
-		String[] facades = { "br.octahedron.cotopaxi.controller.InvalidFacade" };
-		new MetadataMapper(facades);
+		CotopaxiConfigView configMock = createMock(CotopaxiConfigView.class);
+		Collection facade = Arrays.asList(InvalidFacade.class); 
+		expect(configMock.getModelFacades()).andReturn(facade);
+		replay(configMock);
+		new MetadataMapper(configMock);
 	}
 
 	@Test(expected = PageNotFoundExeption.class)

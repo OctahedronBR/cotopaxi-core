@@ -16,10 +16,13 @@
  */
 package br.octahedron.cotopaxi.view.formatter;
 
+import static br.octahedron.cotopaxi.CotopaxiConfigView.HTML_FORMAT;
+import static br.octahedron.cotopaxi.CotopaxiConfigView.JSON_FORMAT;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import br.octahedron.cotopaxi.config.CotopaxiConfigView;
+import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.util.reflect.ReflectionUtil;
 
 /**
@@ -35,8 +38,8 @@ public class FormatterBuilder {
 
 	public FormatterBuilder(CotopaxiConfigView config) {
 		this.config = config;
-		this.registerDefaultFormatter(Formatter.HTML_FORMAT, VelocityFormatter.class);
-		this.registerDefaultFormatter(Formatter.JSON_FORMAT, SimpleJSONFormatter.class);
+		this.registerDefaultFormatter(HTML_FORMAT, VelocityFormatter.class);
+		this.registerDefaultFormatter(JSON_FORMAT, SimpleJSONFormatter.class);
 	}
 
 	protected void registerDefaultFormatter(String format, Class<? extends Formatter> formatterClass) {

@@ -18,8 +18,8 @@ package br.octahedron.util.reflect;
 
 import javax.jdo.annotations.PrimaryKey;
 
-import br.octahedron.cotopaxi.config.CotopaxiConfig;
-import br.octahedron.cotopaxi.config.CotopaxiConfigurator;
+import br.octahedron.cotopaxi.CotopaxiConfig;
+import br.octahedron.cotopaxi.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.metadata.annotation.Action;
 import br.octahedron.cotopaxi.model.InputAdapter;
 

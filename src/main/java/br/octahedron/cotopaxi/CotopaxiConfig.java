@@ -14,7 +14,7 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.config;
+package br.octahedron.cotopaxi;
 
 import br.octahedron.cotopaxi.cloudservice.CloudServicesFactory;
 import br.octahedron.cotopaxi.controller.filter.Filter;
@@ -98,4 +98,17 @@ public interface CotopaxiConfig {
 	 *            the URL which requests will be redirected to.
 	 */
 	public abstract void setRedirect(String originalURL, String destURL);
+
+	/**
+	 * Adds a model facade to Cotopaxi. ModelFacade, such as the name says, represents a facade
+	 * between the controller and the model, and should provide the necessary metadata to maps
+	 * request to the model.
+	 * 
+	 * The modelFacade class should has an empty constructor.
+	 * 
+	 * @param modelFacadeClass the model facade class.
+	 *            the class
+	 */
+	public abstract void addModelFacade(Class<?> ... modelFacadeClass);
+
 }

@@ -29,10 +29,6 @@ import br.octahedron.cotopaxi.view.ContentType;
  */
 public abstract class Formatter {
 
-	public static final String HTML_FORMAT = "html";
-	public static final String JSON_FORMAT = "json";
-	public static final String RSS_FORMAT = "rss";
-	public static final String ATOM_FORMAT = "atom";
 	protected Map<String, Object> attributes;
 	protected ContentType contentType;
 	protected Locale locale;

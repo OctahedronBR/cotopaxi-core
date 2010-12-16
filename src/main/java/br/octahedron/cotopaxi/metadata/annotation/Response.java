@@ -16,13 +16,14 @@
  */
 package br.octahedron.cotopaxi.metadata.annotation;
 
+import static br.octahedron.cotopaxi.CotopaxiConfigView.HTML_FORMAT;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 
-import br.octahedron.cotopaxi.view.formatter.Formatter;
 
 /**
  * TODO COMMENTS!!!
@@ -35,7 +36,7 @@ import br.octahedron.cotopaxi.view.formatter.Formatter;
 public @interface Response {
 
 	public static final String DEFAULT_RETURN_NAME = "[default]";
-	public static final String DEFAULT_FORMAT = Formatter.HTML_FORMAT;
+	public static final String DEFAULT_FORMAT = HTML_FORMAT;
 
 	/**
 	 * The result's value name to be used at the template and, if required, store on session. If not

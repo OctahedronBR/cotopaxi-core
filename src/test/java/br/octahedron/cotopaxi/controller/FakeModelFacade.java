@@ -16,8 +16,8 @@
  */
 package br.octahedron.cotopaxi.controller;
 
-import br.octahedron.cotopaxi.config.CotopaxiConfig;
-import br.octahedron.cotopaxi.config.CotopaxiConfigurator;
+import br.octahedron.cotopaxi.CotopaxiConfig;
+import br.octahedron.cotopaxi.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.controller.adapters.MappingBoth;
 import br.octahedron.cotopaxi.controller.adapters.MappingGet;
 import br.octahedron.cotopaxi.controller.adapters.MappingGetAtts;
