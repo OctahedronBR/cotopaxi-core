@@ -158,7 +158,7 @@
       			<activeByDefault>true</activeByDefault>
     		</activation>
     		<build>
-				<defaultGoal>compile</defaultGoal>
+				<defaultGoal>test</defaultGoal>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
