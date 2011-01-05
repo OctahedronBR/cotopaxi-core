@@ -29,11 +29,11 @@ public class InvalidActionResponse extends AbstractActionResponse {
 
 	private Collection<String> invalidAttributes;
 
-	public InvalidActionResponse(String ... invalidAttributes) {
+	public InvalidActionResponse(String... invalidAttributes) {
 		super(Result.VALIDATION_FAILED);
 		this.invalidAttributes = Arrays.asList(invalidAttributes);
 	}
-	
+
 	public InvalidActionResponse(Collection<String> invalidAttributes) {
 		super(Result.VALIDATION_FAILED);
 		this.invalidAttributes = invalidAttributes;

@@ -31,7 +31,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import br.octahedron.cotopaxi.CotopaxiConfigView;
-import br.octahedron.cotopaxi.controller.AuthorizationException;
+import br.octahedron.cotopaxi.controller.auth.UserNotAuthorizedException;
+import br.octahedron.cotopaxi.controller.auth.UserNotLoggedException;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
 import br.octahedron.cotopaxi.metadata.annotation.Message.MessageMetadata;
@@ -78,9 +79,11 @@ public class ViewResponseBuilder {
 	 * It will check the exception and create an appropriate {@link ViewResponse}.
 	 */
 	public ViewResponse getViewResponse(Locale lc, Exception ex) {
-		if (ex instanceof AuthorizationException) {
-			// if it's a AuthorizationException, create a RedirectViewResponse
-			return this.getViewResponse(((AuthorizationException) ex).getRedirectURL());
+		if (ex instanceof UserNotLoggedException) {
+			// if it's a UserNotLoggedException, create a RedirectViewResponse
+			return this.getViewResponse(((UserNotLoggedException) ex).getRedirectURL());
+		} else if (ex instanceof UserNotAuthorizedException) {
+			return this.createForbiddenResponse(lc, ex);
 		} else if (ex instanceof PageNotFoundExeption) {
 			return this.createPageNotFoundResponse(lc, (PageNotFoundExeption) ex);
 		} else {
@@ -91,7 +94,8 @@ public class ViewResponseBuilder {
 	/**
 	 * Creates a {@link ViewResponse}
 	 */
-	public ViewResponse getViewResponse(Locale lc, String format, ActionResponse actionResponse, MetadataHandler metadata) throws FormatterNotFoundException {
+	public ViewResponse getViewResponse(Locale lc, String format, ActionResponse actionResponse, MetadataHandler metadata)
+			throws FormatterNotFoundException {
 		Map<String, Object> attributes;
 		Formatter fmt;
 		switch (actionResponse.getResult()) {
@@ -99,30 +103,30 @@ public class ViewResponseBuilder {
 		case SUCCESS:
 			// check if is a redirect
 			// if not
-			SuccessActionResponse sar = (SuccessActionResponse) actionResponse; 
-			attributes = this.getResponseAtts(sar,  metadata.getResponseMetadata(), metadata.getMessageMetadata());
+			SuccessActionResponse sar = (SuccessActionResponse) actionResponse;
+			attributes = this.getResponseAtts(sar, metadata.getResponseMetadata(), metadata.getMessageMetadata());
 			// get and prepare formatter
 			fmt = this.getFormatter(format, metadata.getResponseMetadata());
 			fmt.setLocale(lc);
 			fmt.setAttributes(attributes);
 			if (!fmt.isReady()) {
 				// hum... is it not ready yet? I guess that it's a template formatter! ;-)
-				((TemplateFormatter)fmt).setTemplate(metadata.getTemplateMetadata().getOnSuccess());
+				((TemplateFormatter) fmt).setTemplate(metadata.getTemplateMetadata().getOnSuccess());
 			}
 			// return formatter view
-			return new FormatterViewResponse(fmt, ResultCode.SUCCESS); 
+			return new FormatterViewResponse(fmt, ResultCode.SUCCESS);
 		case VALIDATION_FAILED:
 			// check if is a redirect
 			// if not
-			InvalidActionResponse iar = (InvalidActionResponse) actionResponse; 
-			attributes = this.getResponseAtts(iar,  metadata.getResponseMetadata(), metadata.getMessageMetadata());
+			InvalidActionResponse iar = (InvalidActionResponse) actionResponse;
+			attributes = this.getResponseAtts(iar, metadata.getResponseMetadata(), metadata.getMessageMetadata());
 			// get and prepare formatter
 			fmt = this.getFormatter(format, metadata.getResponseMetadata());
 			fmt.setLocale(lc);
 			fmt.setAttributes(attributes);
 			if (!fmt.isReady()) {
 				// hum... is it not ready yet? I guess that it's a template formatter! ;-)
-				((TemplateFormatter)fmt).setTemplate(metadata.getTemplateMetadata().getOnValidationFail());
+				((TemplateFormatter) fmt).setTemplate(metadata.getTemplateMetadata().getOnValidationFail());
 			}
 			// return formatter view
 			return new FormatterViewResponse(fmt, ResultCode.BAD_REQUEST);
@@ -130,14 +134,14 @@ public class ViewResponseBuilder {
 			// check if is a redirect
 			// if not
 			ExceptionActionResponse ear = (ExceptionActionResponse) actionResponse;
-			attributes = this.getResponseAtts(ear,  metadata.getResponseMetadata(), metadata.getMessageMetadata());
+			attributes = this.getResponseAtts(ear, metadata.getResponseMetadata(), metadata.getMessageMetadata());
 			// get and prepare formatter
 			fmt = this.getFormatter(format, metadata.getResponseMetadata());
 			fmt.setLocale(lc);
 			fmt.setAttributes(attributes);
 			if (!fmt.isReady()) {
 				// hum... is it not ready yet? I guess that it's a template formatter! ;-)
-				((TemplateFormatter)fmt).setTemplate(metadata.getTemplateMetadata().getOnError());
+				((TemplateFormatter) fmt).setTemplate(metadata.getTemplateMetadata().getOnError());
 			}
 			// return formatter view
 			return new FormatterViewResponse(fmt, ResultCode.INTERNAL_ERROR);
@@ -149,9 +153,11 @@ public class ViewResponseBuilder {
 
 	/**
 	 * Extracts the attributes from the {@link ActionResponse}
-	 * @param messageMetadata 
+	 * 
+	 * @param messageMetadata
 	 */
-	private Map<String, Object> getResponseAtts(SuccessActionResponse actionResponse, ResponseMetadata responseMetadata, MessageMetadata messageMetadata) {
+	private Map<String, Object> getResponseAtts(SuccessActionResponse actionResponse, ResponseMetadata responseMetadata,
+			MessageMetadata messageMetadata) {
 		// add return value to attributes map
 		String returnName = responseMetadata.getReturnName();
 		Object result = actionResponse.getReturnValue();
@@ -161,7 +167,7 @@ public class ViewResponseBuilder {
 		if (messageMetadata.getOnSuccess() != null) {
 			attributes.put(TemplatesAttributes.MESSAGE_ON_SUCCESS.getAttributeKey(), messageMetadata.getOnSuccess());
 		}
-		
+
 		// store on session if necessary
 		// TODO should it be done here?
 		if (responseMetadata.isStoreOnSession()) {
@@ -174,21 +180,23 @@ public class ViewResponseBuilder {
 	/**
 	 * Extracts the attributes from the {@link ActionResponse}
 	 */
-	private Map<String, Object> getResponseAtts(InvalidActionResponse actionResponse, ResponseMetadata responseMetadata, MessageMetadata messageMetadata) {
+	private Map<String, Object> getResponseAtts(InvalidActionResponse actionResponse, ResponseMetadata responseMetadata,
+			MessageMetadata messageMetadata) {
 		Map<String, Object> attributes = actionResponse.getAttributes();
 		attributes.put(INVALIDATION_FIELDS_ATTRIBUTE.getAttributeKey(), actionResponse.getInvalidAttributes());
 		// check Message
 		if (messageMetadata.getOnValidationFail() != null) {
 			attributes.put(TemplatesAttributes.MESSAGE_ON_VALIDATION_FAILS.getAttributeKey(), messageMetadata.getOnValidationFail());
 		}
-		
+
 		return attributes;
 	}
 
 	/**
 	 * Extracts the attributes from the {@link ActionResponse}
 	 */
-	private Map<String, Object> getResponseAtts(ExceptionActionResponse actionResponse, ResponseMetadata responseMetadata, MessageMetadata messageMetadata) {
+	private Map<String, Object> getResponseAtts(ExceptionActionResponse actionResponse, ResponseMetadata responseMetadata,
+			MessageMetadata messageMetadata) {
 		Map<String, Object> attributes = actionResponse.getAttributes();
 		Throwable ex = actionResponse.getCause();
 		Writer stackTrace = new StringBuilderWriter();
@@ -201,7 +209,7 @@ public class ViewResponseBuilder {
 		if (messageMetadata.getOnError() != null) {
 			attributes.put(TemplatesAttributes.MESSAGE_ON_ERROR.getAttributeKey(), messageMetadata.getOnError());
 		}
-		
+
 		return attributes;
 	}
 
@@ -209,10 +217,10 @@ public class ViewResponseBuilder {
 	 * Gets a formatter for the given format
 	 */
 	private Formatter getFormatter(String format, ResponseMetadata responseMetadata) throws FormatterNotFoundException {
-		 if (format == null) {
-			 format = responseMetadata.getFormats()[0];
-		 }
-		 return this.builder.getFormatter(format);
+		if (format == null) {
+			format = responseMetadata.getFormats()[0];
+		}
+		return this.builder.getFormatter(format);
 	}
 
 	/**
@@ -243,5 +251,19 @@ public class ViewResponseBuilder {
 		// get and prepare formatter
 		TemplateFormatter formatter = new VelocityFormatter(this.config.getErrorTemplate(), attributes, lc);
 		return new FormatterViewResponse(formatter, ResultCode.INTERNAL_ERROR);
+	}
+
+	private ViewResponse createForbiddenResponse(Locale lc, Exception ex) {
+		// generate attributes map to be rendered
+		StringBuilderWriter stackTrace = new StringBuilderWriter();
+		ex.printStackTrace(new PrintWriter(stackTrace));
+		Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put(EXCEPTION_ATTRIBUTE.getAttributeKey(), ex);
+		attributes.put(EXCEPTION_CLASS_ATTRIBUTE.getAttributeKey(), ex.getClass().getName());
+		attributes.put(EXCEPTION_MESSAGE_ATTRIBUTE.getAttributeKey(), ex.getMessage());
+		attributes.put(EXCEPTION_STACK_TRACE_ATTRIBUTE.getAttributeKey(), stackTrace.getBuffer().toString());
+		// get and prepare formatter
+		TemplateFormatter formatter = new VelocityFormatter(this.config.getForbiddenTemplate(), attributes, lc);
+		return new FormatterViewResponse(formatter, ResultCode.FORBIDDEN);
 	}
 }

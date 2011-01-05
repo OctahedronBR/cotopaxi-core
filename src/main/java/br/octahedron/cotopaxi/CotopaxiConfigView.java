@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import br.octahedron.cotopaxi.cloudservice.CloudServicesFactory;
+import br.octahedron.cotopaxi.controller.auth.UserLookupStrategy;
 import br.octahedron.cotopaxi.controller.filter.Filter;
 import br.octahedron.cotopaxi.view.formatter.Formatter;
 
@@ -73,6 +74,11 @@ public class CotopaxiConfigView {
 	public static final String I18N_FOLDER = "i18n";
 
 	/**
+	 * The default page for forbidden errors: "{templates_root_folder}/forbidden.vm"
+	 */
+	public static final String FORBIDDEN_HANDLER_TEMPLATE = "forbidden.vm";
+
+	/**
 	 * The default page for handler errors: "{templates_root_folder}/error.vm"
 	 */
 	public static final String ERROR_HANDLER_TEMPLATE = "error.vm";
@@ -88,12 +94,14 @@ public class CotopaxiConfigView {
 	public static final String TEMPLATES_ROOT_FOLDER = "templates";
 
 	protected String i18nFolder = I18N_FOLDER;
+	protected String forbiddenTemplate = FORBIDDEN_HANDLER_TEMPLATE;
 	protected String errorTemplate = ERROR_HANDLER_TEMPLATE;
 	protected String notFoundTemplate = NOT_FOUND_HANDLER_TEMPLATE;
 	protected String templatesRoot = TEMPLATES_ROOT_FOLDER;
 	protected Map<String, Class<? extends Formatter>> formatters = new HashMap<String, Class<? extends Formatter>>();
 	protected Collection<Class<? extends Filter>> globalFilters;
 	protected Map<String, String> redirects;
+	protected UserLookupStrategy userLookupStrategy;
 	protected CloudServicesFactory factory;
 
 	private CotopaxiConfig controllerConfig;
@@ -106,6 +114,17 @@ public class CotopaxiConfigView {
 
 	protected CotopaxiConfig getCotopaxiConfig() {
 		return this.controllerConfig;
+	}
+
+	/**
+	 * Gets the forbidden access (HTTP result code 403) handler.
+	 * 
+	 * @see CotopaxiConfigView#FORBIDDEN_HANDLER_TEMPLATE
+	 * 
+	 * @return the forbiddentPage
+	 */
+	public String getForbiddenTemplate() {
+		return this.forbiddenTemplate;
 	}
 
 	/**
@@ -233,6 +252,10 @@ public class CotopaxiConfigView {
 		return this.modelFacades;
 	}
 
+	public UserLookupStrategy getUserLoginStrategy() {
+		return this.userLookupStrategy;
+	}
+
 	private class CotopaxiConfigImpl implements CotopaxiConfig {
 
 		@Override
@@ -282,11 +305,21 @@ public class CotopaxiConfigView {
 		}
 
 		@Override
-		public void addModelFacade(Class<?> ... modelFacadeClass) {
+		public void addModelFacade(Class<?>... modelFacadeClass) {
 			if (CotopaxiConfigView.this.modelFacades == null) {
 				CotopaxiConfigView.this.modelFacades = new LinkedList<Class<?>>();
 			}
 			CotopaxiConfigView.this.modelFacades.addAll(Arrays.asList(modelFacadeClass));
+		}
+
+		@Override
+		public void setForbiddenTemplate(String forbiddenHandler) {
+			CotopaxiConfigView.this.forbiddenTemplate = forbiddenHandler;
+		}
+
+		@Override
+		public void setUserLookupStrategy(UserLookupStrategy strategy) {
+			CotopaxiConfigView.this.userLookupStrategy = strategy;
 		}
 	}
 }

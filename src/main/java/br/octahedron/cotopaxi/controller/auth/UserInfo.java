@@ -14,7 +14,7 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.auth;
+package br.octahedron.cotopaxi.controller.auth;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -35,6 +35,11 @@ public class UserInfo implements Serializable {
 	private static final long serialVersionUID = -2985274865291979315L;
 	private String username;
 	private Set<String> roles;
+
+	public UserInfo(String username) {
+		this.username = username;
+		this.roles = new HashSet<String>();
+	}
 
 	public UserInfo(String username, Set<String> roles) {
 		this.username = username;

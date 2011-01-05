@@ -21,17 +21,15 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import br.octahedron.cotopaxi.controller.AuthorizationException;
-import br.octahedron.cotopaxi.controller.ControllerManager;
 import br.octahedron.cotopaxi.controller.FacadeOne;
 import br.octahedron.cotopaxi.controller.FacadeThree;
 import br.octahedron.cotopaxi.controller.FacadeTwo;
 import br.octahedron.cotopaxi.controller.FiltersHelper;
+import br.octahedron.cotopaxi.controller.ModelController;
 import br.octahedron.cotopaxi.controller.MyExceptionFilterAfter;
 import br.octahedron.cotopaxi.controller.MyExceptionFilterBefore;
 import br.octahedron.cotopaxi.controller.MyFilter;
@@ -40,7 +38,6 @@ import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
 import br.octahedron.cotopaxi.metadata.annotation.Action.HTTPMethod;
 import br.octahedron.cotopaxi.model.attribute.converter.DateConverter;
-import br.octahedron.cotopaxi.model.auth.UserInfo;
 import br.octahedron.cotopaxi.model.response.ActionResponse;
 import br.octahedron.cotopaxi.model.response.ExceptionActionResponse;
 import br.octahedron.cotopaxi.model.response.InvalidActionResponse;
@@ -52,7 +49,7 @@ import br.octahedron.cotopaxi.model.response.ActionResponse.Result;
  */
 public class ControllerTest {
 
-	private ControllerManager controller;
+	private ModelController controller;
 	private MetadataMapper mapper;
 
 	@Before
@@ -62,13 +59,12 @@ public class ControllerTest {
 		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
 		config.addModelFacade(FacadeOne.class, FacadeTwo.class, FacadeThree.class);
 		this.mapper = new MetadataMapper(CotopaxiConfigView.getInstance());
-		this.controller = new ControllerManager(CotopaxiConfigView.getInstance());
+		this.controller = new ModelController(CotopaxiConfigView.getInstance());
 		DateConverter.setDateFormat("dd/MM/yyyy");
 	}
 
 	@Test
-	public void controllerTest1() throws AuthorizationException, FilterException, PageNotFoundExeption, IllegalArgumentException,
-			IllegalAccessException {
+	public void controllerTest1() throws FilterException, PageNotFoundExeption, IllegalArgumentException, IllegalAccessException {
 		/*
 		 * This test checks a model method that throws an exception
 		 */
@@ -80,7 +76,7 @@ public class ControllerTest {
 		replay(request);
 
 		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
+		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 
 		// check test results
 		verify(request);
@@ -89,8 +85,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest2() throws AuthorizationException, FilterException, PageNotFoundExeption, IllegalArgumentException,
-			IllegalAccessException {
+	public void controllerTest2() throws FilterException, PageNotFoundExeption, IllegalArgumentException, IllegalAccessException {
 		/*
 		 * This test checks a success model execution
 		 */
@@ -102,7 +97,7 @@ public class ControllerTest {
 		replay(request);
 
 		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
+		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 
 		// check test results
 		verify(request);
@@ -112,8 +107,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest3() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
+	public void controllerTest3() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks a success model execution with parameter
 		 */
@@ -127,7 +121,7 @@ public class ControllerTest {
 		replay(request);
 
 		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
+		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 
 		// check test results
 		verify(request);
@@ -136,8 +130,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest4() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
+	public void controllerTest4() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks a model execution with invalid parameter
 		 */
@@ -151,7 +144,7 @@ public class ControllerTest {
 		replay(request);
 
 		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
+		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 
 		// check test results
 		verify(request);
@@ -161,8 +154,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest5() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
+	public void controllerTest5() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks a conversion error / conversion error is handled as an invalid attribute
 		 */
@@ -175,7 +167,7 @@ public class ControllerTest {
 		replay(request);
 
 		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
+		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 
 		// check test results
 		verify(request);
@@ -184,8 +176,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest6() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
+	public void controllerTest6() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks invalid attribute - outside range
 		 */
@@ -199,7 +190,7 @@ public class ControllerTest {
 		replay(request);
 
 		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
+		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 
 		// check test results
 		verify(request);
@@ -208,8 +199,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest7() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
+	public void controllerTest7() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks string array atts
 		 */
@@ -222,7 +212,7 @@ public class ControllerTest {
 		replay(request);
 
 		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
+		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 
 		// check test results
 		verify(request);
@@ -231,8 +221,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest8() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
+	public void controllerTest8() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks many atts and local Filter
 		 */
@@ -247,7 +236,7 @@ public class ControllerTest {
 		replay(request);
 
 		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
+		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 
 		// check test results
 		verify(request);
@@ -257,8 +246,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest9() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
+	public void controllerTest9() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test using Global Filter
 		 */
@@ -273,7 +261,7 @@ public class ControllerTest {
 		config.addGlobalFilter(MyFilter.class);
 
 		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
+		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 
 		// check test results
 		verify(request);
@@ -284,8 +272,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest10() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
+	public void controllerTest10() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks many atts with Filters (Global and Local)
 		 */
@@ -302,7 +289,7 @@ public class ControllerTest {
 		config.addGlobalFilter(MyFilter.class);
 
 		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
+		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 
 		// check test results
 		verify(request);
@@ -312,8 +299,7 @@ public class ControllerTest {
 	}
 
 	@Test(expected = FilterException.class)
-	public void controllerTest11() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
+	public void controllerTest11() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks many atts with Filters (Global and Local)
 		 */
@@ -327,7 +313,7 @@ public class ControllerTest {
 		config.addGlobalFilter(MyExceptionFilterBefore.class);
 		try {
 			// invoking the controller
-			this.controller.process(request, this.mapper.getMapping(request));
+			this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 		} finally {
 			// check test results
 			verify(request);
@@ -337,8 +323,7 @@ public class ControllerTest {
 	}
 
 	@Test(expected = FilterException.class)
-	public void controllerTest12() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
+	public void controllerTest12() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks many atts with Filters (Global and Local)
 		 */
@@ -355,7 +340,7 @@ public class ControllerTest {
 		config.addGlobalFilter(MyExceptionFilterAfter.class);
 		try {
 			// invoking the controller
-			this.controller.process(request, this.mapper.getMapping(request));
+			this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 		} finally {
 			// check test results
 			verify(request);
@@ -365,8 +350,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void controllerTest13() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
+	public void controllerTest13() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks non given parameter
 		 */
@@ -379,130 +363,11 @@ public class ControllerTest {
 		replay(request);
 
 		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
+		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
 
 		// check test results
 		verify(request);
 		assertEquals(Result.VALIDATION_FAILED, resp.getResult());
 		assertEquals("int", ((InvalidActionResponse) resp).getInvalidAttributes().iterator().next());
-	}
-
-	@Test
-	public void controllerTest14() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
-		/*
-		 * This test checks no logged user
-		 */
-		// Prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/restricted1").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
-		expect(request.getSessionParameter(UserInfo.USER_INFO_ATTRIBUTE)).andReturn(null).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		replay(request);
-
-		try {
-			// invoking the controller
-			this.controller.process(request, this.mapper.getMapping(request));
-			fail();
-		} catch (AuthorizationException e) {
-			assertEquals("/login", e.getRedirectURL());
-		} finally {
-			// check test results
-			verify(request);
-		}
-	}
-
-	@Test
-	public void controllerTest15() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
-		/*
-		 * This test checks no logged user, diferent loging url
-		 */
-		// Prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/restricted2").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
-		expect(request.getSessionParameter(UserInfo.USER_INFO_ATTRIBUTE)).andReturn(null).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		replay(request);
-
-		try {
-			// invoking the controller
-			this.controller.process(request, this.mapper.getMapping(request));
-			fail();
-		} catch (AuthorizationException e) {
-			assertEquals("/login2", e.getRedirectURL());
-		} finally {
-			// check test results
-			verify(request);
-		}
-	}
-
-	@Test
-	public void controllerTest16() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
-		/*
-		 * This test an logged user
-		 */
-		// Prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/restricted1").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		expect(request.getSessionParameter(UserInfo.USER_INFO_ATTRIBUTE)).andReturn(new UserInfo("danilo", "developer")).atLeastOnce();
-		replay(request);
-
-		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
-
-		// check test results
-		verify(request);
-		assertEquals(Result.SUCCESS, resp.getResult());
-	}
-
-	@Test
-	public void controllerTest17() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
-		/*
-		 * This test an logged user but with wrong role
-		 */
-		// Prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/restricted3").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
-		expect(request.getSessionParameter(UserInfo.USER_INFO_ATTRIBUTE)).andReturn(new UserInfo("danilo", "developer")).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		replay(request);
-
-		try {
-			// invoking the controller
-			this.controller.process(request, this.mapper.getMapping(request));
-			fail();
-		} catch (AuthorizationException e) {
-			assertEquals("/forbidden", e.getRedirectURL());
-		} finally {
-			// check test results
-			verify(request);
-		}
-	}
-
-	@Test
-	public void controllerTest18() throws IllegalArgumentException, AuthorizationException, FilterException, IllegalAccessException,
-			PageNotFoundExeption {
-		/*
-		 * This test an logged user but with wrong role
-		 */
-		// Prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/restricted3").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
-		expect(request.getSessionParameter(UserInfo.USER_INFO_ATTRIBUTE)).andReturn(new UserInfo("danilo", "admin")).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		replay(request);
-
-		// invoking the controller
-		ActionResponse resp = this.controller.process(request, this.mapper.getMapping(request));
-
-		// check test results
-		verify(request);
-		assertEquals(Result.SUCCESS, resp.getResult());
 	}
 }

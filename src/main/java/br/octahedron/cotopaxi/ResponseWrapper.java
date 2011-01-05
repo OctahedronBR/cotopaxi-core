@@ -82,10 +82,12 @@ public class ResponseWrapper {
 	public void setCharacterEncoding(String encoding) {
 		this.response.setCharacterEncoding(encoding);
 	}
-	
+
 	/**
 	 * Redirects the response to the given URL
-	 * @param url The URL to be redirected
+	 * 
+	 * @param url
+	 *            The URL to be redirected
 	 */
 	public void redirect(String url) throws IOException {
 		this.response.sendRedirect(url);

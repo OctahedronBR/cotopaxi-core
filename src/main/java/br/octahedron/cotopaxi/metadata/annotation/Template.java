@@ -89,18 +89,18 @@ public @interface Template {
 
 			// try load from annotation and override defaults
 			Template template = method.getAnnotation(Template.class);
-			if ( template != null) {
+			if (template != null) {
 				// on success
 				if (!template.onSuccess().equals(DEFAULT_TEMPLATE_NAME)) {
-					onSuccess = template.onSuccess();
+					this.onSuccess = template.onSuccess();
 				}
 				// on error
 				if (!template.onError().equals(DEFAULT_TEMPLATE_NAME)) {
-					onError = template.onError();
+					this.onError = template.onError();
 				}
 				// on validationFails
 				if (!template.onValidationFails().equals(DEFAULT_TEMPLATE_NAME)) {
-					onError = template.onValidationFails();
+					this.onError = template.onValidationFails();
 				}
 			}
 		}

@@ -45,11 +45,11 @@ public class VelocityFormatter extends TemplateFormatter {
 		this.setAttributes(attributes);
 		this.setLocale(lc);
 	}
-	
+
 	public String getTemplate() {
 		return this.template;
 	}
-	
+
 	public Map<String, Object> getAttributes() {
 		return this.attributes;
 	}

@@ -19,14 +19,14 @@ package br.octahedron.cotopaxi;
 /**
  * 
  * TODO comment
+ * 
  * @author Name - email@octahedron.com.br
- *
+ * 
  */
 public interface InputHandler {
 
 	public String getRequestParameter(String name);
 
 	public Object getSessionParameter(String name);
-	
-	
+
 }

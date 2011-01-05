@@ -54,11 +54,12 @@ public class MapperTest {
 	public void setup() throws SecurityException, ClassNotFoundException, NoSuchMethodException {
 		this.request = createMock(RequestWrapper.class);
 		CotopaxiConfigView configMock = createMock(CotopaxiConfigView.class);
-		Collection facade = Arrays.asList(FakeModelFacade.class); 
+		Collection facade = Arrays.asList(FakeModelFacade.class);
 		expect(configMock.getModelFacades()).andReturn(facade);
 		replay(configMock);
 		this.mapper = new MetadataMapper(configMock);
 	}
+
 	@SuppressWarnings("unchecked")
 	@Test(expected = NoSuchMethodException.class)
 	public void controllerInvalidFacades() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SecurityException,
@@ -67,7 +68,7 @@ public class MapperTest {
 		 * Facade didn't has an empty constructor
 		 */
 		CotopaxiConfigView configMock = createMock(CotopaxiConfigView.class);
-		Collection facade = Arrays.asList(InvalidFacade.class); 
+		Collection facade = Arrays.asList(InvalidFacade.class);
 		expect(configMock.getModelFacades()).andReturn(facade);
 		replay(configMock);
 		new MetadataMapper(configMock);
@@ -166,7 +167,7 @@ public class MapperTest {
 	public void testExtractAtts1() throws PageNotFoundExeption {
 		expect(this.request.getURL()).andReturn("/user/anyone/32/view");
 		expect(this.request.getHTTPMethod()).andStubReturn(HTTPMethod.GET);
-		expect(request.getFormat()).andReturn(null);
+		expect(this.request.getFormat()).andReturn(null);
 		expect(this.request.getURL()).andReturn("/user/anyone/32/view");
 		this.request.setRequestParameter("name", "anyone");
 		this.request.setRequestParameter("id", "32");
@@ -180,7 +181,7 @@ public class MapperTest {
 	public void testExtractAtts2() throws PageNotFoundExeption {
 		expect(this.request.getURL()).andReturn("/user/32");
 		expect(this.request.getHTTPMethod()).andStubReturn(HTTPMethod.GET);
-		expect(request.getFormat()).andReturn(null);
+		expect(this.request.getFormat()).andReturn(null);
 		expect(this.request.getURL()).andReturn("/user/32");
 		this.request.setRequestParameter("id", "32");
 		replay(this.request);

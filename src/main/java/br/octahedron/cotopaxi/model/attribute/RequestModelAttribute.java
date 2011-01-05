@@ -31,9 +31,9 @@ import br.octahedron.util.reflect.InstanceHandler;
  * @param <T>
  */
 public class RequestModelAttribute<T> implements ModelAttribute<T> {
-	
+
 	private static InstanceHandler<TypeConverter<?>> converters = new InstanceHandler<TypeConverter<?>>();
-	
+
 	private String name;
 	private Class<? extends TypeConverter<T>> typeConverter;
 	private Validator<T> validator;
@@ -43,27 +43,31 @@ public class RequestModelAttribute<T> implements ModelAttribute<T> {
 		this.typeConverter = typeConverter;
 	}
 
-
 	public RequestModelAttribute(String name, Class<? extends TypeConverter<T>> typeConverter, Validator<T> validator) {
 		this(name, typeConverter);
 		this.validator = validator;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see br.octahedron.cotopaxi.model.attribute.ModelAttribute#getName()
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.model.attribute.ModelAttribute#getAttributeValue(br.octahedron.cotopaxi.model.attribute.InputHandler)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.octahedron.cotopaxi.model.attribute.ModelAttribute#getAttributeValue(br.octahedron.cotopaxi
+	 * .model.attribute.InputHandler)
 	 */
 	@SuppressWarnings("unchecked")
 	public T getAttributeValue(InputHandler input) throws InvalidAttributeException, ConversionException {
 		String strAttValue = input.getRequestParameter(this.name);
-		
+
 		// try to convert
 		TypeConverter<T> converter = (TypeConverter<T>) converters.getInstance(this.typeConverter);
 		T converted = converter.convert(strAttValue);

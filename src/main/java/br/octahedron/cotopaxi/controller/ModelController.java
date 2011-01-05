@@ -52,14 +52,14 @@ import br.octahedron.util.reflect.InstanceHandler;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-class ModelController {
+public class ModelController {
 
 	private final Logger logger = Logger.getLogger(ModelController.class.getName());
 	private CotopaxiConfigView config;
 	private InstanceHandler<Filter> filters = new InstanceHandler<Filter>();
 	private InstanceHandler<Object> facades = new InstanceHandler<Object>();
 
-	protected ModelController(CotopaxiConfigView config) {
+	public ModelController(CotopaxiConfigView config) {
 		this.config = config;
 	}
 
@@ -83,7 +83,7 @@ class ModelController {
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 */
-	protected ActionResponse executeRequest(RequestWrapper request, ActionMetadata actionMetadata) throws FilterException, IllegalArgumentException,
+	public ActionResponse executeRequest(RequestWrapper request, ActionMetadata actionMetadata) throws FilterException, IllegalArgumentException,
 			IllegalAccessException {
 		// Process Filters
 		if (this.config.hasGlobalFilters()) {

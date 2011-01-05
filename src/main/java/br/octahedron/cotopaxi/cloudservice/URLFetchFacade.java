@@ -25,7 +25,6 @@ import org.xml.sax.SAXException;
 
 import br.octahedron.cotopaxi.cloudservice.common.HTTPMethod;
 
-
 /**
  * Facade for URL fetch service.
  * 

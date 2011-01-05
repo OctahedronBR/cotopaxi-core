@@ -45,7 +45,7 @@ public final class VelocityEngineWrapper {
 		if (!init) {
 			CotopaxiConfigView config = CotopaxiConfigView.getInstance();
 			String templateRoot = config.getTemplateRoot();
-			logger.fine("Loading velocity engine. Templates root folder: " + templateRoot);			
+			logger.fine("Loading velocity engine. Templates root folder: " + templateRoot);
 			engine.setProperty("resource.loader", "file");
 			engine.setProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
 			engine.setProperty("file.resource.loader.path", templateRoot);

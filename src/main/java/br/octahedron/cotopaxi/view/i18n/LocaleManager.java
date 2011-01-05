@@ -23,13 +23,13 @@ import br.octahedron.util.ThreadProperties;
 
 /**
  * @author nome - email@octahedron.com.br
- *
+ * 
  */
 public class LocaleManager {
-	
+
 	private static final String LOCALE_KEY = "user_locale";
 	private static final LocaleManager instance = new LocaleManager();
-	
+
 	public static LocaleManager getInstance() {
 		return instance;
 	}
@@ -38,17 +38,17 @@ public class LocaleManager {
 	}
 
 	public Locale getLocale(RequestWrapper request) {
-		if ( request.isLocaleFromURL() ) {
+		if (request.isLocaleFromURL()) {
 			// if locale came from URL, set it to session for next requests
 			Locale lc = request.getLocale();
 			ThreadProperties.setProperty(LOCALE_KEY, lc);
 			return lc;
 		} else {
-			if ( ThreadProperties.containsProperty(LOCALE_KEY) ) {
+			if (ThreadProperties.containsProperty(LOCALE_KEY)) {
 				// check if there's a previous configured locale
 				return (Locale) ThreadProperties.getProperty(LOCALE_KEY);
 			} else {
-				// once there's no locale on session, return requested 
+				// once there's no locale on session, return requested
 				return request.getLocale();
 			}
 		}

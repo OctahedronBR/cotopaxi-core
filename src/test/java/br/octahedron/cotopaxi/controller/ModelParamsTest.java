@@ -32,6 +32,7 @@ import org.junit.Test;
 import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.cotopaxi.RequestWrapper;
 import br.octahedron.cotopaxi.controller.ModelController.ValidationException;
+import br.octahedron.cotopaxi.controller.auth.UserInfo;
 import br.octahedron.cotopaxi.model.InputAdapter;
 import br.octahedron.cotopaxi.model.attribute.ObjectModelAttribute;
 import br.octahedron.cotopaxi.model.attribute.RequestModelAttribute;
@@ -40,7 +41,6 @@ import br.octahedron.cotopaxi.model.attribute.converter.LongConverter;
 import br.octahedron.cotopaxi.model.attribute.converter.SafeStringConverter;
 import br.octahedron.cotopaxi.model.attribute.converter.StringCommaSeparatedArrayConverter;
 import br.octahedron.cotopaxi.model.attribute.validator.RangeValidator;
-import br.octahedron.cotopaxi.model.auth.UserInfo;
 import br.octahedron.util.DateUtil;
 
 /**
@@ -63,7 +63,7 @@ public class ModelParamsTest {
 		expect(request.getRequestParameter("id")).andReturn("1");
 		replay(request);
 		// execute
-		Object[] params = controller.getModelParams(new AdapterOne(), request);
+		Object[] params = this.controller.getModelParams(new AdapterOne(), request);
 		// verify
 		assertEquals(2, params.length);
 		assertEquals(1l, params[1]);
@@ -79,7 +79,7 @@ public class ModelParamsTest {
 		replay(request);
 		// execute
 		try {
-			controller.getModelParams(new AdapterOne(), request);
+			this.controller.getModelParams(new AdapterOne(), request);
 		} finally {
 			// verify
 			verify(request);
@@ -95,7 +95,7 @@ public class ModelParamsTest {
 		replay(request);
 		// execute
 		try {
-			controller.getModelParams(new AdapterOne(), request);
+			this.controller.getModelParams(new AdapterOne(), request);
 			fail();
 		} catch (ValidationException ex) {
 			assertEquals(2, ex.getInvalidAttributes().size());
@@ -115,7 +115,7 @@ public class ModelParamsTest {
 		expect(request.getRequestParameter("id")).andReturn("9");
 		replay(request);
 		// execute
-		Object[] params = controller.getModelParams(new AdapterTwo(), request);
+		Object[] params = this.controller.getModelParams(new AdapterTwo(), request);
 		// verify
 		assertEquals(2, params.length);
 		Something some = (Something) params[0];

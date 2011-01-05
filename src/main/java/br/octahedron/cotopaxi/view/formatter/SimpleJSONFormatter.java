@@ -19,9 +19,9 @@ package br.octahedron.cotopaxi.view.formatter;
 import java.util.Locale;
 import java.util.Map;
 
+import br.octahedron.cotopaxi.view.ContentType;
 import flexjson.JSON;
 import flexjson.JSONSerializer;
-import br.octahedron.cotopaxi.view.ContentType;
 
 /**
  * A simple json formatter using FlexJSON. It serializes the attribute maps and can use the

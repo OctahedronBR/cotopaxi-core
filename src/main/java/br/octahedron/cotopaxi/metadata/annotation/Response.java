@@ -24,7 +24,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 
-
 /**
  * TODO COMMENTS!!!
  * 
@@ -40,7 +39,8 @@ public @interface Response {
 
 	/**
 	 * The result's value name to be used at the template and, if required, store on session. If not
-	 * given the value will be add to the attributes map and session the simple class name, in lower case.
+	 * given the value will be add to the attributes map and session the simple class name, in lower
+	 * case.
 	 * 
 	 * @see Class#getSimpleName()
 	 */

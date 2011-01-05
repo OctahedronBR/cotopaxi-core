@@ -21,15 +21,17 @@ import java.io.IOException;
 import br.octahedron.cotopaxi.ResponseWrapper;
 
 /**
- * A response to be dispatched to user.  
+ * A response to be dispatched to user.
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public interface ViewResponse {
-	
+
 	/**
 	 * Dispatches this response to client.
-	 * @param response the servler response wrapper
+	 * 
+	 * @param response
+	 *            the servler response wrapper
 	 */
 	public void dispatch(ResponseWrapper response) throws IOException;
 

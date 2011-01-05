@@ -34,9 +34,9 @@ import br.octahedron.cotopaxi.model.response.ActionResponse;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Message {
-	
+
 	public static final String DEFAULT_MESSAGE = "[default]";
-	
+
 	/**
 	 * @return The template to be used on model successful execution
 	 */
@@ -59,22 +59,22 @@ public @interface Message {
 		private String onSuccess;
 		private String onError;
 		private String onValidationFail;
-		
+
 		public MessageMetadata(Method method) {
 			// try load from annotation and override defaults
 			Message message = method.getAnnotation(Message.class);
-			if ( message != null) {
+			if (message != null) {
 				// on success
 				if (!message.onSuccess().equals(DEFAULT_MESSAGE)) {
-					onSuccess = message.onSuccess();
+					this.onSuccess = message.onSuccess();
 				}
 				// on error
 				if (!message.onError().equals(DEFAULT_MESSAGE)) {
-					onError = message.onError();
+					this.onError = message.onError();
 				}
 				// on validationFails
 				if (!message.onValidationFails().equals(DEFAULT_MESSAGE)) {
-					onValidationFail = message.onValidationFails();
+					this.onValidationFail = message.onValidationFails();
 				}
 			}
 		}
@@ -94,11 +94,12 @@ public @interface Message {
 		}
 
 		/**
-		 * @return the message to be shown on validation fail or <code>null</code> if no message set.
+		 * @return the message to be shown on validation fail or <code>null</code> if no message
+		 *         set.
 		 */
 		public String getOnValidationFail() {
 			return this.onValidationFail;
 		}
 	}
-	
+
 }

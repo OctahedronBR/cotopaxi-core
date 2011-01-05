@@ -14,41 +14,19 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.controller;
-
-import java.util.Date;
+package br.octahedron.cotopaxi.controller.auth;
 
 /**
- * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
+ * Indicates that an logged user has no permissions to access some resource.
  * 
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class Something {
-	private Date date;
-	private String[] labels;
-	private String title;
+public class UserNotAuthorizedException extends Exception {
 
-	public Date getDate() {
-		return this.date;
-	}
+	private static final long serialVersionUID = 6253329200516656338L;
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public String[] getLabels() {
-		return this.labels;
-	}
-
-	public void setLabels(String[] labels) {
-		this.labels = labels;
-	}
-
-	public String getTitle() {
-		return this.title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
+	public UserNotAuthorizedException(String message) {
+		super(message);
 	}
 
 }

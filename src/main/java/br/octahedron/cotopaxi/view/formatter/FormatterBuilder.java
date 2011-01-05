@@ -32,7 +32,7 @@ import br.octahedron.util.reflect.ReflectionUtil;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class FormatterBuilder {
-	
+
 	private Map<String, Class<? extends Formatter>> defaultFormatters = new HashMap<String, Class<? extends Formatter>>();
 	private CotopaxiConfigView config;
 
@@ -49,7 +49,8 @@ public class FormatterBuilder {
 	/**
 	 * Gets the {@link Formatter} for the given format. If there's no {@link Formatter} registered
 	 * for the given format, it returns null.
-	 * @throws FormatterNotFoundException 
+	 * 
+	 * @throws FormatterNotFoundException
 	 */
 	public Formatter getFormatter(String format) throws FormatterNotFoundException {
 		try {
@@ -63,11 +64,11 @@ public class FormatterBuilder {
 				throw new FormatterNotFoundException("No Formatter fegistered for format " + format);
 			}
 		} catch (InstantiationException e) {
-			throw new FormatterNotFoundException("Can't instanciate Formatter for format" + format,e);
+			throw new FormatterNotFoundException("Can't instanciate Formatter for format" + format, e);
 		} catch (IllegalAccessException e) {
-			throw new FormatterNotFoundException("Can't instanciate Formatter for format" + format,e);
+			throw new FormatterNotFoundException("Can't instanciate Formatter for format" + format, e);
 		} catch (ClassNotFoundException e) {
-			throw new FormatterNotFoundException("Can't instanciate Formatter for format" + format,e);
+			throw new FormatterNotFoundException("Can't instanciate Formatter for format" + format, e);
 		}
 
 	}

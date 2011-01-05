@@ -27,7 +27,7 @@ public class ConfigurationTest {
 	public void configureOK() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		new CotopaxiServlet().configure("br.octahedron.cotopaxi.Configurator");
 	}
-	
+
 	@Test(expected = ClassNotFoundException.class)
 	public void configureNull() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		new CotopaxiServlet().configure(null);

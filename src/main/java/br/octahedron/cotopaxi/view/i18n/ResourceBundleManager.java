@@ -64,7 +64,8 @@ public class ResourceBundleManager {
 	 * @param locale
 	 *            The locale for which a resource bundle is desired.
 	 * @return A resource bundle for the given base name and locale.
-	 * @throws IOException If file not found, or if other IO error occurs. 
+	 * @throws IOException
+	 *             If file not found, or if other IO error occurs.
 	 */
 	public ResourceBundle getResourceBundle(String baseName, Locale locale) throws IOException {
 		return this.getResourceBundle(this.i18nPath + baseName + this.I18N_SEPARATOR + locale.getCountry() + this.I18N_EXTENSION);
@@ -96,8 +97,8 @@ public class ResourceBundleManager {
 	 *            The relative file path of property locale file, also used as the key of resource
 	 *            bundle in memcache.
 	 * @return A <code>Map<String, String></code> containing the keys and values for a specific
-	 *         locale or <code>null</code> if the file 
-	 * @throws IOException 
+	 *         locale or <code>null</code> if the file
+	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
 	private Map<String, String> getMapFromCache(String filepath) throws FileNotFoundException, IOException {
@@ -125,18 +126,18 @@ public class ResourceBundleManager {
 	 * {@link #getMapFromCache(String)} when a map is not in memcache.
 	 * 
 	 * @return A <code>Map<String, String></code> from a {@link Properties}.
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
+	 * @throws IOException
+	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
 	private Map<String, String> getMapFromProperties(String filepath) throws FileNotFoundException, IOException {
-			Properties props = new Properties();
-			props.load(FileUtil.getInputStream(filepath));
-			Map<String, String> map = new HashMap(props);
-			return map;
-		
+		Properties props = new Properties();
+		props.load(FileUtil.getInputStream(filepath));
+		Map<String, String> map = new HashMap(props);
+		return map;
+
 	}
 
 }

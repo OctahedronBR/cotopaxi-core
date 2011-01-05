@@ -125,6 +125,7 @@ public class ReflectionUtil {
 
 	/**
 	 * Get an annotated field's value.
+	 * 
 	 * @see ReflectionUtil#getFieldValue(Field, Object)
 	 */
 	public static <T extends Annotation> Object getAnnotatedFieldValue(Object instance, Class<T> annClass) {

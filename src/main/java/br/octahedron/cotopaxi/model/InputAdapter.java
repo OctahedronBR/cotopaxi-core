@@ -50,6 +50,7 @@ public class InputAdapter {
 
 	/**
 	 * TODO DOCUMENT
+	 * 
 	 * @param attribute
 	 */
 	public void addAttribute(ModelAttribute<?> attribute) {
@@ -61,6 +62,7 @@ public class InputAdapter {
 
 	/**
 	 * TODO DOCUMENT
+	 * 
 	 * @param <T>
 	 * @param name
 	 * @param typeConverter
@@ -71,6 +73,7 @@ public class InputAdapter {
 
 	/**
 	 * TODO DOCUMENT
+	 * 
 	 * @param <T>
 	 * @param name
 	 * @param typeConverter
@@ -79,11 +82,12 @@ public class InputAdapter {
 	public <T> void addAttribute(String name, Class<? extends TypeConverter<T>> typeConverter, Validator<T> validator) {
 		this.addAttribute(new RequestModelAttribute<T>(name, typeConverter, validator));
 	}
-	
+
 	// TODO create and test add user_info attribute
 
 	/**
 	 * TODO DOCUMENT
+	 * 
 	 * @param <T>
 	 * @param name
 	 * @param klass

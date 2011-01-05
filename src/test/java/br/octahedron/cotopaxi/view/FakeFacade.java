@@ -24,11 +24,10 @@ import br.octahedron.cotopaxi.metadata.annotation.Message;
  */
 public class FakeFacade {
 
-	@Action(url="/test1")
-	@Message(onSuccess="OK", onError="FAILED", onValidationFails="INVALID")
+	@Action(url = "/test1")
+	@Message(onSuccess = "OK", onError = "FAILED", onValidationFails = "INVALID")
 	public void lalala() {
-		
+
 	}
-	
-	
+
 }

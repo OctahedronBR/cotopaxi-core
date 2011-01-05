@@ -44,7 +44,7 @@ public abstract class Formatter {
 	 * @return <code>true</code> if it's ready, <code>false</code> otherwise.
 	 */
 	public boolean isReady() {
-		return locale != null && attributes != null;
+		return this.locale != null && this.attributes != null;
 	}
 
 	/**
@@ -96,7 +96,7 @@ public abstract class Formatter {
 	 */
 	public final String format() throws IllegalStateException {
 		if (this.isReady()) {
-			return doFormat();
+			return this.doFormat();
 		} else {
 			throw new IllegalStateException("This formatter is not ready.");
 		}

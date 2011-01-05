@@ -55,7 +55,7 @@ public class MetadataHandler {
 		this.responseMetadata = new ResponseMetadata(met);
 		this.messageMetadata = new MessageMetadata(met);
 	}
-	
+
 	public ActionMetadata getActionMetadata() {
 		return this.actionMetadata;
 	}

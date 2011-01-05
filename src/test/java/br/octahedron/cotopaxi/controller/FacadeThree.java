@@ -32,7 +32,7 @@ public class FacadeThree {
 		// do nothing
 	}
 
-	@LoginRequired(loginURL = "/login2")
+	@LoginRequired
 	@Action(url = "/restricted2", method = HTTPMethod.GET)
 	public void doNothing2() {
 		// do nothing

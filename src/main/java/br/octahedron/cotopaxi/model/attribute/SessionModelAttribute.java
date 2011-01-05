@@ -22,10 +22,10 @@ import br.octahedron.cotopaxi.model.attribute.converter.ConversionException;
 /**
  * @author Name - email@octahedron.com.br
  * @param <T>
- *
+ * 
  */
 public class SessionModelAttribute<T> implements ModelAttribute<T> {
-	
+
 	private String name;
 
 	public SessionModelAttribute(String name) {

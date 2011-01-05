@@ -14,27 +14,27 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.auth;
-
-import static br.octahedron.cotopaxi.model.auth.UserInfo.USER_INFO_ATTRIBUTE;
-import br.octahedron.util.ThreadProperties;
+package br.octahedron.cotopaxi.controller.auth;
 
 /**
- * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
+ * It provides an strategy to recover the current logged user.
  * 
+ * It's used by the authentication/authorization mechanism to loads the current user and check it
+ * credentials.
+ * 
+ * 
+ * 
+ * @author Danilo Penna Queiroz- daniloqueiroz@octahedron.com.br
  */
-public abstract class AbstractUserService {
+public interface UserLookupStrategy {
 
-	public final UserInfo getCurrentUser() {
-		return (UserInfo) ThreadProperties.getProperty(USER_INFO_ATTRIBUTE);
-	}
+	/**
+	 * @return the current logged user, if exists, or <code>null</code> otherwise.
+	 */
+	public abstract UserInfo getCurrentUSer();
 
-	protected final void loggedIn(UserInfo user) {
-		ThreadProperties.setProperty(USER_INFO_ATTRIBUTE, user);
-	}
-
-	protected final void loggedOut() {
-		ThreadProperties.setProperty(USER_INFO_ATTRIBUTE, null);
-	}
-
+	/**
+	 * @return gets the login url. This url is used to redirect the request if user isn't logged.
+	 */
+	public abstract String getLoginURL();
 }

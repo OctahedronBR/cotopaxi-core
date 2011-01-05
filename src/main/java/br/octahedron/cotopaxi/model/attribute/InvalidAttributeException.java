@@ -20,7 +20,7 @@ package br.octahedron.cotopaxi.model.attribute;
  * Indicates that a {@link ModelAttribute} is invalid.
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
- *
+ * 
  */
 public class InvalidAttributeException extends Exception {
 

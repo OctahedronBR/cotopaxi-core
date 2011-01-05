@@ -33,12 +33,14 @@ public abstract class TemplateFormatter extends Formatter {
 
 	@Override
 	public boolean isReady() {
-		return super.isReady() && template != null;
+		return super.isReady() && this.template != null;
 	}
 
 	/**
 	 * Sets this formatter template
-	 * @param templateFile the template to be used by this formatter
+	 * 
+	 * @param templateFile
+	 *            the template to be used by this formatter
 	 */
 	public void setTemplate(String templateFile) {
 		this.template = templateFile;

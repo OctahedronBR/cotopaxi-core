@@ -29,11 +29,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import br.octahedron.cotopaxi.controller.AuthorizationException;
-import br.octahedron.cotopaxi.controller.ControllerManager;
+import br.octahedron.cotopaxi.controller.ModelController;
+import br.octahedron.cotopaxi.controller.auth.AuthManager;
+import br.octahedron.cotopaxi.controller.auth.UserNotAuthorizedException;
+import br.octahedron.cotopaxi.controller.auth.UserNotLoggedException;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
 import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
+import br.octahedron.cotopaxi.model.response.ActionResponse;
 import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
 import br.octahedron.cotopaxi.view.i18n.LocaleManager;
 import br.octahedron.cotopaxi.view.response.ViewResponse;
@@ -61,14 +64,11 @@ public class CotopaxiServlet extends HttpServlet {
 	 */
 	private static final String MODEL_CONFIGURATOR_PROPERTY = "CONFIGURATOR";
 
-	// private static final Class<? extends Formatter> DEFAULT_HTML_FORMATTER =
-	// VelocityFormatter.class;
-	// private static final Class<? extends Formatter> DEFAULT_JSON_FORMATTER = JSONFormatter.class;
-
 	private static final Logger logger = Logger.getLogger(CotopaxiServlet.class.getName());
-	private transient ControllerManager controller;
+	private transient ModelController controller;
 	private transient ViewResponseBuilder view;
 	private transient MetadataMapper mapper;
+	private transient AuthManager auth;
 	private CotopaxiConfigView config;
 
 	private LocaleManager localeManager;
@@ -76,17 +76,16 @@ public class CotopaxiServlet extends HttpServlet {
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
 		try {
-			logger.info("Configuring Cotopaxi [1/4]...");
+			logger.info("Loading Cotopaxi...");
 			// Cotopaxi configuration
 			this.configure(servletConfig.getInitParameter(MODEL_CONFIGURATOR_PROPERTY));
 			// creating mapper
-			logger.info("Creating Mapper and loading Model Metadata [2/4]...");
 			this.mapper = new MetadataMapper(this.config);
-			// create the ControllerManager
-			logger.info("Creating Controller Manager [3/4]");
-			this.controller = new ControllerManager(this.config);
+			// create the Model Controller
+			this.controller = new ModelController(this.config);
+			// create Authentication Manager
+			this.auth = new AuthManager(this.config);
 			// create the ViewerManager
-			logger.info("Creating View Manager [4/4]");
 			this.view = new ViewResponseBuilder(this.config);
 			this.localeManager = LocaleManager.getInstance();
 			// Done!
@@ -155,9 +154,14 @@ public class CotopaxiServlet extends HttpServlet {
 			Locale lc = this.localeManager.getLocale(request);
 			try {
 				MetadataHandler metadata = this.mapper.getMapping(request);
-				viewResponse = this.view.getViewResponse(lc, request.getFormat(), this.controller.process(request, metadata), metadata);
-			} catch (AuthorizationException e) {
-				logger.fine("Request for " + requestedURL + " failed due authorization restrictions! Redirecting to " + e.getRedirectURL());
+				this.auth.authorizeUser(metadata.getLoginMetadata()); // just check auth!
+				ActionResponse actionResp = this.controller.executeRequest(request, metadata.getActionMetadata());
+				viewResponse = this.view.getViewResponse(lc, request.getFormat(), actionResp, metadata);
+			} catch (UserNotLoggedException e) {
+				logger.fine("Request for " + requestedURL + " failed due authorization restrictions: no user logged!");
+				viewResponse = this.view.getViewResponse(lc, e);
+			} catch (UserNotAuthorizedException e) {
+				logger.fine("Request for " + requestedURL + " failed due authorization restrictions: user not authorized!");
 				viewResponse = this.view.getViewResponse(lc, e);
 			} catch (PageNotFoundExeption pnfex) {
 				logger.fine("Page Not Found! Requested url was " + requestedURL);

@@ -1,5 +1,3 @@
-package br.octahedron.cotopaxi.controller;
-
 /*
  *  This file is part of Cotopaxi.
  *
@@ -16,22 +14,20 @@ package br.octahedron.cotopaxi.controller;
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
+package br.octahedron.cotopaxi.controller.auth;
 
 /**
- * Indicates that an an request cannot be answered due authorization requirements.
- * 
- * It can happen if the request needs an logged user, and there's no user logged at current session,
- * or if the logged user doesn't has the required role.
+ * Indicates that there's no user logged.
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-public class AuthorizationException extends Exception {
+public class UserNotLoggedException extends Exception {
 
-	private static final long serialVersionUID = -4509198861899259133L;
+	private static final long serialVersionUID = -4053219039361329027L;
 	private String redirectURL;
 
-	public AuthorizationException(String message, String redirectURL) {
+	public UserNotLoggedException(String message, String redirectURL) {
 		super(message);
 		this.redirectURL = redirectURL;
 	}
@@ -39,4 +35,5 @@ public class AuthorizationException extends Exception {
 	public String getRedirectURL() {
 		return this.redirectURL;
 	}
+
 }

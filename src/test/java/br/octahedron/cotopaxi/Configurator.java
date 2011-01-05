@@ -16,7 +16,6 @@
  */
 package br.octahedron.cotopaxi;
 
-
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */

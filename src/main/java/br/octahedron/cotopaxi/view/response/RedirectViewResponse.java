@@ -22,7 +22,7 @@ import br.octahedron.cotopaxi.ResponseWrapper;
 
 /**
  * @author nome - email@octahedron.com.br
- *
+ * 
  */
 public class RedirectViewResponse implements ViewResponse {
 
@@ -32,8 +32,11 @@ public class RedirectViewResponse implements ViewResponse {
 		this.redirectURL = redirectURL;
 	}
 
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.view.ViewResponse#dispatch(br.octahedron.cotopaxi.ResponseWrapper)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.octahedron.cotopaxi.view.ViewResponse#dispatch(br.octahedron.cotopaxi.ResponseWrapper)
 	 */
 	@Override
 	public void dispatch(ResponseWrapper response) throws IOException {

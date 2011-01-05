@@ -73,7 +73,7 @@ public class MetadataMapper {
 
 	public MetadataMapper(CotopaxiConfigView configView) throws SecurityException, NoSuchMethodException {
 		// loads the model metadata to mapper
-		for (Class<?> facade: configView.getModelFacades()) {
+		for (Class<?> facade : configView.getModelFacades()) {
 			facade.getConstructor(new Class<?>[0]);
 			ReflectionUtil.getAnnotatedMethods(facade, Action.class, new MetadataLoader(this));
 		}

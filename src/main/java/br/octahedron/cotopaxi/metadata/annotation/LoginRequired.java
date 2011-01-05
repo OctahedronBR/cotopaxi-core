@@ -37,24 +37,12 @@ public @interface LoginRequired {
 	String requiredRole() default "";
 
 	/**
-	 * Specify the Login URL to redirect non logged users
-	 */
-	String loginURL() default "/login";
-
-	/**
-	 * Specify the Login URL to redirect non authorized users
-	 */
-	String forbiddenURL() default "/forbidden";
-
-	/**
 	 * A wrapper for LoginRequired metadata
 	 * 
 	 */
 	public static class LoginRequiredMetadata {
 		private boolean loginRequired;
 		private String requiredRole;
-		private String forbiddenURL;
-		private String loginURL;
 
 		public LoginRequiredMetadata(Method method) {
 			LoginRequired login = method.getAnnotation(LoginRequired.class);
@@ -62,8 +50,6 @@ public @interface LoginRequired {
 			if (login != null) {
 				this.loginRequired = true;
 				this.requiredRole = login.requiredRole();
-				this.forbiddenURL = login.forbiddenURL();
-				this.loginURL = login.loginURL();
 			}
 		}
 
@@ -73,14 +59,6 @@ public @interface LoginRequired {
 
 		public String getRequiredRole() {
 			return this.requiredRole;
-		}
-
-		public String getForbiddenURL() {
-			return this.forbiddenURL;
-		}
-
-		public String getLoginURL() {
-			return this.loginURL;
 		}
 	}
 }

@@ -24,7 +24,8 @@ public enum TemplatesAttributes {
 
 	URL_NOT_FOUND_ATTRIBUTE("pageNotFound"), URL_NOT_FOUND_METHOD_ATTRIBUTE("pageNotFoundMethod"), INVALIDATION_FIELDS_ATTRIBUTE("invalidFields"), EXCEPTION_ATTRIBUTE(
 			"exception"), EXCEPTION_CLASS_ATTRIBUTE("exceptionClass"), EXCEPTION_MESSAGE_ATTRIBUTE("exceptionMessage"), EXCEPTION_STACK_TRACE_ATTRIBUTE(
-			"exceptionStackTrace"), MESSAGE_ON_SUCCESS("successMessage"), MESSAGE_ON_ERROR("errorMessage"), MESSAGE_ON_VALIDATION_FAILS("validationMessage");
+			"exceptionStackTrace"), MESSAGE_ON_SUCCESS("successMessage"), MESSAGE_ON_ERROR("errorMessage"), MESSAGE_ON_VALIDATION_FAILS(
+			"validationMessage");
 
 	private String attributeKey;
 

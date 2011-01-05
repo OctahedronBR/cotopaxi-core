@@ -17,6 +17,7 @@
 package br.octahedron.cotopaxi;
 
 import br.octahedron.cotopaxi.cloudservice.CloudServicesFactory;
+import br.octahedron.cotopaxi.controller.auth.UserLookupStrategy;
 import br.octahedron.cotopaxi.controller.filter.Filter;
 import br.octahedron.cotopaxi.view.formatter.Formatter;
 
@@ -37,18 +38,17 @@ public interface CotopaxiConfig {
 	public abstract void setI18nFolder(String i18nFolder);
 
 	/**
+	 * Sets the server forbidden handler.
+	 */
+	public abstract void setForbiddenTemplate(String forbiddenHandler);
+
+	/**
 	 * Sets the server error handler.
-	 * 
-	 * @param errorHandler
-	 *            the errorHandler to set
 	 */
 	public abstract void setErrorTemplate(String errorHandler);
 
 	/**
 	 * Sets the not found error handler.
-	 * 
-	 * @param notFoundHandler
-	 *            the notFoundHandler to set
 	 */
 	public abstract void setNotFoundTemplate(String notFoundHandler);
 
@@ -59,6 +59,16 @@ public interface CotopaxiConfig {
 	 *            the templates root folder
 	 */
 	public abstract void setTemplatesRoot(String templatesRoot);
+
+	/**
+	 * Sets the {@link UserLookupStrategy} to be used by the authentication mechanism
+	 * 
+	 * @see UserLookupStrategy
+	 * 
+	 * @param strategy
+	 *            the {@link UserLookupStrategy}
+	 */
+	public abstract void setUserLookupStrategy(UserLookupStrategy strategy);
 
 	/**
 	 * Sets the {@link CloudServicesFactory} to be used by this application.
@@ -106,9 +116,9 @@ public interface CotopaxiConfig {
 	 * 
 	 * The modelFacade class should has an empty constructor.
 	 * 
-	 * @param modelFacadeClass the model facade class.
-	 *            the class
+	 * @param modelFacadeClass
+	 *            the model facade class. the class
 	 */
-	public abstract void addModelFacade(Class<?> ... modelFacadeClass);
+	public abstract void addModelFacade(Class<?>... modelFacadeClass);
 
 }

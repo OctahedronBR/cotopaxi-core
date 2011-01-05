@@ -19,7 +19,8 @@ package br.octahedron.cotopaxi.view;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -52,7 +53,7 @@ import br.octahedron.cotopaxi.view.response.ViewResponseBuilder;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class ViewResponseBuilderTest {
-	
+
 	private MetadataMapper mapper;
 	private ViewResponseBuilder builder;
 
@@ -60,13 +61,13 @@ public class ViewResponseBuilderTest {
 	@Before
 	public void setUp() throws SecurityException, ClassNotFoundException, NoSuchMethodException {
 		CotopaxiConfigView configMock = createMock(CotopaxiConfigView.class);
-		Collection facade = Arrays.asList(FakeFacade.class); 
+		Collection facade = Arrays.asList(FakeFacade.class);
 		expect(configMock.getModelFacades()).andReturn(facade);
 		replay(configMock);
 		this.mapper = new MetadataMapper(configMock);
 		this.builder = new ViewResponseBuilder(CotopaxiConfigView.getInstance());
 	}
-	
+
 	@Test
 	public void messageTemplateCodeTest1() throws PageNotFoundExeption, FormatterNotFoundException, IOException {
 		// configuration
@@ -88,7 +89,7 @@ public class ViewResponseBuilderTest {
 		assertTrue(atts.containsKey(TemplatesAttributes.MESSAGE_ON_SUCCESS.getAttributeKey()));
 		assertEquals("OK", atts.get(TemplatesAttributes.MESSAGE_ON_SUCCESS.getAttributeKey()));
 	}
-	
+
 	@Test
 	public void messageTemplateCodeTest2() throws PageNotFoundExeption, FormatterNotFoundException, IOException {
 		// configuration
@@ -112,7 +113,7 @@ public class ViewResponseBuilderTest {
 		assertTrue(atts.containsKey(TemplatesAttributes.EXCEPTION_CLASS_ATTRIBUTE.getAttributeKey()));
 		assertEquals(NullPointerException.class.getName(), atts.get(TemplatesAttributes.EXCEPTION_CLASS_ATTRIBUTE.getAttributeKey()));
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void messageTemplateCodeTest3() throws PageNotFoundExeption, FormatterNotFoundException, IOException {
@@ -124,7 +125,7 @@ public class ViewResponseBuilderTest {
 		replay(request);
 		MetadataHandler metadata = this.mapper.getMapping(request);
 		// execution
-		ViewResponse resp = this.builder.getViewResponse(Locale.US, null, new InvalidActionResponse("name","age"), metadata);
+		ViewResponse resp = this.builder.getViewResponse(Locale.US, null, new InvalidActionResponse("name", "age"), metadata);
 		FakeResponseWrapper rw = new FakeResponseWrapper();
 		resp.dispatch(rw);
 		VelocityFormatter fmt = (VelocityFormatter) rw.getFormatter();
@@ -148,21 +149,23 @@ public class ViewResponseBuilderTest {
 		public FakeResponseWrapper() {
 			super(null);
 		}
-		
+
+		@Override
 		public void setResultCode(ResultCode code) {
 			this.resultCode = code;
 		}
-		
+
+		@Override
 		public void render(Formatter formatter) throws IOException {
 			this.formatter = formatter;
 		}
-		
+
 		public Formatter getFormatter() {
-			return formatter;
+			return this.formatter;
 		}
-		
+
 		public ResultCode getResultCode() {
-			return resultCode;
+			return this.resultCode;
 		}
 	}
 }
