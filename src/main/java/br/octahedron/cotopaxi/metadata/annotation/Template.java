@@ -100,7 +100,7 @@ public @interface Template {
 				}
 				// on validationFails
 				if (!template.onValidationFails().equals(DEFAULT_TEMPLATE_NAME)) {
-					this.onError = template.onValidationFails();
+					this.onValidationFail = template.onValidationFails();
 				}
 			}
 		}
