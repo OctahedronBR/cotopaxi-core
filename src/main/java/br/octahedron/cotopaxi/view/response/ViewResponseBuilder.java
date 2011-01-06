@@ -197,14 +197,10 @@ public class ViewResponseBuilder {
 	 */
 	private Map<String, Object> getResponseAtts(ExceptionActionResponse actionResponse, ResponseMetadata responseMetadata,
 			MessageMetadata messageMetadata) {
-		Map<String, Object> attributes = actionResponse.getAttributes();
+		// generate attributes map to be rendered
 		Throwable ex = actionResponse.getCause();
-		Writer stackTrace = new StringBuilderWriter();
-		ex.printStackTrace(new PrintWriter(stackTrace));
-		attributes.put(EXCEPTION_ATTRIBUTE.getAttributeKey(), ex);
-		attributes.put(EXCEPTION_CLASS_ATTRIBUTE.getAttributeKey(), ex.getClass().getName());
-		attributes.put(EXCEPTION_MESSAGE_ATTRIBUTE.getAttributeKey(), ex.getMessage());
-		attributes.put(EXCEPTION_STACK_TRACE_ATTRIBUTE.getAttributeKey(), stackTrace.toString());
+		Map<String, Object> attributes = actionResponse.getAttributes();
+		extractExceptionAttributes(attributes, ex);
 		// check Message
 		if (messageMetadata.getOnError() != null) {
 			attributes.put(TemplatesAttributes.MESSAGE_ON_ERROR.getAttributeKey(), messageMetadata.getOnError());
@@ -241,13 +237,8 @@ public class ViewResponseBuilder {
 	 */
 	private ViewResponse createErrorResponse(Locale lc, Exception ex) {
 		// generate attributes map to be rendered
-		StringBuilderWriter stackTrace = new StringBuilderWriter();
-		ex.printStackTrace(new PrintWriter(stackTrace));
 		Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put(EXCEPTION_ATTRIBUTE.getAttributeKey(), ex);
-		attributes.put(EXCEPTION_CLASS_ATTRIBUTE.getAttributeKey(), ex.getClass().getName());
-		attributes.put(EXCEPTION_MESSAGE_ATTRIBUTE.getAttributeKey(), ex.getMessage());
-		attributes.put(EXCEPTION_STACK_TRACE_ATTRIBUTE.getAttributeKey(), stackTrace.getBuffer().toString());
+		extractExceptionAttributes(attributes, ex);
 		// get and prepare formatter
 		TemplateFormatter formatter = new VelocityFormatter(this.config.getErrorTemplate(), attributes, lc);
 		return new FormatterViewResponse(formatter, ResultCode.INTERNAL_ERROR);
@@ -255,15 +246,24 @@ public class ViewResponseBuilder {
 
 	private ViewResponse createForbiddenResponse(Locale lc, Exception ex) {
 		// generate attributes map to be rendered
-		StringBuilderWriter stackTrace = new StringBuilderWriter();
-		ex.printStackTrace(new PrintWriter(stackTrace));
 		Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put(EXCEPTION_ATTRIBUTE.getAttributeKey(), ex);
-		attributes.put(EXCEPTION_CLASS_ATTRIBUTE.getAttributeKey(), ex.getClass().getName());
-		attributes.put(EXCEPTION_MESSAGE_ATTRIBUTE.getAttributeKey(), ex.getMessage());
-		attributes.put(EXCEPTION_STACK_TRACE_ATTRIBUTE.getAttributeKey(), stackTrace.getBuffer().toString());
+		extractExceptionAttributes(attributes, ex);
 		// get and prepare formatter
 		TemplateFormatter formatter = new VelocityFormatter(this.config.getForbiddenTemplate(), attributes, lc);
 		return new FormatterViewResponse(formatter, ResultCode.FORBIDDEN);
+	}
+
+	private void extractExceptionAttributes(Map<String, Object> attributes, Throwable ex) {
+		Writer stackTrace = new StringBuilderWriter();
+		ex.printStackTrace(new PrintWriter(stackTrace));
+		attributes.put(EXCEPTION_ATTRIBUTE.getAttributeKey(), ex);
+		attributes.put(EXCEPTION_CLASS_ATTRIBUTE.getAttributeKey(), ex.getClass().getName());
+		attributes.put(EXCEPTION_STACK_TRACE_ATTRIBUTE.getAttributeKey(), stackTrace.toString());
+		// just to avoid null messages
+		if ( ex.getMessage() != null) { 
+			attributes.put(EXCEPTION_MESSAGE_ATTRIBUTE.getAttributeKey(), ex.getMessage());
+		} else {
+			attributes.put(EXCEPTION_MESSAGE_ATTRIBUTE.getAttributeKey(), "Null");
+		}
 	}
 }
