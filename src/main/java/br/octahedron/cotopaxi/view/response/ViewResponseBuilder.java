@@ -24,8 +24,8 @@ import static br.octahedron.cotopaxi.view.TemplatesAttributes.INVALIDATION_FIELD
 import static br.octahedron.cotopaxi.view.TemplatesAttributes.URL_NOT_FOUND_ATTRIBUTE;
 import static br.octahedron.cotopaxi.view.TemplatesAttributes.URL_NOT_FOUND_METHOD_ATTRIBUTE;
 
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -47,7 +47,6 @@ import br.octahedron.cotopaxi.view.formatter.FormatterBuilder;
 import br.octahedron.cotopaxi.view.formatter.FormatterNotFoundException;
 import br.octahedron.cotopaxi.view.formatter.TemplateFormatter;
 import br.octahedron.cotopaxi.view.formatter.VelocityFormatter;
-import br.octahedron.util.StringBuilderWriter;
 import br.octahedron.util.ThreadProperties;
 
 /**
@@ -254,16 +253,22 @@ public class ViewResponseBuilder {
 	}
 
 	private void extractExceptionAttributes(Map<String, Object> attributes, Throwable ex) {
-		Writer stackTrace = new StringBuilderWriter();
-		ex.printStackTrace(new PrintWriter(stackTrace));
 		attributes.put(EXCEPTION_ATTRIBUTE.getAttributeKey(), ex);
 		attributes.put(EXCEPTION_CLASS_ATTRIBUTE.getAttributeKey(), ex.getClass().getName());
-		attributes.put(EXCEPTION_STACK_TRACE_ATTRIBUTE.getAttributeKey(), stackTrace.toString());
+		attributes.put(EXCEPTION_STACK_TRACE_ATTRIBUTE.getAttributeKey(), extractStackTrace(ex.getStackTrace()));
 		// just to avoid null messages
 		if ( ex.getMessage() != null) { 
 			attributes.put(EXCEPTION_MESSAGE_ATTRIBUTE.getAttributeKey(), ex.getMessage());
 		} else {
 			attributes.put(EXCEPTION_MESSAGE_ATTRIBUTE.getAttributeKey(), "Null");
 		}
+	}
+
+	private Collection<String> extractStackTrace(StackTraceElement[] stackTrace) {
+		ArrayList<String> result = new ArrayList<String>();
+		for(StackTraceElement element : stackTrace) {
+			result.add(element.toString());
+		}
+		return result;
 	}
 }
