@@ -42,16 +42,16 @@ public class UserInfo implements Serializable {
 	}
 
 	public UserInfo(String username, Set<String> roles) {
-		this.username = username;
-		this.roles = new HashSet<String>(roles);
-	}
-
-	public UserInfo(String username, String... roles) {
-		this.username = username;
-		this.roles = new HashSet<String>(roles.length);
-
+		this(username);
 		for (String role : roles) {
-			this.roles.add(role);
+			this.roles.add(role.toLowerCase());
+		}
+	}
+	
+	public UserInfo(String username, String... roles) {
+		this(username);
+		for (String role : roles) {
+			this.roles.add(role.toLowerCase());
 		}
 	}
 
@@ -67,6 +67,6 @@ public class UserInfo implements Serializable {
 
 	public boolean satisfyRole(String role) {
 		// all users satisfy empty role
-		return role.isEmpty() || this.roles.contains(role);
+		return role.isEmpty() || this.roles.contains(role.toLowerCase());
 	}
 }

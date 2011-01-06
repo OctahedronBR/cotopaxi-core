@@ -171,7 +171,7 @@ public class CotopaxiServlet extends HttpServlet {
 				// maps the request to metadata
 				MetadataHandler metadata = this.mapper.getMapping(request);
 				// check user authorization
-				this.auth.authorizeUser(metadata.getLoginMetadata());
+				this.auth.authorizeUser(request, metadata.getLoginMetadata());
 				// execute filters before
 				this.filter.executeFiltersBefore(metadata.getActionMetadata(), request);
 				// execute the controller

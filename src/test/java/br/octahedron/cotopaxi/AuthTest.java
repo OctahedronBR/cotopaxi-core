@@ -71,13 +71,13 @@ public class AuthTest {
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
 		expect(this.userStrategy.getCurrentUSer()).andReturn(null);
-		expect(this.userStrategy.getLoginURL()).andReturn("/login");
+		expect(this.userStrategy.getLoginURL("/restricted1")).andReturn("/login");
 		replay(this.userStrategy);
 
 		try {
 			// invoking the auth mechanism
 			LoginRequiredMetadata login = this.mapper.getMapping(request).getLoginMetadata();
-			this.auth.authorizeUser(login);
+			this.auth.authorizeUser(request, login);
 			fail();
 		} catch (UserNotLoggedException e) {
 			assertEquals("/login", e.getRedirectURL());
@@ -104,7 +104,7 @@ public class AuthTest {
 
 		// invoking the auth mechanism
 		LoginRequiredMetadata login = this.mapper.getMapping(request).getLoginMetadata();
-		this.auth.authorizeUser(login);
+		this.auth.authorizeUser(request, login);
 
 		// check test results
 		verify(request);
@@ -128,7 +128,7 @@ public class AuthTest {
 		try {
 			// invoking the auth mechanism
 			LoginRequiredMetadata login = this.mapper.getMapping(request).getLoginMetadata();
-			this.auth.authorizeUser(login);
+			this.auth.authorizeUser(request, login);
 		} finally {
 			// check test results
 			verify(request);
@@ -152,7 +152,7 @@ public class AuthTest {
 
 		// invoking the auth mechanism
 		LoginRequiredMetadata login = this.mapper.getMapping(request).getLoginMetadata();
-		this.auth.authorizeUser(login);
+		this.auth.authorizeUser(request, login);
 
 		// check test results
 		verify(request);

@@ -34,7 +34,9 @@ public interface UserLookupStrategy {
 	public abstract UserInfo getCurrentUSer();
 
 	/**
-	 * @return gets the login url. This url is used to redirect the request if user isn't logged.
+	 * 
+	 * @param redirectURL The URL which user will be redirect after login
+	 * @return gets the login URL. This URL is used to redirect the request if user isn't logged.
 	 */
-	public abstract String getLoginURL();
+	public abstract String getLoginURL(String redirectURL);
 }

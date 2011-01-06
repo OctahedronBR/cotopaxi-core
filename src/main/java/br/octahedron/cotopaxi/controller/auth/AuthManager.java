@@ -18,6 +18,7 @@ package br.octahedron.cotopaxi.controller.auth;
 
 import br.octahedron.cotopaxi.CotopaxiConfig;
 import br.octahedron.cotopaxi.CotopaxiConfigView;
+import br.octahedron.cotopaxi.RequestWrapper;
 import br.octahedron.cotopaxi.metadata.annotation.LoginRequired;
 import br.octahedron.cotopaxi.metadata.annotation.LoginRequired.LoginRequiredMetadata;
 
@@ -49,7 +50,7 @@ public class AuthManager {
 	 * @throws UserNotLoggedException
 	 * @throws UserNotAuthorizedException
 	 */
-	public void authorizeUser(LoginRequiredMetadata loginMetadata) throws UserNotLoggedException, UserNotAuthorizedException {
+	public void authorizeUser(RequestWrapper request, LoginRequiredMetadata loginMetadata) throws UserNotLoggedException, UserNotAuthorizedException {
 		if (loginMetadata.isLoginRequired()) {
 			UserInfo user = this.userLookupStrategy.getCurrentUSer();
 			if (user != null) {
@@ -58,7 +59,7 @@ public class AuthManager {
 					throw new UserNotAuthorizedException("User " + user.getUsername() + " doesn't satify role " + role);
 				}
 			} else {
-				throw new UserNotLoggedException("There's no user logged!", this.userLookupStrategy.getLoginURL());
+				throw new UserNotLoggedException("There's no user logged!", this.userLookupStrategy.getLoginURL(request.getURL()));
 			}
 		}
 	}
