@@ -17,16 +17,25 @@
 package br.octahedron.cotopaxi;
 
 /**
+ * This entity handles the inupt parameters from servlet. It provides access to the Servlet Request
+ * Parameters and Servlet Session Parameters.
  * 
- * TODO comment
- * 
- * @author Name - email@octahedron.com.br
- * 
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public interface InputHandler {
 
+	/**
+	 * Gets an parameter's value from request.
+	 * @param name the parameter's name
+	 * @return the parameter's value, or null if doesn't exist such parameter
+	 */
 	public String getRequestParameter(String name);
 
+	/**
+	 * Gets an parameter's value from session.
+	 * @param name the parameter's name
+	 * @return the parameter's value, or null if doesn't exist such parameter
+	 */
 	public Object getSessionParameter(String name);
 
 }

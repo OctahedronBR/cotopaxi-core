@@ -52,7 +52,7 @@ public class AuthManager {
 	 */
 	public void authorizeUser(RequestWrapper request, LoginRequiredMetadata loginMetadata) throws UserNotLoggedException, UserNotAuthorizedException {
 		if (loginMetadata.isLoginRequired()) {
-			UserInfo user = this.userLookupStrategy.getCurrentUSer();
+			UserInfo user = this.userLookupStrategy.getCurrentUSer(request);
 			if (user != null) {
 				String role = loginMetadata.getRequiredRole();
 				if (!user.satisfyRole(role)) {

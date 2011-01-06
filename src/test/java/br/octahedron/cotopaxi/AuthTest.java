@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import br.octahedron.cotopaxi.controller.FacadeThree;
 import br.octahedron.cotopaxi.controller.auth.AuthManager;
+import br.octahedron.cotopaxi.controller.auth.SessionUserLookupStrategy;
 import br.octahedron.cotopaxi.controller.auth.UserInfo;
 import br.octahedron.cotopaxi.controller.auth.UserLookupStrategy;
 import br.octahedron.cotopaxi.controller.auth.UserNotAuthorizedException;
@@ -70,7 +71,7 @@ public class AuthTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		expect(this.userStrategy.getCurrentUSer()).andReturn(null);
+		expect(this.userStrategy.getCurrentUSer(request)).andReturn(null);
 		expect(this.userStrategy.getLoginURL("/restricted1")).andReturn("/login");
 		replay(this.userStrategy);
 
@@ -99,7 +100,7 @@ public class AuthTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		expect(this.userStrategy.getCurrentUSer()).andReturn(new UserInfo("danilo"));
+		expect(this.userStrategy.getCurrentUSer(request)).andReturn(new UserInfo("danilo"));
 		replay(this.userStrategy);
 
 		// invoking the auth mechanism
@@ -122,7 +123,7 @@ public class AuthTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		expect(this.userStrategy.getCurrentUSer()).andReturn(new UserInfo("danilo", "tester"));
+		expect(this.userStrategy.getCurrentUSer(request)).andReturn(new UserInfo("danilo", "tester"));
 		replay(this.userStrategy);
 
 		try {
@@ -147,7 +148,7 @@ public class AuthTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		expect(this.userStrategy.getCurrentUSer()).andReturn(new UserInfo("danilo", "admin"));
+		expect(this.userStrategy.getCurrentUSer(request)).andReturn(new UserInfo("danilo", "admin"));
 		replay(this.userStrategy);
 
 		// invoking the auth mechanism
@@ -157,6 +158,31 @@ public class AuthTest {
 		// check test results
 		verify(request);
 		verify(this.userStrategy);
+	}
+	
+	@Test
+	public void authenticationTest5() throws PageNotFoundExeption, UserNotLoggedException, UserNotAuthorizedException {
+		/*
+		 * This test an logged with required role
+		 */
+		// Prepare test
+		RequestWrapper request = createMock(RequestWrapper.class);
+		expect(request.getURL()).andReturn("/restricted3").atLeastOnce();
+		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
+		expect(request.getFormat()).andReturn(null);
+		expect(request.getSessionParameter(SessionUserLookupStrategy.USER_SESSION_ATTRIBUTE)).andReturn(new UserInfo("danilo","admin"));
+		replay(request);
+
+		this.userStrategy = new SessionUserLookupStrategy();
+		this.config.getCotopaxiConfig().setUserLookupStrategy(this.userStrategy);
+		this.auth = new AuthManager(this.config);
+		
+		// invoking the auth mechanism
+		LoginRequiredMetadata login = this.mapper.getMapping(request).getLoginMetadata();
+		this.auth.authorizeUser(request, login);
+
+		// check test results
+		verify(request);
 	}
 
 }

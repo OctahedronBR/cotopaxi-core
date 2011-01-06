@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi.controller.auth;
 
+import br.octahedron.cotopaxi.InputHandler;
+
 /**
  * It provides an strategy to recover the current logged user.
  * 
@@ -31,7 +33,7 @@ public interface UserLookupStrategy {
 	/**
 	 * @return the current logged user, if exists, or <code>null</code> otherwise.
 	 */
-	public abstract UserInfo getCurrentUSer();
+	public abstract UserInfo getCurrentUSer(InputHandler input);
 
 	/**
 	 * 
