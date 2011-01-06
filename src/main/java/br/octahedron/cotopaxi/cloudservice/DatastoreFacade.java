@@ -79,13 +79,13 @@ public interface DatastoreFacade {
 	 *            <code>true</code> to indicates that a PersistenceManagerFilter will be used,
 	 *            <code>false</code> otherwise.
 	 */
-	public abstract void detachObjectsOnQuery(boolean detach);
+	public abstract void detachObjectsOnLoad(boolean detach);
 
 	/**
-	 * @return <code>true</code> if objects are being detached on queries, <code>false</code>
+	 * @return <code>true</code> if objects are being detached on load, <code>false</code>
 	 *         otherwise.
 	 */
-	public abstract boolean detachObjectsOnQuery();
+	public abstract boolean detachObjectsOnLoad();
 
 	/**
 	 * Saves the given object at the Datastore.
