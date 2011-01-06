@@ -60,6 +60,7 @@ public class ViewResponseBuilderTest {
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws SecurityException, ClassNotFoundException, NoSuchMethodException {
+		System.setProperty("cotopaxi.test", "true");
 		CotopaxiConfigView configMock = createMock(CotopaxiConfigView.class);
 		Collection facade = Arrays.asList(FakeFacade.class);
 		expect(configMock.getModelFacades()).andReturn(facade);

@@ -28,11 +28,7 @@ import org.junit.Test;
 import br.octahedron.cotopaxi.controller.FacadeOne;
 import br.octahedron.cotopaxi.controller.FacadeThree;
 import br.octahedron.cotopaxi.controller.FacadeTwo;
-import br.octahedron.cotopaxi.controller.FiltersHelper;
 import br.octahedron.cotopaxi.controller.ModelController;
-import br.octahedron.cotopaxi.controller.MyExceptionFilterAfter;
-import br.octahedron.cotopaxi.controller.MyExceptionFilterBefore;
-import br.octahedron.cotopaxi.controller.MyFilter;
 import br.octahedron.cotopaxi.controller.filter.FilterException;
 import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
@@ -54,12 +50,11 @@ public class ControllerTest {
 
 	@Before
 	public void setUp() throws SecurityException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException {
-		FiltersHelper.reset();
 		CotopaxiConfigView.reset();
 		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
 		config.addModelFacade(FacadeOne.class, FacadeTwo.class, FacadeThree.class);
 		this.mapper = new MetadataMapper(CotopaxiConfigView.getInstance());
-		this.controller = new ModelController(CotopaxiConfigView.getInstance());
+		this.controller = new ModelController();
 		DateConverter.setDateFormat("dd/MM/yyyy");
 	}
 
@@ -222,135 +217,6 @@ public class ControllerTest {
 
 	@Test
 	public void controllerTest8() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
-		/*
-		 * This test checks many atts and local Filter
-		 */
-		// Prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/two/many").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		expect(request.getRequestParameter("str")).andReturn("name1,name2,name3,name4");
-		expect(request.getRequestParameter("when")).andReturn("06/11/2010");
-		expect(request.getRequestParameter("int")).andReturn("5");
-		replay(request);
-
-		// invoking the controller
-		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
-
-		// check test results
-		verify(request);
-		assertEquals(Result.SUCCESS, resp.getResult());
-		assertEquals(1, FiltersHelper.getFilterBefore());
-		assertEquals(1, FiltersHelper.getFilterAfter());
-	}
-
-	@Test
-	public void controllerTest9() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
-		/*
-		 * This test using Global Filter
-		 */
-		// Prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/two/varargs").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		expect(request.getRequestParameter("str")).andReturn("name1,name2,name3,name4");
-		replay(request);
-		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
-		config.addGlobalFilter(MyFilter.class);
-
-		// invoking the controller
-		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
-
-		// check test results
-		verify(request);
-		assertEquals(Result.SUCCESS, resp.getResult());
-		assertEquals(4, ((String[]) ((SuccessActionResponse) resp).getReturnValue()).length);
-		assertEquals(1, FiltersHelper.getFilterBefore());
-		assertEquals(1, FiltersHelper.getFilterAfter());
-	}
-
-	@Test
-	public void controllerTest10() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
-		/*
-		 * This test checks many atts with Filters (Global and Local)
-		 */
-		// Prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/two/many").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		expect(request.getRequestParameter("str")).andReturn("name1,name2,name3,name4");
-		expect(request.getRequestParameter("when")).andReturn("06/11/2010");
-		expect(request.getRequestParameter("int")).andReturn("5");
-		replay(request);
-		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
-		config.addGlobalFilter(MyFilter.class);
-
-		// invoking the controller
-		ActionResponse resp = this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
-
-		// check test results
-		verify(request);
-		assertEquals(Result.SUCCESS, resp.getResult());
-		assertEquals(2, FiltersHelper.getFilterBefore());
-		assertEquals(2, FiltersHelper.getFilterAfter());
-	}
-
-	@Test(expected = FilterException.class)
-	public void controllerTest11() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
-		/*
-		 * This test checks many atts with Filters (Global and Local)
-		 */
-		// Prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/two/many").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		replay(request);
-		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
-		config.addGlobalFilter(MyExceptionFilterBefore.class);
-		try {
-			// invoking the controller
-			this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
-		} finally {
-			// check test results
-			verify(request);
-			assertEquals(1, FiltersHelper.getFilterBefore());
-			assertEquals(0, FiltersHelper.getFilterAfter());
-		}
-	}
-
-	@Test(expected = FilterException.class)
-	public void controllerTest12() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
-		/*
-		 * This test checks many atts with Filters (Global and Local)
-		 */
-		// Prepare test
-		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getURL()).andReturn("/two/many").atLeastOnce();
-		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
-		expect(request.getFormat()).andReturn(null);
-		expect(request.getRequestParameter("str")).andReturn("name1,name2,name3,name4");
-		expect(request.getRequestParameter("when")).andReturn("06/11/2010");
-		expect(request.getRequestParameter("int")).andReturn("5");
-		replay(request);
-		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
-		config.addGlobalFilter(MyExceptionFilterAfter.class);
-		try {
-			// invoking the controller
-			this.controller.executeRequest(request, this.mapper.getMapping(request).getActionMetadata());
-		} finally {
-			// check test results
-			verify(request);
-			assertEquals(2, FiltersHelper.getFilterBefore());
-			assertEquals(1, FiltersHelper.getFilterAfter());
-		}
-	}
-
-	@Test
-	public void controllerTest13() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
 		 * This test checks non given parameter
 		 */

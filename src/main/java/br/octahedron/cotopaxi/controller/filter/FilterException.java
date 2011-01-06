@@ -28,9 +28,6 @@ import br.octahedron.cotopaxi.cloudservice.DatastoreFacade;
  */
 public class FilterException extends Exception {
 
-	// private static final String ERROR_TEMPLATE =
-	// ControllerConfigView.Builder.getControllerConfigView().getErrorTemplate();
-
 	private static final long serialVersionUID = -3194948115528012343L;
 
 	public FilterException(String message) {

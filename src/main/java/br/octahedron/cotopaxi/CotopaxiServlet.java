@@ -17,7 +17,6 @@
 package br.octahedron.cotopaxi;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,12 +26,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import br.octahedron.cotopaxi.controller.ModelController;
 import br.octahedron.cotopaxi.controller.auth.AuthManager;
 import br.octahedron.cotopaxi.controller.auth.UserNotAuthorizedException;
 import br.octahedron.cotopaxi.controller.auth.UserNotLoggedException;
+import br.octahedron.cotopaxi.controller.filter.FilterExecutor;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
 import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
@@ -41,7 +40,6 @@ import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
 import br.octahedron.cotopaxi.view.i18n.LocaleManager;
 import br.octahedron.cotopaxi.view.response.ViewResponse;
 import br.octahedron.cotopaxi.view.response.ViewResponseBuilder;
-import br.octahedron.util.ThreadProperties;
 import br.octahedron.util.reflect.ReflectionUtil;
 
 /**
@@ -65,9 +63,10 @@ public class CotopaxiServlet extends HttpServlet {
 	private static final String MODEL_CONFIGURATOR_PROPERTY = "CONFIGURATOR";
 
 	private static final Logger logger = Logger.getLogger(CotopaxiServlet.class.getName());
-	private transient ModelController controller;
 	private transient ViewResponseBuilder view;
 	private transient MetadataMapper mapper;
+	private transient ModelController controller;
+	private transient FilterExecutor filter;
 	private transient AuthManager auth;
 	private CotopaxiConfigView config;
 
@@ -81,8 +80,10 @@ public class CotopaxiServlet extends HttpServlet {
 			this.configure(servletConfig.getInitParameter(MODEL_CONFIGURATOR_PROPERTY));
 			// creating mapper
 			this.mapper = new MetadataMapper(this.config);
+			// creating Filter Executor
+			this.filter = new FilterExecutor(this.config);
 			// create the Model Controller
-			this.controller = new ModelController(this.config);
+			this.controller = new ModelController(); 
 			// create Authentication Manager
 			this.auth = new AuthManager(this.config);
 			// create the ViewerManager
@@ -141,22 +142,44 @@ public class CotopaxiServlet extends HttpServlet {
 	 * </pre>
 	 */
 	private void deliver(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		ViewResponse viewResponse;
+		// prepare
 		RequestWrapper request = new RequestWrapper(req);
+		ResponseWrapper response = new ResponseWrapper(resp);
 		String requestedURL = request.getURL();
+		// gets view response
+		ViewResponse viewResponse = getViewResponse(request, requestedURL);
+		// dispatch the view response
+		try {
+			viewResponse.dispatch(response);
+		} catch (Exception e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
+			Locale lc = this.localeManager.getLocale(request);
+			viewResponse = this.view.getViewResponse(lc, e);
+			viewResponse.dispatch(response);
+		}
+	}
 
+	private ViewResponse getViewResponse(RequestWrapper request, String requestedURL) {
+		ViewResponse viewResponse;
 		if (this.config.isRedirect(requestedURL)) {
 			// request is a redirect, send response!
 			logger.fine("Redirecting request for " + requestedURL);
 			viewResponse = this.view.getViewResponse(requestedURL);
 		} else {
-			this.prepareThreadProperties(req);
 			Locale lc = this.localeManager.getLocale(request);
 			try {
+				// maps the request to metadata
 				MetadataHandler metadata = this.mapper.getMapping(request);
-				this.auth.authorizeUser(metadata.getLoginMetadata()); // just check auth!
+				// check user authorization
+				this.auth.authorizeUser(metadata.getLoginMetadata());
+				// execute filters before
+				this.filter.executeFiltersBefore(metadata.getActionMetadata(), request);
+				// execute the controller
 				ActionResponse actionResp = this.controller.executeRequest(request, metadata.getActionMetadata());
+				// gets the view response
 				viewResponse = this.view.getViewResponse(lc, request.getFormat(), actionResp, metadata);
+				// execute filters after
+				this.filter.executeFiltersAfter(metadata.getActionMetadata(), request, actionResp);
 			} catch (UserNotLoggedException e) {
 				logger.fine("Request for " + requestedURL + " failed due authorization restrictions: no user logged!");
 				viewResponse = this.view.getViewResponse(lc, e);
@@ -169,61 +192,8 @@ public class CotopaxiServlet extends HttpServlet {
 			} catch (Exception ex) {
 				logger.log(Level.WARNING, ex.getMessage(), ex);
 				viewResponse = this.view.getViewResponse(lc, ex);
-			} finally {
-				this.finalizeThreadProperties(req);
 			}
 		}
-
-		// dispatch the view response
-		try {
-			ResponseWrapper response = new ResponseWrapper(resp);
-			viewResponse.dispatch(response);
-		} catch (Exception e) {
-			logger.log(Level.WARNING, e.getMessage(), e);
-			Locale lc = this.localeManager.getLocale(request);
-			viewResponse = this.view.getViewResponse(lc, e);
-			ResponseWrapper response = new ResponseWrapper(resp);
-			viewResponse.dispatch(response);
-		}
-	}
-
-	/**
-	 * Take the sessions attributes and put them at the {@link ThreadProperties}
-	 */
-	@SuppressWarnings("unchecked")
-	private void prepareThreadProperties(HttpServletRequest request) {
-		// Remove previous properties
-		ThreadProperties.clear();
-		// Get atts from session and put on ThreadProperties
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			Enumeration<String> atts = session.getAttributeNames();
-			while (atts.hasMoreElements()) {
-				String att = atts.nextElement();
-				ThreadProperties.setProperty(att, session.getAttribute(att));
-			}
-		}
-	}
-
-	/**
-	 * Take the {@link ThreadProperties} attributes and put them at the Session (or remove from
-	 * session)
-	 */
-	private void finalizeThreadProperties(HttpServletRequest request) {
-		// Get atts from ThreadProperties and put on Session
-		HttpSession session = request.getSession(false);
-		if (!ThreadProperties.isEmpty()) {
-			for (String key : ThreadProperties.keys()) {
-				Object value = ThreadProperties.getProperty(key);
-				if (value == null && session != null) {
-					session.removeAttribute(key);
-				} else {
-					if (session == null) {
-						session = request.getSession(true);
-					}
-					session.setAttribute(key, value);
-				}
-			}
-		}
+		return viewResponse;
 	}
 }

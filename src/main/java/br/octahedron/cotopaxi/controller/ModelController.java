@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.cotopaxi.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.RequestWrapper;
 import br.octahedron.cotopaxi.controller.filter.Filter;
@@ -55,13 +54,7 @@ import br.octahedron.util.reflect.InstanceHandler;
 public class ModelController {
 
 	private final Logger logger = Logger.getLogger(ModelController.class.getName());
-	private CotopaxiConfigView config;
-	private InstanceHandler<Filter> filters = new InstanceHandler<Filter>();
 	private InstanceHandler<Object> facades = new InstanceHandler<Object>();
-
-	public ModelController(CotopaxiConfigView config) {
-		this.config = config;
-	}
 
 	/**
 	 * Executes the request, it means:
@@ -85,35 +78,6 @@ public class ModelController {
 	 */
 	public ActionResponse executeRequest(RequestWrapper request, ActionMetadata actionMetadata) throws FilterException, IllegalArgumentException,
 			IllegalAccessException {
-		// Process Filters
-		if (this.config.hasGlobalFilters()) {
-			this.executeFiltersBefore(this.config.getGlobalFilters(), request);
-		}
-		if (actionMetadata.hasFilters()) {
-			this.executeFiltersBefore(actionMetadata.getFilters(), request);
-		}
-		ActionResponse response = this.getModelResponse(request, actionMetadata);
-		// Process Filters
-		if (this.config.hasGlobalFilters()) {
-			this.executeFiltersAfter(this.config.getGlobalFilters(), request, response);
-		}
-		if (actionMetadata.hasFilters()) {
-			this.executeFiltersAfter(actionMetadata.getFilters(), request, response);
-		}
-
-		return response;
-	}
-
-	/**
-	 * Gets the model response. It converts the parameters, execute model and generate the
-	 * ModelResponse
-	 * 
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 */
-	private ActionResponse getModelResponse(RequestWrapper request, ActionMetadata actionMetadata) throws IllegalArgumentException,
-			IllegalAccessException {
-		// Executes model
 		ActionResponse response;
 		InputAdapter adapter = actionMetadata.getInputAdapter();
 		try {
@@ -185,27 +149,6 @@ public class ModelController {
 			InvocationTargetException {
 		Object facade = this.facades.getInstance(method.getDeclaringClass());
 		return method.invoke(facade, params);
-	}
-
-	/**
-	 * Execute the {@link Filter#doBefore(RequestWrapper)}
-	 */
-	private void executeFiltersBefore(Collection<Class<? extends Filter>> filters, RequestWrapper request) throws FilterException {
-		for (Class<? extends Filter> filterClass : filters) {
-			Filter filter = this.filters.getInstance(filterClass);
-			filter.doBefore(request);
-		}
-	}
-
-	/**
-	 * Execute the {@link Filter#doAfter(RequestWrapper, ActionResponse))}
-	 */
-	private void executeFiltersAfter(Collection<Class<? extends Filter>> filters, RequestWrapper request, ActionResponse response)
-			throws FilterException {
-		for (Class<? extends Filter> filterClass : filters) {
-			Filter filter = this.filters.getInstance(filterClass);
-			filter.doAfter(request, response);
-		}
 	}
 
 	/**

@@ -103,7 +103,7 @@ public class ResponseWrapper {
 	public void render(Formatter formatter) throws IOException {
 		this.setContentType(formatter.getContentType());
 		this.setLocale(formatter.getLocale());
-		this.render(formatter.format());
+		this.render(formatter.getFormatted());
 	}
 
 	/**

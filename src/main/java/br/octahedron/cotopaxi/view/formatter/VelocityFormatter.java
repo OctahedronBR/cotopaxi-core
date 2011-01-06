@@ -41,24 +41,16 @@ public class VelocityFormatter extends TemplateFormatter {
 
 	public VelocityFormatter(String template, Map<String, Object> attributes, Locale lc) {
 		super(ContentType.HTML);
-		this.setTemplate(template);
 		this.setAttributes(attributes);
 		this.setLocale(lc);
-	}
-
-	public String getTemplate() {
-		return this.template;
-	}
-
-	public Map<String, Object> getAttributes() {
-		return this.attributes;
+		this.setTemplate(template);
 	}
 
 	@Override
 	protected String doFormat() {
 		// TODO locale
-		VelocityContext context = new VelocityContext(this.attributes);
-		Template template = getVelocityTemplate(this.template);
+		VelocityContext context = new VelocityContext(this.getAttributes());
+		Template template = getVelocityTemplate(this.getTemplate());
 		StringBuilderWriter writer = new StringBuilderWriter();
 		template.merge(context, writer);
 		return writer.getBuffer().toString();

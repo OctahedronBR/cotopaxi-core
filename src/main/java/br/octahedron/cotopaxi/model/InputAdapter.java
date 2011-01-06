@@ -83,8 +83,6 @@ public class InputAdapter {
 		this.addAttribute(new RequestModelAttribute<T>(name, typeConverter, validator));
 	}
 
-	// TODO create and test add user_info attribute
-
 	/**
 	 * TODO DOCUMENT
 	 * 
@@ -93,7 +91,6 @@ public class InputAdapter {
 	 * @param klass
 	 */
 	public <T> void addSessionAttribute(String name, Class<T> klass) {
-		// TODO test session attribute
 		this.addAttribute(new SessionModelAttribute<T>(name));
 	}
 }

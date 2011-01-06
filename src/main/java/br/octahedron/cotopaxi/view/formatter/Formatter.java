@@ -18,6 +18,7 @@ package br.octahedron.cotopaxi.view.formatter;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import br.octahedron.cotopaxi.view.ContentType;
 
@@ -28,10 +29,13 @@ import br.octahedron.cotopaxi.view.ContentType;
  * 
  */
 public abstract class Formatter {
+	
+	private static final Logger logger = Logger.getLogger(Formatter.class.getName());
 
-	protected Map<String, Object> attributes;
-	protected ContentType contentType;
-	protected Locale locale;
+	private Map<String, Object> attributes;
+	private ContentType contentType;
+	private Locale locale;
+	private String formatted;
 
 	public Formatter(ContentType contentType) {
 		this.contentType = contentType;
@@ -44,9 +48,16 @@ public abstract class Formatter {
 	 * @return <code>true</code> if it's ready, <code>false</code> otherwise.
 	 */
 	public boolean isReady() {
-		return this.locale != null && this.attributes != null;
+		return this.locale != null && this.attributes != null && !this.isTest();
 	}
 
+	/**
+	 * Gets the attributes to be used by this {@link Formatter}.
+	 */
+	public Map<String, Object> getAttributes() {
+		return this.attributes;
+	}
+	
 	/**
 	 * Gets the response's content type
 	 * 
@@ -75,6 +86,7 @@ public abstract class Formatter {
 	 */
 	public void setAttributes(Map<String, Object> atts) {
 		this.attributes = atts;
+		this.format();
 	}
 
 	/**
@@ -85,24 +97,23 @@ public abstract class Formatter {
 	 */
 	public void setLocale(Locale lc) {
 		this.locale = lc;
+		this.format();
+	}
+
+	public final String getFormatted() {
+		return this.formatted;
 	}
 
 	/**
-	 * Formats the response.
-	 * 
-	 * It's a template method, subclass should implements the {@link Formatter#doFormat()} method.
-	 * 
-	 * @return the formatted response as String.
+	 * Formats the response. It's a template method, subclass should implements the {@link Formatter#doFormat()} method.
 	 */
-	public final String format() throws IllegalStateException {
+	protected final void format() {
 		if (this.isReady()) {
-			return this.doFormat();
-		} else {
-			throw new IllegalStateException("This formatter is not ready.");
-		}
-
+			logger.fine("Formatting...");
+			this.formatted = this.doFormat();
+		} 
 	}
-
+	
 	/**
 	 * Formats the content and return it as String. This method is called by the
 	 * {@link Formatter#format()} template method, that check if this format is ready before call
@@ -112,4 +123,11 @@ public abstract class Formatter {
 	 * @return
 	 */
 	protected abstract String doFormat();
+
+	/**
+	 * Checks if its running tests
+	 */
+	private boolean isTest() {
+		return Boolean.parseBoolean(System.getProperty("cotopaxi.test", "false"));
+	}
 }

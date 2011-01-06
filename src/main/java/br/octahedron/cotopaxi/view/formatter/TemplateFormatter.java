@@ -25,7 +25,7 @@ import br.octahedron.cotopaxi.view.ContentType;
  */
 public abstract class TemplateFormatter extends Formatter {
 
-	protected String template;
+	private String template;
 
 	public TemplateFormatter(ContentType contentType) {
 		super(contentType);
@@ -34,6 +34,13 @@ public abstract class TemplateFormatter extends Formatter {
 	@Override
 	public boolean isReady() {
 		return super.isReady() && this.template != null;
+	}
+	
+	/**
+	 * Gets the template used by this {@link TemplateFormatter}
+	 */
+	public String getTemplate() {
+		return this.template;
 	}
 
 	/**
@@ -44,6 +51,7 @@ public abstract class TemplateFormatter extends Formatter {
 	 */
 	public void setTemplate(String templateFile) {
 		this.template = templateFile;
+		this.format();
 	}
 
 }

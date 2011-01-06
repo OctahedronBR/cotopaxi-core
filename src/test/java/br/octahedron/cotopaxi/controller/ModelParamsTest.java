@@ -29,7 +29,6 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.cotopaxi.RequestWrapper;
 import br.octahedron.cotopaxi.controller.ModelController.ValidationException;
 import br.octahedron.cotopaxi.controller.auth.UserInfo;
@@ -52,7 +51,7 @@ public class ModelParamsTest {
 
 	@Before
 	public void setUp() {
-		this.controller = new ModelController(CotopaxiConfigView.getInstance());
+		this.controller = new ModelController();
 	}
 
 	@Test

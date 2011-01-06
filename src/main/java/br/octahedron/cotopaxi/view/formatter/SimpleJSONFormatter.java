@@ -53,6 +53,6 @@ public class SimpleJSONFormatter extends Formatter {
 	 */
 	@Override
 	protected String doFormat() {
-		return new JSONSerializer().prettyPrint(true).serialize(this.attributes);
+		return new JSONSerializer().prettyPrint(true).serialize(this.getAttributes());
 	}
 }
