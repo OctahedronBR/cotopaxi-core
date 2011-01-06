@@ -37,7 +37,7 @@ public class InstanceHandler<T> {
 			}
 			return this.filters.get(klass);
 		} catch (Exception e) {
-			throw new InstanceLoadException("Unable to loading klass " + klass, e);
+			throw new InstanceLoadException("Unable to load class " + klass, e);
 		}
 	}
 
