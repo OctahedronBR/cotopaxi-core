@@ -147,7 +147,7 @@ public class RequestWrapper implements InputHandler {
 	public Object getSessionParameter(String name) {
 		HttpSession session = this.request.getSession(false);
 		if (session != null) {
-			return this.request.getAttribute(name);
+			return session.getAttribute(name);
 		} else {
 			return null;
 		}

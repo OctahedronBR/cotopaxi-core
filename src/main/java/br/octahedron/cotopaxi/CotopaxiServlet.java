@@ -185,6 +185,7 @@ public class CotopaxiServlet extends HttpServlet {
 					ResponseMetadata responseMetadata = metadata.getResponseMetadata();
 					if (responseMetadata.isStoreOnSession()) {
 						String returnName = responseMetadata.getReturnName();
+						logger.info("Saving object " + returnName + " at session.");
 						request.setSessionAttribute(returnName, ((SuccessActionResponse)actionResp).getReturnValue());
 					}
 				}

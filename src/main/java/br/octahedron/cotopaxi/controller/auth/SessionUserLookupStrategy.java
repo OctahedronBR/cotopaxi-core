@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi.controller.auth;
 
+import java.util.logging.Logger;
+
 import br.octahedron.cotopaxi.InputHandler;
 
 /**
@@ -24,6 +26,8 @@ import br.octahedron.cotopaxi.InputHandler;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class SessionUserLookupStrategy implements UserLookupStrategy {
+	
+	private static final Logger logger = Logger.getLogger(SessionUserLookupStrategy.class.getName());
 	
 	/**
 	 * The user property, used as key to the current user on session map. 
@@ -48,6 +52,7 @@ public class SessionUserLookupStrategy implements UserLookupStrategy {
 
 	@Override
 	public UserInfo getCurrentUSer(InputHandler input) {
+		logger.fine("Trying to recover User from session");
 		return (UserInfo) input.getSessionParameter(USER_SESSION_ATTRIBUTE);
 	}
 
