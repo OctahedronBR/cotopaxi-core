@@ -35,8 +35,10 @@ import br.octahedron.cotopaxi.controller.filter.FilterExecutor;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
 import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
+import br.octahedron.cotopaxi.metadata.annotation.Response.ResponseMetadata;
 import br.octahedron.cotopaxi.model.response.ActionResponse;
 import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
+import br.octahedron.cotopaxi.model.response.ActionResponse.Result;
 import br.octahedron.cotopaxi.view.i18n.LocaleManager;
 import br.octahedron.cotopaxi.view.response.ViewResponse;
 import br.octahedron.cotopaxi.view.response.ViewResponseBuilder;
@@ -176,6 +178,17 @@ public class CotopaxiServlet extends HttpServlet {
 				this.filter.executeFiltersBefore(metadata.getActionMetadata(), request);
 				// execute the controller
 				ActionResponse actionResp = this.controller.executeRequest(request, metadata.getActionMetadata());
+
+				// persist on session // TODO is it here?
+				if ( actionResp.getResult() == Result.SUCCESS) { 
+					// store on session if necessary
+					ResponseMetadata responseMetadata = metadata.getResponseMetadata();
+					if (responseMetadata.isStoreOnSession()) {
+						String returnName = responseMetadata.getReturnName();
+						request.setSessionAttribute(returnName, ((SuccessActionResponse)actionResp).getReturnValue());
+					}
+				}
+				
 				// gets the view response
 				viewResponse = this.view.getViewResponse(lc, request.getFormat(), actionResp, metadata);
 				// execute filters after

@@ -47,7 +47,6 @@ import br.octahedron.cotopaxi.view.formatter.FormatterBuilder;
 import br.octahedron.cotopaxi.view.formatter.FormatterNotFoundException;
 import br.octahedron.cotopaxi.view.formatter.TemplateFormatter;
 import br.octahedron.cotopaxi.view.formatter.VelocityFormatter;
-import br.octahedron.util.ThreadProperties;
 
 /**
  * A builder for the ViewResponse.
@@ -165,12 +164,6 @@ public class ViewResponseBuilder {
 		// check message
 		if (messageMetadata.getOnSuccess() != null) {
 			attributes.put(TemplatesAttributes.MESSAGE_ON_SUCCESS.getAttributeKey(), messageMetadata.getOnSuccess());
-		}
-
-		// store on session if necessary
-		// TODO should it be done here?
-		if (responseMetadata.isStoreOnSession()) {
-			ThreadProperties.setProperty(returnName, result);
 		}
 		// return
 		return attributes;

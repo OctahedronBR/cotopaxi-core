@@ -152,4 +152,9 @@ public class RequestWrapper implements InputHandler {
 			return null;
 		}
 	}
+
+	public void setSessionAttribute(String key, Object value) {
+		HttpSession session = this.request.getSession();
+		session.setAttribute(key, value);
+	}
 }
