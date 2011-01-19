@@ -49,6 +49,15 @@ public class ReflectionUtil {
 		return createInstance(Class.forName(className));
 	}
 
+	public static <T extends Annotation> T getAnnotation(Class<?> klass, Class<T> annClass) {
+		if (klass.isAnnotationPresent(annClass)) {
+			return (T) klass.getAnnotation(annClass);
+
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * Gets all the {@link Method}s annotated with the given {@link Annotation}.
 	 */

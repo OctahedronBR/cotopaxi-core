@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class InstanceHandler<T> {
 
-	private Map<Class<? extends T>, T> filters = new HashMap<Class<? extends T>, T>();
+	private Map<Class<? extends T>, T> instances = new HashMap<Class<? extends T>, T>();
 
 	/**
 	 * Gets a <T> instance for the given Filter's class ready to be used.
@@ -30,12 +30,12 @@ public class InstanceHandler<T> {
 	@SuppressWarnings("unchecked")
 	public final T getInstance(Class<? extends T> klass) {
 		try {
-			if (!this.filters.containsKey(klass)) {
+			if (!this.instances.containsKey(klass)) {
 				T instance = (T) ReflectionUtil.createInstance(klass);
-				this.filters.put(klass, instance);
+				this.instances.put(klass, instance);
 				this.createdInstance(instance);
 			}
-			return this.filters.get(klass);
+			return this.instances.get(klass);
 		} catch (Exception e) {
 			throw new InstanceLoadException("Unable to load class " + klass, e);
 		}

@@ -28,6 +28,7 @@ import br.octahedron.cotopaxi.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.RequestWrapper;
 import br.octahedron.cotopaxi.controller.filter.Filter;
 import br.octahedron.cotopaxi.controller.filter.FilterException;
+import br.octahedron.cotopaxi.inject.InjectorInstanceHandler;
 import br.octahedron.cotopaxi.metadata.annotation.Action.ActionMetadata;
 import br.octahedron.cotopaxi.model.InputAdapter;
 import br.octahedron.cotopaxi.model.attribute.InvalidAttributeException;
@@ -54,7 +55,7 @@ import br.octahedron.util.reflect.InstanceHandler;
 public class ModelController {
 
 	private final Logger logger = Logger.getLogger(ModelController.class.getName());
-	private InstanceHandler<Object> facades = new InstanceHandler<Object>();
+	private InstanceHandler<Object> facades = new InjectorInstanceHandler();
 
 	/**
 	 * Executes the request, it means:
