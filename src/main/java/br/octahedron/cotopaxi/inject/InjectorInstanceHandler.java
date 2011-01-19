@@ -69,6 +69,7 @@ public class InjectorInstanceHandler extends InstanceHandler<Object> {
 				} else {
 					obj = this.getInstance(c);
 				}
+				logger.info("Injecting object " + obj.getClass().getSimpleName() + " into object " + instance.getClass().getSimpleName());
 				set.invoke(instance, obj);
 			}
 		}
