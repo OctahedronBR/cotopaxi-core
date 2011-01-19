@@ -177,7 +177,7 @@ public class FilterExecutorTest {
 			// check test results
 			verify(request);
 			assertEquals(2, FiltersHelper.getFilterBefore());
-			assertEquals(1, FiltersHelper.getFilterAfter());
+			assertEquals(2, FiltersHelper.getFilterAfter());
 		}
 	}
 	
