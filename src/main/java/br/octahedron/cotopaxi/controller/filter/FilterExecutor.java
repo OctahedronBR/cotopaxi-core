@@ -67,11 +67,11 @@ public class FilterExecutor {
 	 */
 	public void executeFiltersAfter(ActionMetadata actionMetadata, RequestWrapper request, ActionResponse actionResp) throws FilterException {
 		logger.info("Executing the after filters for " + request.getURL());
-		if (this.config.hasGlobalFilters()) {
-			this.executeFiltersAfter(this.config.getGlobalFilters(), request, actionResp);
-		}
 		if (actionMetadata.hasFilters()) {
 			this.executeFiltersAfter(actionMetadata.getFilters(), request, actionResp);
+		}
+		if (this.config.hasGlobalFilters()) {
+			this.executeFiltersAfter(this.config.getGlobalFilters(), request, actionResp);
 		}
 	}
 
