@@ -16,16 +16,17 @@
  */
 package br.octahedron.cotopaxi.model.response;
 
+import br.octahedron.cotopaxi.InputHandler;
+
 /**
- * @author nome - email@octahedron.com.br
- * 
+ * @author Danilo Penna Queiroz - danilqueiroz@octahedron.com.br
  */
 public class ExceptionActionResponse extends AbstractActionResponse {
 
 	private Throwable cause;
 
-	public ExceptionActionResponse(Throwable cause) {
-		super(Result.EXCEPTION);
+	public ExceptionActionResponse(InputHandler inputHandler, Throwable cause) {
+		super(Result.EXCEPTION, inputHandler);
 		this.cause = cause;
 	}
 

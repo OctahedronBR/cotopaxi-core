@@ -58,7 +58,7 @@ public class ModelParamsTest {
 	public void testRequestSessionParams1() throws ValidationException {
 		// configure
 		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getSessionParameter("user")).andReturn(new UserInfo("danilo", "tester"));
+		expect(request.getSessionAttribute("user")).andReturn(new UserInfo("danilo", "tester"));
 		expect(request.getRequestParameter("id")).andReturn("1");
 		replay(request);
 		// execute
@@ -73,7 +73,7 @@ public class ModelParamsTest {
 	public void testRequestSessionParams2() throws ValidationException {
 		// configure
 		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getSessionParameter("user")).andReturn(new UserInfo("danilo", "tester"));
+		expect(request.getSessionAttribute("user")).andReturn(new UserInfo("danilo", "tester"));
 		expect(request.getRequestParameter("id")).andReturn(null);
 		replay(request);
 		// execute
@@ -89,7 +89,7 @@ public class ModelParamsTest {
 	public void testRequestSessionParams3() {
 		// configure
 		RequestWrapper request = createMock(RequestWrapper.class);
-		expect(request.getSessionParameter("user")).andReturn(null);
+		expect(request.getSessionAttribute("user")).andReturn(null);
 		expect(request.getRequestParameter("id")).andReturn(null);
 		replay(request);
 		// execute
@@ -110,7 +110,7 @@ public class ModelParamsTest {
 		RequestWrapper request = createMock(RequestWrapper.class);
 		expect(request.getRequestParameter("title")).andReturn("testing");
 		expect(request.getRequestParameter("labels")).andReturn("test,cotopaxi,devel");
-		expect(request.getSessionParameter("date")).andReturn(DateUtil.getDate());
+		expect(request.getSessionAttribute("date")).andReturn(DateUtil.getDate());
 		expect(request.getRequestParameter("id")).andReturn("9");
 		replay(request);
 		// execute

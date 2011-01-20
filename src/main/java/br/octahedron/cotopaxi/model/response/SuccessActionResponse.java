@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi.model.response;
 
+import br.octahedron.cotopaxi.InputHandler;
+
 /**
  * Represents a SUCCESSFUL {@link ActionResponse}.
  * 
@@ -25,10 +27,11 @@ public class SuccessActionResponse extends AbstractActionResponse {
 
 	private Object returnValue;
 
-	public SuccessActionResponse(Object returnValue) {
-		super(Result.SUCCESS);
+	public SuccessActionResponse(InputHandler inputHandler, Object returnValue) {
+		super(Result.SUCCESS, inputHandler);
 		this.returnValue = returnValue;
 	}
+
 
 	public Object getReturnValue() {
 		return this.returnValue;

@@ -170,7 +170,7 @@ public class AuthTest {
 		expect(request.getURL()).andReturn("/restricted3").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
-		expect(request.getSessionParameter(SessionUserLookupStrategy.USER_SESSION_ATTRIBUTE)).andReturn(new UserInfo("danilo","admin"));
+		expect(request.getSessionAttribute(SessionUserLookupStrategy.USER_SESSION_ATTRIBUTE)).andReturn(new UserInfo("danilo","admin"));
 		replay(request);
 
 		this.userStrategy = new SessionUserLookupStrategy();

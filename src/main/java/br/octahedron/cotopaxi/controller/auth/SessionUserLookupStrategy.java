@@ -32,7 +32,7 @@ public class SessionUserLookupStrategy implements UserLookupStrategy {
 	/**
 	 * The user property, used as key to the current user on session map. 
 	 */
-	public static final String USER_SESSION_ATTRIBUTE = "CURRENT_USER";
+	public static final String USER_SESSION_ATTRIBUTE = "current_user";
 	
 	public static final String DEFAULT_LOGIN_URL = "/login";
 	public static final String DEFAULT_REDIRECT_ATTRIBUTE = "redirect";
@@ -53,7 +53,7 @@ public class SessionUserLookupStrategy implements UserLookupStrategy {
 	@Override
 	public UserInfo getCurrentUSer(InputHandler input) {
 		logger.fine("Trying to recover User from session");
-		return (UserInfo) input.getSessionParameter(USER_SESSION_ATTRIBUTE);
+		return (UserInfo) input.getSessionAttribute(USER_SESSION_ATTRIBUTE);
 	}
 
 	@Override

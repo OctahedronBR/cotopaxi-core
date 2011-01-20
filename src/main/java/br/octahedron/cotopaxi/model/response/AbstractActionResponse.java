@@ -19,6 +19,7 @@ package br.octahedron.cotopaxi.model.response;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.octahedron.cotopaxi.InputHandler;
 import br.octahedron.cotopaxi.view.TemplatesAttributes;
 
 /**
@@ -32,8 +33,12 @@ public abstract class AbstractActionResponse implements ActionResponse {
 	private Map<String, Object> attributes = new HashMap<String, Object>();
 	private Result result;
 
-	public AbstractActionResponse(Result result) {
+	public AbstractActionResponse(Result result, InputHandler input) {
 		this.result = result;
+		// copy sessions attributes to ActionResponse Attributes
+		for(String sessionAttName : input.getSessionAttributes()) {
+			this.attributes.put(sessionAttName, input.getSessionAttribute(sessionAttName));
+		}
 	}
 
 	/*

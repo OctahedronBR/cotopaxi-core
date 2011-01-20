@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import br.octahedron.cotopaxi.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.RequestWrapper;
 import br.octahedron.cotopaxi.controller.filter.Filter;
-import br.octahedron.cotopaxi.controller.filter.FilterException;
 import br.octahedron.cotopaxi.inject.InjectorInstanceHandler;
 import br.octahedron.cotopaxi.metadata.annotation.Action.ActionMetadata;
 import br.octahedron.cotopaxi.model.InputAdapter;
@@ -61,37 +60,28 @@ public class ModelController {
 	 * Executes the request, it means:
 	 * 
 	 * <pre>
-	 * 	Executes global filters (doBefore);
-	 * Executes mapping filters (doBefore);
 	 *  Converts model attributes;
 	 *  Validates model attributes;
 	 *  Executes the model;
 	 *  Recovery the {@link SuccessActionResponse};
-	 *  Executes the mapping filters (doAfter);
-	 *  Executes the global filters (doAfter).
 	 * </pre>
 	 * 
-	 * Then, returns the {@link ExecutableResponse}
-	 * 
-	 * @throws FilterException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
 	 */
-	public ActionResponse executeRequest(RequestWrapper request, ActionMetadata actionMetadata) throws FilterException, IllegalArgumentException,
+	public ActionResponse executeRequest(RequestWrapper request, ActionMetadata actionMetadata) throws IllegalArgumentException,
 			IllegalAccessException {
 		ActionResponse response;
 		InputAdapter adapter = actionMetadata.getInputAdapter();
 		try {
 			Object[] params = this.getModelParams(adapter, request);
 			Object result = this.executeModel(actionMetadata.getMethod(), adapter, params);
-			response = new SuccessActionResponse(result);
+			response = new SuccessActionResponse(request, result);
 		} catch (ValidationException e) {
 			this.logger.fine("ValidationException: " + e.getInvalidAttributes().toString());
-			response = new InvalidActionResponse(e.getInvalidAttributes());
+			response = new InvalidActionResponse(request, e.getInvalidAttributes());
 		} catch (InvocationTargetException itex) {
 			Throwable cause = itex.getCause();
 			this.logger.log(Level.INFO, cause.getMessage(), cause);
-			response = new ExceptionActionResponse(cause);
+			response = new ExceptionActionResponse(request, cause);
 		}
 		return response;
 	}

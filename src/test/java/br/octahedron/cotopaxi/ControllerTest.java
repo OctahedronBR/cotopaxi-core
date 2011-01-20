@@ -22,6 +22,8 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,6 +60,7 @@ public class ControllerTest {
 		DateConverter.setDateFormat("dd/MM/yyyy");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void controllerTest1() throws FilterException, PageNotFoundExeption, IllegalArgumentException, IllegalAccessException {
 		/*
@@ -68,6 +71,7 @@ public class ControllerTest {
 		expect(request.getURL()).andReturn("/except").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
+		expect(request.getSessionAttributes()).andReturn(Collections.EMPTY_LIST);
 		replay(request);
 
 		// invoking the controller
@@ -79,6 +83,7 @@ public class ControllerTest {
 		assertEquals(Exception.class, ((ExceptionActionResponse) resp).getCause().getClass());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void controllerTest2() throws FilterException, PageNotFoundExeption, IllegalArgumentException, IllegalAccessException {
 		/*
@@ -89,6 +94,7 @@ public class ControllerTest {
 		expect(request.getURL()).andReturn("/helloworld").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn("html");
+		expect(request.getSessionAttributes()).andReturn(Collections.EMPTY_LIST);		
 		replay(request);
 
 		// invoking the controller
@@ -101,6 +107,7 @@ public class ControllerTest {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void controllerTest3() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
@@ -113,6 +120,7 @@ public class ControllerTest {
 		expect(request.getFormat()).andReturn(null);
 		request.setRequestParameter("name", "test");
 		expect(request.getRequestParameter("name")).andReturn("test");
+		expect(request.getSessionAttributes()).andReturn(Collections.EMPTY_LIST);
 		replay(request);
 
 		// invoking the controller
@@ -124,6 +132,7 @@ public class ControllerTest {
 		assertEquals("Hello, test", ((SuccessActionResponse) resp).getReturnValue());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void controllerTest4() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
@@ -136,6 +145,7 @@ public class ControllerTest {
 		expect(request.getFormat()).andReturn(null);
 		request.setRequestParameter("name", "coder");
 		expect(request.getRequestParameter("name")).andReturn("coder");
+		expect(request.getSessionAttributes()).andReturn(Collections.EMPTY_LIST);
 		replay(request);
 
 		// invoking the controller
@@ -148,6 +158,7 @@ public class ControllerTest {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void controllerTest5() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
@@ -159,6 +170,7 @@ public class ControllerTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		expect(request.getRequestParameter("int")).andReturn("lalala");
+		expect(request.getSessionAttributes()).andReturn(Collections.EMPTY_LIST);
 		replay(request);
 
 		// invoking the controller
@@ -170,6 +182,7 @@ public class ControllerTest {
 		assertEquals("int", ((InvalidActionResponse) resp).getInvalidAttributes().iterator().next());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void controllerTest6() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
@@ -182,6 +195,7 @@ public class ControllerTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		expect(request.getRequestParameter("int")).andReturn("11");
+		expect(request.getSessionAttributes()).andReturn(Collections.EMPTY_LIST);
 		replay(request);
 
 		// invoking the controller
@@ -193,6 +207,7 @@ public class ControllerTest {
 		assertEquals("int", ((InvalidActionResponse) resp).getInvalidAttributes().iterator().next());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void controllerTest7() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
@@ -204,6 +219,7 @@ public class ControllerTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		expect(request.getRequestParameter("str")).andReturn("name1,name2,name3,name4");
+		expect(request.getSessionAttributes()).andReturn(Collections.EMPTY_LIST);
 		replay(request);
 
 		// invoking the controller
@@ -215,6 +231,7 @@ public class ControllerTest {
 		assertEquals(4, ((String[]) ((SuccessActionResponse) resp).getReturnValue()).length);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void controllerTest8() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
 		/*
@@ -226,6 +243,7 @@ public class ControllerTest {
 		expect(request.getFormat()).andReturn(null);
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
 		expect(request.getRequestParameter("int")).andReturn(null);
+		expect(request.getSessionAttributes()).andReturn(Collections.EMPTY_LIST);
 		replay(request);
 
 		// invoking the controller

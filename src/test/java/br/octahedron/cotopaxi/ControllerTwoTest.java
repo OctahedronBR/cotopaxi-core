@@ -22,6 +22,8 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,6 +57,7 @@ public class ControllerTwoTest {
 		DateConverter.setDateFormat("dd/MM/yyyy");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void controllerTest1() throws FilterException, PageNotFoundExeption, IllegalArgumentException, IllegalAccessException {
 		/*
@@ -69,6 +72,7 @@ public class ControllerTwoTest {
 		request.setRequestParameter("module_name", "contact");
 		expect(request.getRequestParameter("event_name")).andReturn("teste");
 		expect(request.getRequestParameter("module_name")).andReturn("contact");
+		expect(request.getSessionAttributes()).andReturn(Collections.EMPTY_LIST);
 		replay(request);
 
 		// invoking the controller

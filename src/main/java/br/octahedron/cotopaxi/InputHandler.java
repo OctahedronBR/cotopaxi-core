@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi;
 
+import java.util.Collection;
+
 /**
  * This entity handles the inupt parameters from servlet. It provides access to the Servlet Request
  * Parameters and Servlet Session Parameters.
@@ -36,6 +38,12 @@ public interface InputHandler {
 	 * @param name the parameter's name
 	 * @return the parameter's value, or null if doesn't exist such parameter
 	 */
-	public Object getSessionParameter(String name);
+	public Object getSessionAttribute(String name);
+
+	/**
+	 * Gets a collection with all session attributes' names.
+	 * @return a collection with all session attributes' names.
+	 */
+	public Collection<String> getSessionAttributes();
 
 }

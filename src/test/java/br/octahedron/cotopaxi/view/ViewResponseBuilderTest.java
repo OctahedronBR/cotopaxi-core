@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -69,6 +70,7 @@ public class ViewResponseBuilderTest {
 		this.builder = new ViewResponseBuilder(CotopaxiConfigView.getInstance());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void messageTemplateCodeTest1() throws PageNotFoundExeption, FormatterNotFoundException, IOException {
 		// configuration
@@ -76,10 +78,11 @@ public class ViewResponseBuilderTest {
 		expect(request.getURL()).andReturn("/test1").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
+		expect(request.getSessionAttributes()).andReturn(Collections.EMPTY_LIST);
 		replay(request);
 		MetadataHandler metadata = this.mapper.getMapping(request);
 		// execution
-		ViewResponse resp = this.builder.getViewResponse(Locale.US, null, new SuccessActionResponse(null), metadata);
+		ViewResponse resp = this.builder.getViewResponse(Locale.US, null, new SuccessActionResponse(request, null), metadata);
 		FakeResponseWrapper rw = new FakeResponseWrapper();
 		resp.dispatch(rw);
 		VelocityFormatter fmt = (VelocityFormatter) rw.getFormatter();
@@ -91,6 +94,7 @@ public class ViewResponseBuilderTest {
 		assertEquals("OK", atts.get(TemplatesAttributes.MESSAGE_ON_SUCCESS.getAttributeKey()));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void messageTemplateCodeTest2() throws PageNotFoundExeption, FormatterNotFoundException, IOException {
 		// configuration
@@ -98,10 +102,11 @@ public class ViewResponseBuilderTest {
 		expect(request.getURL()).andReturn("/test1").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
+		expect(request.getSessionAttributes()).andReturn(Collections.EMPTY_LIST);
 		replay(request);
 		MetadataHandler metadata = this.mapper.getMapping(request);
 		// execution
-		ViewResponse resp = this.builder.getViewResponse(Locale.US, null, new ExceptionActionResponse(new NullPointerException()), metadata);
+		ViewResponse resp = this.builder.getViewResponse(Locale.US, null, new ExceptionActionResponse(request, new NullPointerException()), metadata);
 		FakeResponseWrapper rw = new FakeResponseWrapper();
 		resp.dispatch(rw);
 		VelocityFormatter fmt = (VelocityFormatter) rw.getFormatter();
@@ -123,10 +128,12 @@ public class ViewResponseBuilderTest {
 		expect(request.getURL()).andReturn("/test1").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
+		expect(request.getSessionAttributes()).andReturn(Arrays.asList("test"));
+		expect(request.getSessionAttribute("test")).andReturn(new Object());
 		replay(request);
 		MetadataHandler metadata = this.mapper.getMapping(request);
 		// execution
-		ViewResponse resp = this.builder.getViewResponse(Locale.US, null, new InvalidActionResponse("name", "age"), metadata);
+		ViewResponse resp = this.builder.getViewResponse(Locale.US, null, new InvalidActionResponse(request, "name", "age"), metadata);
 		FakeResponseWrapper rw = new FakeResponseWrapper();
 		resp.dispatch(rw);
 		VelocityFormatter fmt = (VelocityFormatter) rw.getFormatter();

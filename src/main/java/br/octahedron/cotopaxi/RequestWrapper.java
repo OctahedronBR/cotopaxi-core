@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -144,7 +146,7 @@ public class RequestWrapper implements InputHandler {
 	}
 
 	@Override
-	public Object getSessionParameter(String name) {
+	public Object getSessionAttribute(String name) {
 		HttpSession session = this.request.getSession(false);
 		if (session != null) {
 			return session.getAttribute(name);
@@ -156,5 +158,16 @@ public class RequestWrapper implements InputHandler {
 	public void setSessionAttribute(String key, Object value) {
 		HttpSession session = this.request.getSession();
 		session.setAttribute(key, value);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<String> getSessionAttributes() {
+		HttpSession session = this.request.getSession(false);
+		if (session != null) {
+			return Collections.list(session.getAttributeNames());
+		} else {
+			return Collections.EMPTY_LIST;
+		}
 	}
 }

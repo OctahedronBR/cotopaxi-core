@@ -36,7 +36,7 @@ public class SessionModelAttribute<T> implements ModelAttribute<T> {
 	@Override
 	public T getAttributeValue(InputHandler input) throws InvalidAttributeException, ConversionException {
 		try {
-			T value = (T) input.getSessionParameter(this.name);
+			T value = (T) input.getSessionAttribute(this.name);
 			if (value == null) {
 				throw new InvalidAttributeException();
 			}
