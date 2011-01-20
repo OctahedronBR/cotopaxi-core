@@ -22,11 +22,11 @@ import br.octahedron.cotopaxi.ResponseWrapper;
 import br.octahedron.cotopaxi.view.formatter.Formatter;
 
 /**
- * @author nome - email@octahedron.com.br
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
 public class FormatterViewResponse implements ViewResponse {
-
+	
 	private Formatter formatter;
 	private ResultCode code;
 

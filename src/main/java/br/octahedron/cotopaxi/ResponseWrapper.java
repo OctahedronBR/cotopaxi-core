@@ -18,6 +18,7 @@ package br.octahedron.cotopaxi;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,6 +33,8 @@ import br.octahedron.cotopaxi.view.response.ResultCode;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class ResponseWrapper {
+	
+	private static final Logger logger = Logger.getLogger(ResponseWrapper.class.getName());
 
 	private HttpServletResponse response;
 
@@ -44,6 +47,7 @@ public class ResponseWrapper {
 	 *            the response's status code
 	 */
 	public void setResultCode(ResultCode code) {
+		logger.fine("Response -> ResultCode:" + code.getIntCode());
 		this.response.setStatus(code.getIntCode());
 	}
 
@@ -64,6 +68,7 @@ public class ResponseWrapper {
 	 *            the response's content type
 	 */
 	public void setContentType(ContentType contentType) {
+		logger.fine("Response -> ContentType:" + contentType.getContentTypeAsString());
 		this.response.setContentType(contentType.getContentTypeAsString());
 	}
 
@@ -72,6 +77,7 @@ public class ResponseWrapper {
 	 *            the response's locale
 	 */
 	public void setLocale(Locale locale) {
+		logger.fine("Response -> Locale:" + locale.toString());
 		this.response.setLocale(locale);
 	}
 
@@ -113,7 +119,7 @@ public class ResponseWrapper {
 	 * @param output
 	 *            The content to be renderer to user.
 	 */
-	public void render(String output) throws IOException {
+	private void render(String output) throws IOException {
 		this.response.getWriter().write(output);
 		this.response.flushBuffer();
 	}

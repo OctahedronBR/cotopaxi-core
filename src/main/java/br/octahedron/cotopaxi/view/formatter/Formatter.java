@@ -18,7 +18,6 @@ package br.octahedron.cotopaxi.view.formatter;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import br.octahedron.cotopaxi.view.ContentType;
 
@@ -30,8 +29,6 @@ import br.octahedron.cotopaxi.view.ContentType;
  */
 public abstract class Formatter {
 	
-	private static final Logger logger = Logger.getLogger(Formatter.class.getName());
-
 	private Map<String, Object> attributes;
 	private ContentType contentType;
 	private Locale locale;
@@ -109,7 +106,6 @@ public abstract class Formatter {
 	 */
 	protected final void format() {
 		if (this.isReady()) {
-			logger.fine("Formatting...");
 			this.formatted = this.doFormat();
 		} 
 	}
