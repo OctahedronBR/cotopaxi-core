@@ -27,6 +27,7 @@ import br.octahedron.cotopaxi.metadata.annotation.LoginRequired.LoginRequiredMet
 import br.octahedron.cotopaxi.metadata.annotation.Message.MessageMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.Response.ResponseMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.Template.TemplateMetadata;
+import br.octahedron.cotopaxi.metadata.annotation.Redirect.RedirectMetadata;;
 
 /**
  * This entity handlers all metadata extract {@link Action} methods.
@@ -47,6 +48,7 @@ public class MetadataHandler {
 	protected TemplateMetadata templateMetadata;
 	protected ResponseMetadata responseMetadata;
 	protected MessageMetadata messageMetadata;
+	private RedirectMetadata redirectMetadata;
 
 	protected MetadataHandler(Method met) {
 		this.actionMetadata = new ActionMetadata(met);
@@ -54,6 +56,7 @@ public class MetadataHandler {
 		this.templateMetadata = new TemplateMetadata(met);
 		this.responseMetadata = new ResponseMetadata(met);
 		this.messageMetadata = new MessageMetadata(met);
+		this.redirectMetadata = new RedirectMetadata(met);
 	}
 
 	public ActionMetadata getActionMetadata() {
@@ -74,5 +77,9 @@ public class MetadataHandler {
 
 	public MessageMetadata getMessageMetadata() {
 		return this.messageMetadata;
+	}
+	
+	public RedirectMetadata getRedirectMetadata() {
+		return redirectMetadata;
 	}
 }

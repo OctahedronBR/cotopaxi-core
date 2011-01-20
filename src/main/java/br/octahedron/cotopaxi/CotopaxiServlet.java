@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.octahedron.cotopaxi.controller.ModelController;
+import br.octahedron.cotopaxi.controller.RedirectStrategy;
 import br.octahedron.cotopaxi.controller.auth.AuthManager;
 import br.octahedron.cotopaxi.controller.auth.UserNotAuthorizedException;
 import br.octahedron.cotopaxi.controller.auth.UserNotLoggedException;
@@ -35,6 +36,7 @@ import br.octahedron.cotopaxi.controller.filter.FilterExecutor;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
 import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
+import br.octahedron.cotopaxi.metadata.annotation.Redirect.RedirectMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.Response.ResponseMetadata;
 import br.octahedron.cotopaxi.model.response.ActionResponse;
 import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
@@ -85,7 +87,7 @@ public class CotopaxiServlet extends HttpServlet {
 			// creating Filter Executor
 			this.filter = new FilterExecutor(this.config);
 			// create the Model Controller
-			this.controller = new ModelController(); 
+			this.controller = new ModelController();
 			// create Authentication Manager
 			this.auth = new AuthManager(this.config);
 			// create the ViewerManager
@@ -180,18 +182,25 @@ public class CotopaxiServlet extends HttpServlet {
 				ActionResponse actionResp = this.controller.executeRequest(request, metadata.getActionMetadata());
 
 				// persist on session // TODO is it here?
-				if ( actionResp.getResult() == Result.SUCCESS) { 
+				if (actionResp.getResult() == Result.SUCCESS) {
 					// store on session if necessary
 					ResponseMetadata responseMetadata = metadata.getResponseMetadata();
 					if (responseMetadata.isStoreOnSession()) {
 						String returnName = responseMetadata.getReturnName();
 						logger.info("Saving object " + returnName + " at session.");
-						request.setSessionAttribute(returnName, ((SuccessActionResponse)actionResp).getReturnValue());
+						request.setSessionAttribute(returnName, ((SuccessActionResponse) actionResp).getReturnValue());
 					}
 				}
-				
+
+				// checks if should redirect
+				RedirectMetadata redirectMetadata = metadata.getRedirectMetadata();
+				RedirectStrategy redirect = redirectMetadata.getRedirectStrategy();
 				// gets the view response
-				viewResponse = this.view.getViewResponse(lc, request.getFormat(), actionResp, metadata);
+				if (redirect.shouldRedirect(actionResp)) {
+					viewResponse = this.view.getViewResponse(redirect.getRedirectURL(actionResp, request));
+				} else {
+					viewResponse = this.view.getViewResponse(lc, request.getFormat(), actionResp, metadata);
+				}
 				// execute filters after
 				this.filter.executeFiltersAfter(metadata.getActionMetadata(), request, actionResp);
 			} catch (UserNotLoggedException e) {

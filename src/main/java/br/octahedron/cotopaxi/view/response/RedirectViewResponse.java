@@ -21,11 +21,10 @@ import java.io.IOException;
 import br.octahedron.cotopaxi.ResponseWrapper;
 
 /**
- * @author nome - email@octahedron.com.br
- * 
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class RedirectViewResponse implements ViewResponse {
-
+	
 	private String redirectURL;
 
 	protected RedirectViewResponse(String redirectURL) {

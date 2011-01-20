@@ -23,7 +23,6 @@ import br.octahedron.cotopaxi.view.formatter.Formatter;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
- * 
  */
 public class FormatterViewResponse implements ViewResponse {
 	

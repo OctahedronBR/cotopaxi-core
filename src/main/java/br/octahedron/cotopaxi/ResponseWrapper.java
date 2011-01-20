@@ -96,6 +96,7 @@ public class ResponseWrapper {
 	 *            The URL to be redirected
 	 */
 	public void redirect(String url) throws IOException {
+		logger.fine("Redirecting response to " + url);
 		this.response.sendRedirect(url);
 	}
 
@@ -120,6 +121,7 @@ public class ResponseWrapper {
 	 *            The content to be renderer to user.
 	 */
 	private void render(String output) throws IOException {
+		logger.fine("Rendering and flusing response");
 		this.response.getWriter().write(output);
 		this.response.flushBuffer();
 	}

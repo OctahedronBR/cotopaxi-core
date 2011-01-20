@@ -99,8 +99,6 @@ public class ViewResponseBuilder {
 		switch (actionResponse.getResult()) {
 		// TODO refactor
 		case SUCCESS:
-			// check if is a redirect
-			// if not
 			SuccessActionResponse sar = (SuccessActionResponse) actionResponse;
 			attributes = this.getResponseAtts(sar, metadata.getResponseMetadata(), metadata.getMessageMetadata());
 			// get and prepare formatter
@@ -114,8 +112,6 @@ public class ViewResponseBuilder {
 			// return formatter view
 			return new FormatterViewResponse(fmt, ResultCode.SUCCESS);
 		case VALIDATION_FAILED:
-			// check if is a redirect
-			// if not
 			InvalidActionResponse iar = (InvalidActionResponse) actionResponse;
 			attributes = this.getResponseAtts(iar, metadata.getResponseMetadata(), metadata.getMessageMetadata());
 			// get and prepare formatter
@@ -129,8 +125,6 @@ public class ViewResponseBuilder {
 			// return formatter view
 			return new FormatterViewResponse(fmt, ResultCode.BAD_REQUEST);
 		case EXCEPTION:
-			// check if is a redirect
-			// if not
 			ExceptionActionResponse ear = (ExceptionActionResponse) actionResponse;
 			attributes = this.getResponseAtts(ear, metadata.getResponseMetadata(), metadata.getMessageMetadata());
 			// get and prepare formatter
