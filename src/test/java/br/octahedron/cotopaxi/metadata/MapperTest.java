@@ -189,5 +189,19 @@ public class MapperTest {
 		this.mapper.getMapping(this.request);
 		verify(this.request);
 	}
+	
+	@Test
+	public void testExtractAtts3() throws PageNotFoundExeption, SecurityException, NoSuchMethodException {
+		expect(this.request.getURL()).andReturn("/something_really_big/a/myfullname/1/452");
+		expect(this.request.getHTTPMethod()).andStubReturn(HTTPMethod.GET);
+		expect(this.request.getFormat()).andReturn(null);
+		expect(this.request.getURL()).andReturn("/something_really_big/a/myfullname/1/452");
+		this.request.setRequestParameter("name", "myfullname");
+		this.request.setRequestParameter("id", "452");
+		replay(this.request);
+		// 4 - /user/{id}
+		this.mapper.getMapping(this.request);
+		verify(this.request);
+	}
 
 }

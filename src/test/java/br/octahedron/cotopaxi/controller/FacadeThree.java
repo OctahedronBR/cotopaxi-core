@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi.controller;
 
+import static br.octahedron.cotopaxi.metadata.annotation.Action.HTTPMethod.GET;
+import br.octahedron.cotopaxi.controller.adapters.AddModuleAdapter;
 import br.octahedron.cotopaxi.metadata.annotation.Action;
 import br.octahedron.cotopaxi.metadata.annotation.LoginRequired;
 import br.octahedron.cotopaxi.metadata.annotation.Action.HTTPMethod;
@@ -47,5 +49,10 @@ public class FacadeThree {
 	@Action(url = "/three/user", method = HTTPMethod.GET)
 	public void logout(String username, String something) {
 
+	}
+	
+	@Action(url = "/{event_name}/{module_name}/add", method = GET, adapter = AddModuleAdapter.class)
+	public void addModule(String eventName, String moduleName) {
+		
 	}
 }

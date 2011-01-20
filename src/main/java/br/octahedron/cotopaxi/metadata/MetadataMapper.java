@@ -18,7 +18,6 @@ package br.octahedron.cotopaxi.metadata;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,8 +56,9 @@ public class MetadataMapper {
 	public static final String NOT_FOUND_METHOD = "notFoundMethod";
 
 	private static final String METHOD_SEPARATOR = "%%";
+	private static final String SEPARATOR = "/";
 	/* pattern for non static urls */
-	private static final Pattern nonStaticPattern = Pattern.compile("^(/[a-zA-Z_0-9]*)*(/\\{[a-zA-Z_0-9]+\\})+(/[a-zA-Z_0-9]*)*$");
+	private static final Pattern nonStaticPattern = Pattern.compile("^((/[a-zA-Z_0-9]+)*(/\\{[a-zA-Z_0-9]+\\})+(/[a-zA-Z_0-9]+)*)+/?$");
 	/* pattern for variables */
 	private static final Pattern variablePattern = Pattern.compile("\\{[a-zA-Z_0-9]+\\}");
 
@@ -180,23 +180,17 @@ public class MetadataMapper {
 	 * accessed URL and maps the parameters, setting it on the {@link RequestWrapper}.
 	 */
 	private void extractURLParameters(InputAdapter mapping, String mappingURL, RequestWrapper request) {
-		Scanner scan = new Scanner(mappingURL);
-		String url = request.getURL();
-		String attName = scan.findInLine(variablePattern);
-		while (attName != null) {
-			attName = attName.substring(1, attName.length() - 1);
-			int matchStart = scan.match().start();
-			int matchEnd = url.indexOf("/", matchStart);
-			if (matchEnd > 0) {
-				String value = url.substring(matchStart, matchEnd);
-				request.setRequestParameter(attName, value);
-			} else {
-				String value = url.substring(matchStart);
+		String[] mappingURLTokens = mappingURL.split(SEPARATOR);
+		String[] requestURLTokens = request.getURL().split(SEPARATOR);
+		for(int i = 1; i < mappingURLTokens.length; i++) {
+			Matcher m = variablePattern.matcher(mappingURLTokens[i]);
+			if ( m.matches() ) {
+				String attName = mappingURLTokens[i];
+				attName = attName.substring(1, attName.length() - 1);
+				String value = requestURLTokens[i];
 				request.setRequestParameter(attName, value);
 			}
-			attName = scan.findInLine(variablePattern);
 		}
-		scan.close();
 	}
 
 	/**
