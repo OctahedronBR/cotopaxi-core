@@ -39,15 +39,10 @@ import br.octahedron.cotopaxi.view.response.ViewResponse;
 public class FilterExecutor {
 
 	private static final Logger logger = Logger.getLogger(FilterExecutor.class.getName());
-	@Inject
-	private InstanceHandler instanceHandler;
+	private InstanceHandler instanceHandler = new InstanceHandler();
 	@Inject
 	private CotopaxiConfigView cotopaxiConfigView;
-
-	public void setInstanceHandler(InstanceHandler instanceHandler) {
-		this.instanceHandler = instanceHandler;
-	}
-
+	
 	public void setCotopaxiConfigView(CotopaxiConfigView cotopaxiConfigView) {
 		this.cotopaxiConfigView = cotopaxiConfigView;
 	}

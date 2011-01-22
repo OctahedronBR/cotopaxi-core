@@ -48,8 +48,10 @@ public class RequestWrapper implements InputHandler {
 	private Map<String, String> requestParameters;
 
 	public RequestWrapper(HttpServletRequest req) {
-		this.request = req;
-		this.extractURLparams();
+		if (req != null) {
+			this.request = req;
+			this.extractURLparams();
+		}
 	}
 
 	private void extractURLparams() {

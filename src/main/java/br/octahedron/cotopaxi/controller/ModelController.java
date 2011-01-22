@@ -19,7 +19,6 @@ package br.octahedron.cotopaxi.controller;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -139,22 +138,5 @@ public class ModelController {
 			InvocationTargetException {
 		Object facade = this.instanceHandler.getInstance(method.getDeclaringClass());
 		return method.invoke(facade, params);
-	}
-
-	/**
-	 * Thrown to indicate and validation exception while getting model params.
-	 */
-	protected static class ValidationException extends Exception {
-
-		private static final long serialVersionUID = -1072466743781926291L;
-		private Collection<String> invalidAttributes;
-
-		public ValidationException(Collection<String> invalidAttributes) {
-			this.invalidAttributes = invalidAttributes;
-		}
-
-		public Collection<String> getInvalidAttributes() {
-			return this.invalidAttributes;
-		}
 	}
 }

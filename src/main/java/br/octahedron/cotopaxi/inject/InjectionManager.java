@@ -24,12 +24,12 @@ import java.util.logging.Logger;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-public class InjectionManager {
+public abstract class InjectionManager {
 
 	private static final Logger logger = Logger.getLogger(InjectionManager.class.getName());
 
-	private static final Map<Class<?>, Object> instances = new HashMap<Class<?>, Object>();
-	private static final Map<Class<?>, Class<?>> dependencies = new HashMap<Class<?>, Class<?>>();
+	protected static final Map<Class<?>, Object> instances = new HashMap<Class<?>, Object>();
+	protected static final Map<Class<?>, Class<?>> dependencies = new HashMap<Class<?>, Class<?>>();
 
 	/**
 	 * Registers an implementation class for a given dependency.
@@ -85,5 +85,10 @@ public class InjectionManager {
 	@SuppressWarnings("unchecked")
 	protected static <T> T getImplementation(Class<T> klass) {
 		return (T) instances.get(klass);
+	}
+	
+	protected void reset() {
+		instances.clear();
+		dependencies.clear();
 	}
 }

@@ -30,7 +30,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.octahedron.cotopaxi.RequestWrapper;
-import br.octahedron.cotopaxi.controller.ModelController.ValidationException;
 import br.octahedron.cotopaxi.controller.auth.UserInfo;
 import br.octahedron.cotopaxi.model.InputAdapter;
 import br.octahedron.cotopaxi.model.attribute.ObjectModelAttribute;
