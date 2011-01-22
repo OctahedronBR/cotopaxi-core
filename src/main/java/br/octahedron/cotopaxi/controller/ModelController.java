@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import br.octahedron.cotopaxi.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.RequestWrapper;
 import br.octahedron.cotopaxi.controller.filter.Filter;
-import br.octahedron.cotopaxi.inject.InjectorInstanceHandler;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.cotopaxi.metadata.annotation.Action.ActionMetadata;
 import br.octahedron.cotopaxi.model.InputAdapter;
 import br.octahedron.cotopaxi.model.attribute.InvalidAttributeException;
@@ -37,7 +37,6 @@ import br.octahedron.cotopaxi.model.response.ActionResponse;
 import br.octahedron.cotopaxi.model.response.ExceptionActionResponse;
 import br.octahedron.cotopaxi.model.response.InvalidActionResponse;
 import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
-import br.octahedron.util.reflect.InstanceHandler;
 
 /**
  * The ModelController is responsible by the model execution. It means that this entity is
@@ -54,7 +53,8 @@ import br.octahedron.util.reflect.InstanceHandler;
 public class ModelController {
 
 	private final Logger logger = Logger.getLogger(ModelController.class.getName());
-	private InstanceHandler<Object> facades = new InjectorInstanceHandler();
+	private InstanceHandler instanceHandler = new InstanceHandler();
+
 
 	/**
 	 * Executes the request, it means:
@@ -138,7 +138,7 @@ public class ModelController {
 	 */
 	private Object executeModel(Method method, InputAdapter mapping, Object[] params) throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
-		Object facade = this.facades.getInstance(method.getDeclaringClass());
+		Object facade = this.instanceHandler.getInstance(method.getDeclaringClass());
 		return method.invoke(facade, params);
 	}
 

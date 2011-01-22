@@ -49,7 +49,9 @@ public class MemcacheQueueTest {
 	public void setUp() {
 		this.cacheFacade = createMock(MemcacheFacade.class);
 		this.monitor = createMock(DistributedLock.class);
-		this.queue = new DistributedQueue<String>(this.cacheKey, this.cacheFacade, this.monitor);
+		this.queue = new DistributedQueue<String>(this.cacheKey);
+		this.queue.setMemcacheFacade(this.cacheFacade);
+		this.queue.setDistributedLock(this.monitor);
 	}
 
 	@Test

@@ -22,10 +22,12 @@ import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-@Inject(classes={DatastoreFacade.class, MemcacheFacade.class})
 public class UserDAO {
 
+	@Inject
 	private DatastoreFacade datastoreFacade;
+	
+	@Inject
 	private MemcacheFacade memcacheFacade;
 	
 	public DatastoreFacade getDatastoreFacade() {

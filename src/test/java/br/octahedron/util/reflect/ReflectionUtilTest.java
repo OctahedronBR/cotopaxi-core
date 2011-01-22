@@ -39,7 +39,7 @@ public class ReflectionUtilTest {
 	@Test
 	public void testReflection() throws InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException,
 			InvocationTargetException {
-		CotopaxiConfigurator facade = (CotopaxiConfigurator) ReflectionUtil.createInstance("br.octahedron.util.reflect.FakeObj");
+		CotopaxiConfigurator facade = FakeObj.class.newInstance();
 
 		Collection<AnnotatedMethod<Action>> methods = ReflectionUtil.getAnnotatedMethods(FakeObj.class, Action.class);
 		assertEquals(1, methods.size());

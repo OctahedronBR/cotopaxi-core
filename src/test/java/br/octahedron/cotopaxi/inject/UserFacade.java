@@ -19,9 +19,8 @@ package br.octahedron.cotopaxi.inject;
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-@Inject(classes={UserService.class})
 public class UserFacade {
-	
+	@Inject
 	private UserService userService;
 
 	public UserService getUserService() {

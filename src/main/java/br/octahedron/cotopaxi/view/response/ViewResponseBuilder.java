@@ -33,6 +33,7 @@ import java.util.Map;
 import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.cotopaxi.controller.auth.UserNotAuthorizedException;
 import br.octahedron.cotopaxi.controller.auth.UserNotLoggedException;
+import br.octahedron.cotopaxi.inject.Inject;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
 import br.octahedron.cotopaxi.metadata.annotation.Message.MessageMetadata;
@@ -55,14 +56,26 @@ import br.octahedron.cotopaxi.view.formatter.VelocityFormatter;
  * 
  */
 public class ViewResponseBuilder {
-
-	private FormatterBuilder builder;
-	private CotopaxiConfigView config;
-
-	public ViewResponseBuilder(CotopaxiConfigView config) {
-		this.config = config;
-		this.builder = new FormatterBuilder(config);
+	
+	@Inject
+	private FormatterBuilder formatterBuilder;
+	@Inject
+	private CotopaxiConfigView cotopaxiConfigView;
+	
+	/**
+	 * @param formatterBuilder Sets the {@link FormatterBuilder}
+	 */
+	public void setFormatterBuilder(FormatterBuilder formatterBuilder) {
+		this.formatterBuilder = formatterBuilder;
 	}
+	
+	/**
+	 * @param cotopaxiConfigView Sets the {@link CotopaxiConfigView}
+	 */
+	public void setCotopaxiConfigView(CotopaxiConfigView cotopaxiConfigView) {
+		this.cotopaxiConfigView = cotopaxiConfigView;
+	}
+	
 
 	/**
 	 * Creates a {@link ViewResponse}
@@ -202,7 +215,7 @@ public class ViewResponseBuilder {
 		if (format == null) {
 			format = responseMetadata.getFormats()[0];
 		}
-		return this.builder.getFormatter(format);
+		return this.formatterBuilder.getFormatter(format);
 	}
 
 	/**
@@ -214,7 +227,7 @@ public class ViewResponseBuilder {
 		atts.put(URL_NOT_FOUND_ATTRIBUTE.getAttributeKey(), pnfex.getUrl());
 		atts.put(URL_NOT_FOUND_METHOD_ATTRIBUTE.getAttributeKey(), pnfex.getHttpMethod().toString());
 		// get formatter
-		TemplateFormatter formatter = new VelocityFormatter(this.config.getNotFoundTemplate(), atts, lc);
+		TemplateFormatter formatter = new VelocityFormatter(this.cotopaxiConfigView.getNotFoundTemplate(), atts, lc);
 		return new FormatterViewResponse(formatter, ResultCode.NOT_FOUND);
 	}
 
@@ -226,7 +239,7 @@ public class ViewResponseBuilder {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		extractExceptionAttributes(attributes, ex);
 		// get and prepare formatter
-		TemplateFormatter formatter = new VelocityFormatter(this.config.getErrorTemplate(), attributes, lc);
+		TemplateFormatter formatter = new VelocityFormatter(this.cotopaxiConfigView.getErrorTemplate(), attributes, lc);
 		return new FormatterViewResponse(formatter, ResultCode.INTERNAL_ERROR);
 	}
 
@@ -235,7 +248,7 @@ public class ViewResponseBuilder {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		extractExceptionAttributes(attributes, ex);
 		// get and prepare formatter
-		TemplateFormatter formatter = new VelocityFormatter(this.config.getForbiddenTemplate(), attributes, lc);
+		TemplateFormatter formatter = new VelocityFormatter(this.cotopaxiConfigView.getForbiddenTemplate(), attributes, lc);
 		return new FormatterViewResponse(formatter, ResultCode.FORBIDDEN);
 	}
 

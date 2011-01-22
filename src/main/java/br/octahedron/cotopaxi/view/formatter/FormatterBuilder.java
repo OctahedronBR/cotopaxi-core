@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.octahedron.cotopaxi.CotopaxiConfigView;
-import br.octahedron.util.reflect.ReflectionUtil;
+import br.octahedron.cotopaxi.inject.Inject;
 
 /**
  * A builder for formatters. It creates the right {@link Formatter} for a given format. It looks at
@@ -32,14 +32,21 @@ import br.octahedron.util.reflect.ReflectionUtil;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class FormatterBuilder {
-
+	
+	@Inject
+	private CotopaxiConfigView cotopaxiConfigView;
 	private Map<String, Class<? extends Formatter>> defaultFormatters = new HashMap<String, Class<? extends Formatter>>();
-	private CotopaxiConfigView config;
-
-	public FormatterBuilder(CotopaxiConfigView config) {
-		this.config = config;
+	
+	public FormatterBuilder() {
 		this.registerDefaultFormatter(HTML_FORMAT, VelocityFormatter.class);
 		this.registerDefaultFormatter(JSON_FORMAT, SimpleJSONFormatter.class);
+	}
+	
+	/**
+	 * @param cotopaxiConfigView Sets the {@link CotopaxiConfigView}
+	 */
+	public void setCotopaxiConfigView(CotopaxiConfigView cotopaxiConfigView) {
+		this.cotopaxiConfigView = cotopaxiConfigView;
 	}
 
 	protected void registerDefaultFormatter(String format, Class<? extends Formatter> formatterClass) {
@@ -54,12 +61,12 @@ public class FormatterBuilder {
 	 */
 	public Formatter getFormatter(String format) throws FormatterNotFoundException {
 		try {
-			Class<? extends Formatter> formatterClass = this.config.getFormatter(format);
+			Class<? extends Formatter> formatterClass = this.cotopaxiConfigView.getFormatter(format);
 			if (formatterClass == null && this.defaultFormatters.containsKey(format)) {
 				formatterClass = this.defaultFormatters.get(format);
 			}
 			if (formatterClass != null) {
-				return (Formatter) ReflectionUtil.createInstance(formatterClass);
+				return formatterClass.newInstance();
 			} else {
 				throw new FormatterNotFoundException("No Formatter fegistered for format " + format);
 			}
@@ -67,9 +74,6 @@ public class FormatterBuilder {
 			throw new FormatterNotFoundException("Can't instanciate Formatter for format" + format, e);
 		} catch (IllegalAccessException e) {
 			throw new FormatterNotFoundException("Can't instanciate Formatter for format" + format, e);
-		} catch (ClassNotFoundException e) {
-			throw new FormatterNotFoundException("Can't instanciate Formatter for format" + format, e);
 		}
-
 	}
 }

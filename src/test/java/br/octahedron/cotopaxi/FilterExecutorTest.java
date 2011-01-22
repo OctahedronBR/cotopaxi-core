@@ -32,6 +32,7 @@ import br.octahedron.cotopaxi.controller.MyExceptionFilterBefore;
 import br.octahedron.cotopaxi.controller.MyFilter;
 import br.octahedron.cotopaxi.controller.filter.FilterException;
 import br.octahedron.cotopaxi.controller.filter.FilterExecutor;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
 import br.octahedron.cotopaxi.metadata.annotation.Action.ActionMetadata;
@@ -46,13 +47,14 @@ public class FilterExecutorTest {
 	private MetadataMapper mapper;
 
 	@Before
-	public void setUp() throws SecurityException, NoSuchMethodException {
+	public void setUp() throws SecurityException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		FiltersHelper.reset();
-		CotopaxiConfigView.reset();
-		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
+		InstanceHandler instanceHandler = new InstanceHandler();
+		CotopaxiConfigView configView = instanceHandler.getInstance(CotopaxiConfigView.class); 
+		CotopaxiConfig config = configView.getCotopaxiConfig();
 		config.addModelFacade(FacadeTwo.class);
-		this.mapper = new MetadataMapper(CotopaxiConfigView.getInstance());
-		this.filterExec = new FilterExecutor(CotopaxiConfigView.getInstance());
+		this.mapper = new MetadataMapper(configView);
+		this.filterExec = instanceHandler.createInstance(FilterExecutor.class);
 		
 	}
 	
@@ -90,7 +92,10 @@ public class FilterExecutorTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
+		//
+		InstanceHandler instanceHandler = new InstanceHandler();
+		CotopaxiConfigView configView = instanceHandler.getInstance(CotopaxiConfigView.class); 
+		CotopaxiConfig config = configView.getCotopaxiConfig();
 		config.addGlobalFilter(MyFilter.class);
 
 		// invoking the filterexecutor
@@ -105,7 +110,7 @@ public class FilterExecutorTest {
 	}
 
 	@Test
-	public void controllerTest10() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption {
+	public void controllerTest10() throws IllegalArgumentException, FilterException, IllegalAccessException, PageNotFoundExeption, InstantiationException, ClassNotFoundException {
 		/*
 		 * This test checks many atts with Filters (Global and Local)
 		 */
@@ -115,8 +120,7 @@ public class FilterExecutorTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
-		config.addGlobalFilter(MyFilter.class);
+
 
 		// invoking the filterexecutor
 		ActionMetadata actionMetadata = this.mapper.getMapping(request).getActionMetadata();
@@ -140,8 +144,12 @@ public class FilterExecutorTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
-		config.addGlobalFilter(MyExceptionFilterBefore.class);
+		// 		
+		InstanceHandler instanceHandler = new InstanceHandler();
+		CotopaxiConfigView configView = instanceHandler.getInstance(CotopaxiConfigView.class); 
+		CotopaxiConfig config = configView.getCotopaxiConfig();
+		config.addGlobalFilter(MyExceptionFilterAfter.class);
+
 		try {
 			// invoking the filterexecutor
 			ActionMetadata actionMetadata = this.mapper.getMapping(request).getActionMetadata();
@@ -150,8 +158,8 @@ public class FilterExecutorTest {
 		} finally {
 			// check test results
 			verify(request);
-			assertEquals(1, FiltersHelper.getFilterBefore());
-			assertEquals(0, FiltersHelper.getFilterAfter());
+			assertEquals(3, FiltersHelper.getFilterBefore());
+			assertEquals(3, FiltersHelper.getFilterAfter());
 		}
 	}
 
@@ -166,8 +174,10 @@ public class FilterExecutorTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
-		config.addGlobalFilter(MyExceptionFilterAfter.class);
+		InstanceHandler instanceHandler = new InstanceHandler();
+		CotopaxiConfigView configView = instanceHandler.getInstance(CotopaxiConfigView.class); 
+		CotopaxiConfig config = configView.getCotopaxiConfig();
+		config.addGlobalFilter(MyExceptionFilterBefore.class);
 		try {
 			// invoking the filterexecutor
 			ActionMetadata actionMetadata = this.mapper.getMapping(request).getActionMetadata();
@@ -176,8 +186,8 @@ public class FilterExecutorTest {
 		} finally {
 			// check test results
 			verify(request);
-			assertEquals(2, FiltersHelper.getFilterBefore());
-			assertEquals(2, FiltersHelper.getFilterAfter());
+			assertEquals(3, FiltersHelper.getFilterBefore());
+			assertEquals(0, FiltersHelper.getFilterAfter());
 		}
 	}
 	

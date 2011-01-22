@@ -22,10 +22,11 @@ import java.util.logging.Logger;
 import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.cotopaxi.RequestWrapper;
 import br.octahedron.cotopaxi.controller.ModelController;
+import br.octahedron.cotopaxi.inject.Inject;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.cotopaxi.metadata.annotation.Action.ActionMetadata;
 import br.octahedron.cotopaxi.model.response.ActionResponse;
 import br.octahedron.cotopaxi.view.response.ViewResponse;
-import br.octahedron.util.reflect.InstanceHandler;
 
 /**
  * This entity is responsible by the {@link Filter} execution. Filters are executed before the
@@ -38,11 +39,17 @@ import br.octahedron.util.reflect.InstanceHandler;
 public class FilterExecutor {
 
 	private static final Logger logger = Logger.getLogger(FilterExecutor.class.getName());
-	private InstanceHandler<Filter> filters = new InstanceHandler<Filter>();
-	private CotopaxiConfigView config;
-
-	public FilterExecutor(CotopaxiConfigView config) {
-		this.config = config;
+	@Inject
+	private InstanceHandler instanceHandler;
+	@Inject
+	private CotopaxiConfigView cotopaxiConfigView;
+	
+	public void setInstanceHandler(InstanceHandler instanceHandler) {
+		this.instanceHandler = instanceHandler;
+	}
+	
+	public void setCotopaxiConfigView(CotopaxiConfigView cotopaxiConfigView) {
+		this.cotopaxiConfigView = cotopaxiConfigView;
 	}
 
 	/**
@@ -52,8 +59,8 @@ public class FilterExecutor {
 	 */
 	public void executeFiltersBefore(ActionMetadata actionMetadata, RequestWrapper request) throws FilterException {
 		logger.info("Executing the before filters for " + request.getURL());
-		if (this.config.hasGlobalFilters()) {
-			this.executeFiltersBefore(this.config.getGlobalFilters(), request);
+		if (this.cotopaxiConfigView.hasGlobalFilters()) {
+			this.executeFiltersBefore(this.cotopaxiConfigView.getGlobalFilters(), request);
 		}
 		if (actionMetadata.hasFilters()) {
 			this.executeFiltersBefore(actionMetadata.getFilters(), request);
@@ -70,8 +77,8 @@ public class FilterExecutor {
 		if (actionMetadata.hasFilters()) {
 			this.executeFiltersAfter(actionMetadata.getFilters(), request, actionResp);
 		}
-		if (this.config.hasGlobalFilters()) {
-			this.executeFiltersAfter(this.config.getGlobalFilters(), request, actionResp);
+		if (this.cotopaxiConfigView.hasGlobalFilters()) {
+			this.executeFiltersAfter(this.cotopaxiConfigView.getGlobalFilters(), request, actionResp);
 		}
 	}
 
@@ -81,7 +88,7 @@ public class FilterExecutor {
 	private void executeFiltersBefore(Collection<Class<? extends Filter>> filters, RequestWrapper request) throws FilterException {
 		for (Class<? extends Filter> filterClass : filters) {
 			logger.fine("Executing the before filter "+ filterClass.getSimpleName() +" for " + request.getURL());
-			Filter filter = this.filters.getInstance(filterClass);
+			Filter filter = this.instanceHandler.getInstance(filterClass);
 			filter.doBefore(request);
 		}
 	}
@@ -93,7 +100,7 @@ public class FilterExecutor {
 			throws FilterException {
 		for (Class<? extends Filter> filterClass : filters) {
 			logger.fine("Executing the after filter "+ filterClass.getSimpleName() +" for " + request.getURL());
-			Filter filter = this.filters.getInstance(filterClass);
+			Filter filter = this.instanceHandler.getInstance(filterClass);
 			filter.doAfter(request, response);
 		}
 	}

@@ -16,9 +16,8 @@
  */
 package br.octahedron.cotopaxi.controller.auth;
 
-import br.octahedron.cotopaxi.CotopaxiConfig;
-import br.octahedron.cotopaxi.CotopaxiConfigView;
 import br.octahedron.cotopaxi.RequestWrapper;
+import br.octahedron.cotopaxi.inject.Inject;
 import br.octahedron.cotopaxi.metadata.annotation.LoginRequired;
 import br.octahedron.cotopaxi.metadata.annotation.LoginRequired.LoginRequiredMetadata;
 
@@ -30,10 +29,14 @@ import br.octahedron.cotopaxi.metadata.annotation.LoginRequired.LoginRequiredMet
  */
 public class AuthManager {
 
+	@Inject
 	private UserLookupStrategy userLookupStrategy;
 
-	public AuthManager(CotopaxiConfigView config) {
-		this.userLookupStrategy = config.getUserLoginStrategy();
+	/**
+	 * @param userLookupStrategy Sets the {@link UserLookupStrategy}
+	 */
+	public void setUserLookupStrategy(UserLookupStrategy userLookupStrategy) {
+		this.userLookupStrategy = userLookupStrategy;
 	}
 
 	/**
@@ -44,23 +47,16 @@ public class AuthManager {
 	 * The current user is recovered using the configured {@link UserLookupStrategy}.
 	 * 
 	 * @see UserLookupStrategy
-	 * @see CotopaxiConfig#setUserLookupStrategy(UserLookupStrategy)
-	 * 
-	 * @param loginMetadata
-	 * @throws UserNotLoggedException
-	 * @throws UserNotAuthorizedException
 	 */
 	public void authorizeUser(RequestWrapper request, LoginRequiredMetadata loginMetadata) throws UserNotLoggedException, UserNotAuthorizedException {
-		if (loginMetadata.isLoginRequired()) {
-			UserInfo user = this.userLookupStrategy.getCurrentUSer(request);
-			if (user != null) {
-				String role = loginMetadata.getRequiredRole();
-				if (!user.satisfyRole(role)) {
-					throw new UserNotAuthorizedException("User " + user.getUsername() + " doesn't satify role " + role);
-				}
-			} else {
-				throw new UserNotLoggedException("There's no user logged!", this.userLookupStrategy.getLoginURL(request.getURL()));
+		UserInfo user = this.userLookupStrategy.getCurrentUser(request);
+		if (user != null) {
+			String role = loginMetadata.getRequiredRole();
+			if (!user.satisfyRole(role)) {
+				throw new UserNotAuthorizedException("User " + user.getUsername() + " doesn't satify role " + role);
 			}
+		} else {
+			throw new UserNotLoggedException("There's no user logged!", this.userLookupStrategy.getLoginURL(request.getURL()));
 		}
 	}
 }

@@ -24,6 +24,7 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 
 import br.octahedron.cotopaxi.CotopaxiConfigView;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 
 /**
  * A simple wrapper for {@link VelocityEngine}. It load and configure the velocity engine and
@@ -37,14 +38,14 @@ public final class VelocityEngineWrapper {
 	private static final Logger logger = Logger.getLogger(VelocityEngineWrapper.class.getName());
 	private static final VelocityEngine engine = new VelocityEngine();
 	private static boolean init = false;
+	private static CotopaxiConfigView cotopaxiConfigView = new InstanceHandler().getInstance(CotopaxiConfigView.class);
 
 	/**
 	 * Inits and configure the VelocityEngine
 	 */
 	protected static void init() {
 		if (!init) {
-			CotopaxiConfigView config = CotopaxiConfigView.getInstance();
-			String templateRoot = config.getTemplateRoot();
+			 String templateRoot = cotopaxiConfigView.getTemplateRoot();
 			logger.fine("Loading velocity engine. Templates root folder: " + templateRoot);
 			engine.setProperty("resource.loader", "file");
 			engine.setProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");

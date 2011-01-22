@@ -25,8 +25,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import br.octahedron.cotopaxi.controller.filter.Filter;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.cotopaxi.model.InputAdapter;
-import br.octahedron.util.reflect.InstanceHandler;
 
 /**
  * Annotations to be used to indicates that a method can be invoked by the controller.
@@ -85,7 +85,7 @@ public @interface Action {
 	 */
 	public static class ActionMetadata {
 		// Instance Handler for Mappings
-		private static InstanceHandler<InputAdapter> adaptersHandler = new InstanceHandler<InputAdapter>();
+		private static InstanceHandler instanceHandler = new InstanceHandler();
 
 		private Class<? extends Filter>[] filters;
 		private HTTPMethod httpMethod;
@@ -123,7 +123,7 @@ public @interface Action {
 		}
 
 		public InputAdapter getInputAdapter() {
-			return adaptersHandler.getInstance(this.adapterClass);
+			return instanceHandler.getInstance(this.adapterClass);
 		}
 
 		public Method getMethod() {

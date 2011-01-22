@@ -31,24 +31,6 @@ import java.util.LinkedList;
  */
 public class ReflectionUtil {
 
-	/**
-	 * Creates a new instance of the given class. It's necessary that the given class have an empty
-	 * constructor.
-	 */
-	public static Object createInstance(Class<?> clazz) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		return clazz.newInstance();
-	}
-
-	/**
-	 * Creates a new instance of the given class (by name). The className should be the full class
-	 * name. Eg.: java.lang.String
-	 * 
-	 * @see ReflectionUtil#createInstance(Class)
-	 */
-	public static Object createInstance(String className) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		return createInstance(Class.forName(className));
-	}
-
 	public static <T extends Annotation> T getAnnotation(Class<?> klass, Class<T> annClass) {
 		if (klass.isAnnotationPresent(annClass)) {
 			return (T) klass.getAnnotation(annClass);
@@ -93,8 +75,8 @@ public class ReflectionUtil {
 	 * Get all {@link Field}s annotated with the given {@link Annotation}
 	 */
 	public static <T extends Annotation> Collection<Field> getAnnotatedFields(Class<?> klass, Class<T> annClass) {
-		Field[] fields = klass.getDeclaredFields();
 		Collection<Field> result = new LinkedList<Field>();
+		Field[] fields = klass.getDeclaredFields();
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(annClass)) {
 				result.add(field);

@@ -17,10 +17,10 @@
 package br.octahedron.cotopaxi.model.attribute;
 
 import br.octahedron.cotopaxi.InputHandler;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.cotopaxi.model.attribute.converter.ConversionException;
 import br.octahedron.cotopaxi.model.attribute.converter.TypeConverter;
 import br.octahedron.cotopaxi.model.attribute.validator.Validator;
-import br.octahedron.util.reflect.InstanceHandler;
 
 /**
  * This entity represents a Model Attribute. It used by the Cotopaxi to convert and validate input
@@ -32,7 +32,7 @@ import br.octahedron.util.reflect.InstanceHandler;
  */
 public class RequestModelAttribute<T> implements ModelAttribute<T> {
 
-	private static InstanceHandler<TypeConverter<?>> converters = new InstanceHandler<TypeConverter<?>>();
+	private static InstanceHandler instanceHandler = new InstanceHandler();
 
 	private String name;
 	private Class<? extends TypeConverter<T>> typeConverter;
@@ -64,12 +64,11 @@ public class RequestModelAttribute<T> implements ModelAttribute<T> {
 	 * br.octahedron.cotopaxi.model.attribute.ModelAttribute#getAttributeValue(br.octahedron.cotopaxi
 	 * .model.attribute.InputHandler)
 	 */
-	@SuppressWarnings("unchecked")
 	public T getAttributeValue(InputHandler input) throws InvalidAttributeException, ConversionException {
 		String strAttValue = input.getRequestParameter(this.name);
 
 		// try to convert
-		TypeConverter<T> converter = (TypeConverter<T>) converters.getInstance(this.typeConverter);
+		TypeConverter<T> converter = instanceHandler.getInstance(this.typeConverter);
 		T converted = converter.convert(strAttValue);
 		// check if there's a validator register for the att
 		if (this.validator != null) {

@@ -33,7 +33,7 @@ public interface UserLookupStrategy {
 	/**
 	 * @return the current logged user, if exists, or <code>null</code> otherwise.
 	 */
-	public abstract UserInfo getCurrentUSer(InputHandler input);
+	public abstract UserInfo getCurrentUser(InputHandler input);
 
 	/**
 	 * 

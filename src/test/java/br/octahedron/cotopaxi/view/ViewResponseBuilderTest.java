@@ -44,6 +44,7 @@ import br.octahedron.cotopaxi.model.response.ExceptionActionResponse;
 import br.octahedron.cotopaxi.model.response.InvalidActionResponse;
 import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
 import br.octahedron.cotopaxi.view.formatter.Formatter;
+import br.octahedron.cotopaxi.view.formatter.FormatterBuilder;
 import br.octahedron.cotopaxi.view.formatter.FormatterNotFoundException;
 import br.octahedron.cotopaxi.view.formatter.VelocityFormatter;
 import br.octahedron.cotopaxi.view.response.ResultCode;
@@ -65,9 +66,14 @@ public class ViewResponseBuilderTest {
 		CotopaxiConfigView configMock = createMock(CotopaxiConfigView.class);
 		Collection facade = Arrays.asList(FakeFacade.class);
 		expect(configMock.getModelFacades()).andReturn(facade);
+		expect(configMock.getFormatter("html")).andReturn(null);
 		replay(configMock);
 		this.mapper = new MetadataMapper(configMock);
-		this.builder = new ViewResponseBuilder(CotopaxiConfigView.getInstance());
+		this.builder = new ViewResponseBuilder();
+		this.builder.setCotopaxiConfigView(configMock);
+		FormatterBuilder formatterBuilder = new FormatterBuilder();
+		formatterBuilder.setCotopaxiConfigView(configMock);
+		this.builder.setFormatterBuilder(formatterBuilder);
 	}
 
 	@SuppressWarnings("unchecked")

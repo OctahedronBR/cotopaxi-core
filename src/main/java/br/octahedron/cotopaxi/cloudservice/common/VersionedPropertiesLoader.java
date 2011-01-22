@@ -19,9 +19,9 @@ package br.octahedron.cotopaxi.cloudservice.common;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import br.octahedron.cotopaxi.cloudservice.CloudServicesFactory;
 import br.octahedron.cotopaxi.cloudservice.DisabledMemcacheException;
 import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
+import br.octahedron.cotopaxi.inject.Inject;
 
 /**
  * This class is responsible by load <code>VersionedProperties</code> entities. It caches properties
@@ -48,17 +48,15 @@ public class VersionedPropertiesLoader {
 	private static final String VERSIONING_SUFIX = ".version";
 
 	private final Logger logger = Logger.getLogger(VersionedPropertiesLoader.class.getName());
-	private MemcacheFacade cache;
-
+	
+	@Inject
+	private MemcacheFacade memcacheFacade;
+	
 	/**
-	 * Creates a new VersionedPropertiesLoader that will use a cache created using the given
-	 * factory.
-	 * 
-	 * @param factory
-	 *            The cloud services factory to be used.
+	 * @param memcacheFacade Sets the memcacheFacade
 	 */
-	public VersionedPropertiesLoader(CloudServicesFactory factory) {
-		this.cache = factory.createMemcacheFacade();
+	public void setMemcacheFacade(MemcacheFacade memcacheFacade) {
+		this.memcacheFacade = memcacheFacade;
 	}
 
 	/**
@@ -68,7 +66,7 @@ public class VersionedPropertiesLoader {
 	 *            The cache to be used.
 	 */
 	public VersionedPropertiesLoader(MemcacheFacade cache) {
-		this.cache = cache;
+		this.memcacheFacade = cache;
 	}
 
 	/**
@@ -114,8 +112,8 @@ public class VersionedPropertiesLoader {
 	private <T extends Enum<?>> VersionedProperties<T> loadFromMemcache(String propertiesFileName) {
 		VersionedProperties<T> result = null;
 		try {
-			if (this.cache.contains(propertiesFileName)) {
-				result = this.cache.get(VersionedProperties.class, propertiesFileName);
+			if (this.memcacheFacade.contains(propertiesFileName)) {
+				result = this.memcacheFacade.get(VersionedProperties.class, propertiesFileName);
 			}
 		} catch (DisabledMemcacheException e) {
 			this.logger.warning("Unable to load property file " + propertiesFileName + " from Memcache. Memcache Disabled!");
@@ -128,7 +126,7 @@ public class VersionedPropertiesLoader {
 	 */
 	private <T extends Enum<?>> void saveToMemcache(VersionedProperties<T> properties) {
 		try {
-			this.cache.put(properties.getFileName(), properties);
+			this.memcacheFacade.put(properties.getFileName(), properties);
 		} catch (DisabledMemcacheException e) {
 			this.logger.warning("Unable to write property file " + properties.getFileName() + " to Memcache. Memcache Disabled!");
 		}

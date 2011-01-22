@@ -16,36 +16,36 @@
  */
 package br.octahedron.cotopaxi;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import br.octahedron.cotopaxi.cloudservice.DatastoreFacade;
 import br.octahedron.cotopaxi.cloudservice.FakeDatastoreFacade;
-import br.octahedron.cotopaxi.cloudservice.FakeFactory;
 import br.octahedron.cotopaxi.cloudservice.FakeMemcacheFacade;
 import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
-import br.octahedron.cotopaxi.inject.InjectorInstanceHandler;
+import br.octahedron.cotopaxi.inject.InjectionManager;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.cotopaxi.inject.UserDAO;
 import br.octahedron.cotopaxi.inject.UserFacade;
 import br.octahedron.cotopaxi.inject.UserService;
-import br.octahedron.util.reflect.InstanceHandler;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class InjectorTest {
 
-	@SuppressWarnings("unchecked")
 	private InstanceHandler injector;
 
 	@Before
 	public void setUp() {
-		this.injector = new InjectorInstanceHandler();
-		CotopaxiConfigView.getInstance().getCotopaxiConfig().setCloudServicesFactory(new FakeFactory());
+		InjectionManager.registerDependency(DatastoreFacade.class, FakeDatastoreFacade.class);
+		InjectionManager.registerDependency(MemcacheFacade.class, FakeMemcacheFacade.class);
+		this.injector = new InstanceHandler();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testInjection() {
 		UserFacade facade = (UserFacade) this.injector.getInstance(UserFacade.class);

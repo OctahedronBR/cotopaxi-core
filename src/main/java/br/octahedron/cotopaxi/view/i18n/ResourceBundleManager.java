@@ -25,9 +25,9 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import br.octahedron.cotopaxi.cloudservice.CloudServicesFactory;
 import br.octahedron.cotopaxi.cloudservice.DisabledMemcacheException;
 import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
+import br.octahedron.cotopaxi.inject.Inject;
 import br.octahedron.util.FileUtil;
 
 /**
@@ -49,11 +49,19 @@ public class ResourceBundleManager {
 
 	private final Logger logger = Logger.getLogger(ResourceBundleManager.class.getName());
 	private String i18nPath;
-	private MemcacheFacade cache;
+	
+	@Inject // TODO who will inject here?
+	private MemcacheFacade memcacheFacade;
 
-	public ResourceBundleManager(CloudServicesFactory factory, String i18nPath) {
-		this.cache = factory.createMemcacheFacade();
+	public ResourceBundleManager(String i18nPath) {
 		this.i18nPath = i18nPath;
+	}
+	
+	/**
+	 * @param memcacheFacade sets the {@link MemcacheFacade}
+	 */
+	public void setMemcacheFacade(MemcacheFacade memcacheFacade) {
+		this.memcacheFacade = memcacheFacade;
 	}
 
 	/**
@@ -104,7 +112,7 @@ public class ResourceBundleManager {
 	private Map<String, String> getMapFromCache(String filepath) throws FileNotFoundException, IOException {
 		Map<String, String> map = null;
 		try {
-			map = this.cache.get(Map.class, filepath);
+			map = this.memcacheFacade.get(Map.class, filepath);
 		} catch (DisabledMemcacheException e) {
 			this.logger.warning("Unable to recover resourcebundle from Memcache. Memcache Disabled!");
 		}
@@ -112,7 +120,7 @@ public class ResourceBundleManager {
 		if (map == null) {
 			map = this.getMapFromProperties(filepath);
 			try {
-				this.cache.put(filepath, map);
+				this.memcacheFacade.put(filepath, map);
 			} catch (DisabledMemcacheException e) {
 				this.logger.warning("Unable to put resourcebundle in Memcache. Memcache Disabled!");
 			}

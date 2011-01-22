@@ -22,7 +22,6 @@ import java.util.Queue;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
-import br.octahedron.cotopaxi.cloudservice.CloudServicesFactory;
 import br.octahedron.cotopaxi.cloudservice.DisabledMemcacheException;
 import br.octahedron.cotopaxi.cloudservice.DistributedLock;
 import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
@@ -40,18 +39,26 @@ import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
 public class DistributedQueue<T> {
 
 	private final Logger logger = Logger.getLogger(DistributedQueue.class.getName());
-	private MemcacheFacade cache;
-	private DistributedLock monitor;
+	private MemcacheFacade memcacheFacade;
+	private DistributedLock distributedLock;
 	private String cacheKey;
 
-	public DistributedQueue(String queueName, CloudServicesFactory factory) {
-		this(queueName, factory.createMemcacheFacade(), factory.createDistributedLock(queueName));
-	}
-
-	public DistributedQueue(String queueName, MemcacheFacade cache, DistributedLock monitor) {
+	public DistributedQueue(String queueName) {
 		this.cacheKey = queueName;
-		this.cache = cache;
-		this.monitor = monitor;
+	}
+	
+	/**
+	 * @param distributedLock Sets the distributedLock 
+	 */
+	public void setDistributedLock(DistributedLock distributedLock) {
+		this.distributedLock = distributedLock;
+	}
+	
+	/**
+	 * @param memcacheFacade Sets the memcacheFacade
+	 */
+	public void setMemcacheFacade(MemcacheFacade memcacheFacade) {
+		this.memcacheFacade = memcacheFacade;
 	}
 
 	/**
@@ -63,10 +70,10 @@ public class DistributedQueue<T> {
 	 */
 	public boolean add(T element) {
 		try {
-			this.monitor.lock();
+			this.distributedLock.lock();
 			List<T> list = this.getAll();
 			boolean isAdded = list.add(element);
-			this.cache.put(this.cacheKey, list);
+			this.memcacheFacade.put(this.cacheKey, list);
 
 			return isAdded;
 		} catch (DisabledMemcacheException e) {
@@ -74,7 +81,7 @@ public class DistributedQueue<T> {
 		} catch (TimeoutException e) {
 			this.logger.warning("Unable to put elements in Memcache. Timeout!");
 		} finally {
-			this.monitor.unlock();
+			this.distributedLock.unlock();
 		}
 		return false;
 	}
@@ -105,11 +112,11 @@ public class DistributedQueue<T> {
 	 */
 	public T remove() {
 		try {
-			this.monitor.lock();
+			this.distributedLock.lock();
 			List<T> list = this.getAll();
 			if (!list.isEmpty()) {
 				T element = list.remove(0);
-				this.cache.put(this.cacheKey, list);
+				this.memcacheFacade.put(this.cacheKey, list);
 
 				return element;
 			}
@@ -118,7 +125,7 @@ public class DistributedQueue<T> {
 		} catch (TimeoutException e) {
 			this.logger.finest("Unable to put elements in Memcache. Timeout!");
 		} finally {
-			this.monitor.unlock();
+			this.distributedLock.unlock();
 		}
 		return null;
 	}
@@ -135,14 +142,14 @@ public class DistributedQueue<T> {
 	@SuppressWarnings("unchecked")
 	public boolean removeElements(int toIndex) {
 		try {
-			this.monitor.lock();
+			this.distributedLock.lock();
 			ArrayList<T> list = this.getAll();
 			if (list != null) {
 				List<T> sublist = list.subList(0, toIndex);
 				// clone to avoid ConcurrentModificationException
 				ArrayList<T> listCloned = ((ArrayList<T>) list.clone());
 				boolean isRemoved = listCloned.removeAll(sublist);
-				this.cache.put(this.cacheKey, listCloned);
+				this.memcacheFacade.put(this.cacheKey, listCloned);
 
 				return isRemoved;
 			}
@@ -151,7 +158,7 @@ public class DistributedQueue<T> {
 		} catch (TimeoutException e) {
 			this.logger.finest("Unable to put elements in Memcache. Timeout!");
 		} finally {
-			this.monitor.unlock();
+			this.distributedLock.unlock();
 		}
 		return false;
 	}
@@ -166,8 +173,8 @@ public class DistributedQueue<T> {
 	@SuppressWarnings("unchecked")
 	protected ArrayList<T> getAll() throws DisabledMemcacheException {
 		ArrayList<T> list;
-		if (this.cache.contains(this.cacheKey)) {
-			list = this.cache.get(ArrayList.class, this.cacheKey);
+		if (this.memcacheFacade.contains(this.cacheKey)) {
+			list = this.memcacheFacade.get(ArrayList.class, this.cacheKey);
 			return list;
 		} else {
 			return new ArrayList<T>();

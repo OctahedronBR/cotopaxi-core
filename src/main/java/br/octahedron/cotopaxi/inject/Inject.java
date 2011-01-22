@@ -21,33 +21,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import br.octahedron.cotopaxi.cloudservice.CloudServicesFactory;
-import br.octahedron.cotopaxi.cloudservice.DatastoreFacade;
-import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
-import br.octahedron.cotopaxi.cloudservice.URLFetchFacade;
-
 /**
- * Declare classes to be injected on the annotated class. This should be used at the facade classes
+ * Declare fields to be injected on the object. This should be used at the facade classes
  * and its injected classes.
  * 
- * For each class to be injected the annotated class should have a "set" method.
+ * For each fields which should be injected the class should provides a "set" method.
  * 
- * Eg.: If you want to inject an UserService class at the UserFacade class, the UserFacade class
+ * Eg.: If you want to inject an UserService at the UserFacade class, the UserFacade class
  * should have a method "public void setUserService(UserService service)" to injection works.
  * 
  * On the above example, the UserService class, for its time, can have some injection dependencies
  * too.
  * 
- * Inject can also be used to inject some of the facade classes from <b>CloudService</b>. By now the
- * available facades to be inject are {@link DatastoreFacade}, {@link MemcacheFacade} and
- * {@link URLFetchFacade}. To inject one of this class, use the facade interface and the injector
- * will inject an implementation from the configured {@link CloudServicesFactory}.
- * 
  * Eg.:
  * 
  * <pre>
- * &#064;Inject(classes = { UserService.class })
+ * 
  * public class UserFacade {
+ *  &#064;Inject
  * 	private UserService service;
  * 
  * 	public void setUserService(UserService service) {
@@ -55,8 +46,9 @@ import br.octahedron.cotopaxi.cloudservice.URLFetchFacade;
  * 	}
  * }
  * 
- * &#064;Inject(classes = { UserDAO.class })
+ * 
  * public class UserService {
+ *  &#064;Inject
  * 	private UserDAO userDAO;
  * 
  * 	public void setUserDAO(UserDAO userDAO) {
@@ -64,9 +56,11 @@ import br.octahedron.cotopaxi.cloudservice.URLFetchFacade;
  * 	}
  * }
  * 
- * &#064;Inject(classes = { DatastoreFacade.class, MemcacheFacade.class })
+ * 
  * public class UserDAO {
+ *  &#064;Inject
  * 	private DatastoreFacade datastore;
+ *  &#064;Inject
  * 	private MemcacheFacade memcache;
  * 
  * 	public void setDatastoreFacade(DatastoreFacade datastore) {
@@ -79,19 +73,17 @@ import br.octahedron.cotopaxi.cloudservice.URLFetchFacade;
  * }
  * </pre>
  * 
- * 
- * 
- * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Inject {
-
+@Target(ElementType.FIELD)
+public @interface Inject { 
 	/**
-	 * The classes to be inject
+	 * Defines if it should use a singleton instance or create and use an brand new, and exclusive, instance.
+	 * By default its <code>true</code> - it will use a singleton instance.
+	 * 
+	 * To use a new and exclusive instance, set it to <code>false</code>
 	 */
-	Class<?>[] classes();
-
+	boolean singleton() default true;
 }

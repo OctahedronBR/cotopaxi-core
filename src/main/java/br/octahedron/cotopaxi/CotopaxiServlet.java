@@ -33,9 +33,12 @@ import br.octahedron.cotopaxi.controller.auth.AuthManager;
 import br.octahedron.cotopaxi.controller.auth.UserNotAuthorizedException;
 import br.octahedron.cotopaxi.controller.auth.UserNotLoggedException;
 import br.octahedron.cotopaxi.controller.filter.FilterExecutor;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.cotopaxi.metadata.MetadataHandler;
 import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
+import br.octahedron.cotopaxi.metadata.annotation.Action.ActionMetadata;
+import br.octahedron.cotopaxi.metadata.annotation.LoginRequired.LoginRequiredMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.Redirect.RedirectMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.Response.ResponseMetadata;
 import br.octahedron.cotopaxi.model.response.ActionResponse;
@@ -44,7 +47,6 @@ import br.octahedron.cotopaxi.model.response.ActionResponse.Result;
 import br.octahedron.cotopaxi.view.i18n.LocaleManager;
 import br.octahedron.cotopaxi.view.response.ViewResponse;
 import br.octahedron.cotopaxi.view.response.ViewResponseBuilder;
-import br.octahedron.util.reflect.ReflectionUtil;
 
 /**
  * The Servlet is the entry point for the requests/responses. It's responsible by route the request,
@@ -67,12 +69,13 @@ public class CotopaxiServlet extends HttpServlet {
 	private static final String MODEL_CONFIGURATOR_PROPERTY = "CONFIGURATOR";
 
 	private static final Logger logger = Logger.getLogger(CotopaxiServlet.class.getName());
-	private transient ViewResponseBuilder view;
-	private transient MetadataMapper mapper;
-	private transient ModelController controller;
-	private transient FilterExecutor filter;
-	private transient AuthManager auth;
+
+	private InstanceHandler instanceHandler = new InstanceHandler();;
 	private CotopaxiConfigView config;
+	
+	private ViewResponseBuilder view;
+	private MetadataMapper mapper;
+	private ModelController controller;
 
 	private LocaleManager localeManager;
 
@@ -84,14 +87,10 @@ public class CotopaxiServlet extends HttpServlet {
 			this.configure(servletConfig.getInitParameter(MODEL_CONFIGURATOR_PROPERTY));
 			// creating mapper
 			this.mapper = new MetadataMapper(this.config);
-			// creating Filter Executor
-			this.filter = new FilterExecutor(this.config);
 			// create the Model Controller
 			this.controller = new ModelController();
-			// create Authentication Manager
-			this.auth = new AuthManager(this.config);
 			// create the ViewerManager
-			this.view = new ViewResponseBuilder(this.config);
+			this.view = this.instanceHandler.getInstance(ViewResponseBuilder.class);
 			this.localeManager = LocaleManager.getInstance();
 			// Done!
 			logger.info("Cotopaxi is ready to serve!");
@@ -113,14 +112,29 @@ public class CotopaxiServlet extends HttpServlet {
 	 * Used by tests. Create and calls the {@link CotopaxiConfigurator}
 	 */
 	protected void configure(String configuratorClassName) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		this.config = CotopaxiConfigView.getInstance();
+		// Config
+		this.config = this.instanceHandler.getInstance(CotopaxiConfigView.class);
 		if (configuratorClassName != null) {
 			CotopaxiConfig configurable = this.config.getCotopaxiConfig();
-			CotopaxiConfigurator configurator = (CotopaxiConfigurator) ReflectionUtil.createInstance(configuratorClassName);
+			CotopaxiConfigurator configurator = (CotopaxiConfigurator) this.instanceHandler.createInstance(configuratorClassName);
 			configurator.configure(configurable);
 		} else {
 			throw new ClassNotFoundException(null);
 		}
+	}
+	
+	/**
+	 * @return the filter
+	 */
+	public FilterExecutor getFilter() {
+		return this.instanceHandler.getInstance(FilterExecutor.class);
+	}
+
+	/**
+	 * @return the auth
+	 */
+	public AuthManager getAuth() {
+		return this.instanceHandler.getInstance(AuthManager.class);
 	}
 
 	@Override
@@ -174,10 +188,20 @@ public class CotopaxiServlet extends HttpServlet {
 			try {
 				// maps the request to metadata
 				MetadataHandler metadata = this.mapper.getMapping(request);
+				
 				// check user authorization
-				this.auth.authorizeUser(request, metadata.getLoginMetadata());
+				LoginRequiredMetadata loginMetadata = metadata.getLoginMetadata();
+				if ( loginMetadata.isLoginRequired() ) {
+					this.getAuth().authorizeUser(request, loginMetadata);
+				}
+					
 				// execute filters before
-				this.filter.executeFiltersBefore(metadata.getActionMetadata(), request);
+				ActionMetadata actionMetadata = metadata.getActionMetadata();
+				if (this.config.hasGlobalFilters() || actionMetadata.hasFilters()) {
+					this.getFilter().executeFiltersBefore(actionMetadata, request);
+					
+				}
+				
 				// execute the controller
 				ActionResponse actionResp = this.controller.executeRequest(request, metadata.getActionMetadata());
 
@@ -201,8 +225,12 @@ public class CotopaxiServlet extends HttpServlet {
 				} else {
 					viewResponse = this.view.getViewResponse(lc, request.getFormat(), actionResp, metadata);
 				}
+				
 				// execute filters after
-				this.filter.executeFiltersAfter(metadata.getActionMetadata(), request, actionResp);
+				if (this.config.hasGlobalFilters() || actionMetadata.hasFilters()) {
+					this.getFilter().executeFiltersAfter(metadata.getActionMetadata(), request, actionResp);
+					
+				}
 			} catch (UserNotLoggedException e) {
 				logger.fine("Request for " + requestedURL + " failed due authorization restrictions: no user logged!");
 				viewResponse = this.view.getViewResponse(lc, e);

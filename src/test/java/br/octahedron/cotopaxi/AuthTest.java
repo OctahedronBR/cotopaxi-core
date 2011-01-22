@@ -21,8 +21,10 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +36,8 @@ import br.octahedron.cotopaxi.controller.auth.UserLookupStrategy;
 import br.octahedron.cotopaxi.controller.auth.UserNotAuthorizedException;
 import br.octahedron.cotopaxi.controller.auth.UserNotLoggedException;
 import br.octahedron.cotopaxi.controller.filter.FilterException;
+import br.octahedron.cotopaxi.inject.InjectionManager;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
 import br.octahedron.cotopaxi.metadata.annotation.Action.HTTPMethod;
@@ -45,18 +49,27 @@ import br.octahedron.cotopaxi.metadata.annotation.LoginRequired.LoginRequiredMet
  */
 public class AuthTest {
 
+	private InstanceHandler instanceHandler = new InstanceHandler();
 	private UserLookupStrategy userStrategy;
-	private CotopaxiConfigView config = CotopaxiConfigView.getInstance();
 	private AuthManager auth;
 	private MetadataMapper mapper;
 
 	@Before
 	public void setUp() throws SecurityException, NoSuchMethodException {
 		this.userStrategy = createMock(UserLookupStrategy.class);
-		this.config.getCotopaxiConfig().setUserLookupStrategy(this.userStrategy);
-		this.config.getCotopaxiConfig().addModelFacade(FacadeThree.class);
-		this.auth = new AuthManager(this.config);
-		this.mapper = new MetadataMapper(this.config);
+		CotopaxiConfigView config = instanceHandler.getInstance(CotopaxiConfigView.class);
+		config.getCotopaxiConfig().addModelFacade(FacadeThree.class);
+		
+		InjectionManager.registerImplementation(UserLookupStrategy.class, this.userStrategy);
+		
+		this.auth = instanceHandler.getInstance(AuthManager.class);
+		this.mapper = new MetadataMapper(config);
+	}
+	
+	@After
+	public void tearDown() {
+		this.userStrategy = null;
+		InjectionManager.removeImplementation(AuthManager.class);
 	}
 
 	@Test
@@ -71,7 +84,7 @@ public class AuthTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		expect(this.userStrategy.getCurrentUSer(request)).andReturn(null);
+		expect(this.userStrategy.getCurrentUser(request)).andReturn(null);
 		expect(this.userStrategy.getLoginURL("/restricted1")).andReturn("/login");
 		replay(this.userStrategy);
 
@@ -100,7 +113,7 @@ public class AuthTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		expect(this.userStrategy.getCurrentUSer(request)).andReturn(new UserInfo("danilo"));
+		expect(this.userStrategy.getCurrentUser(request)).andReturn(new UserInfo("danilo"));
 		replay(this.userStrategy);
 
 		// invoking the auth mechanism
@@ -123,7 +136,7 @@ public class AuthTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		expect(this.userStrategy.getCurrentUSer(request)).andReturn(new UserInfo("danilo", "tester"));
+		expect(this.userStrategy.getCurrentUser(request)).andReturn(new UserInfo("danilo", "tester"));
 		replay(this.userStrategy);
 
 		try {
@@ -131,6 +144,8 @@ public class AuthTest {
 			LoginRequiredMetadata login = this.mapper.getMapping(request).getLoginMetadata();
 			this.auth.authorizeUser(request, login);
 		} finally {
+			assertTrue(this.userStrategy == this.instanceHandler.getInstance(UserLookupStrategy.class));
+			assertEquals(this.userStrategy, this.instanceHandler.getInstance(UserLookupStrategy.class));
 			// check test results
 			verify(request);
 			verify(this.userStrategy);
@@ -148,7 +163,7 @@ public class AuthTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		expect(this.userStrategy.getCurrentUSer(request)).andReturn(new UserInfo("danilo", "admin"));
+		expect(this.userStrategy.getCurrentUser(request)).andReturn(new UserInfo("danilo", "admin"));
 		replay(this.userStrategy);
 
 		// invoking the auth mechanism
@@ -173,9 +188,9 @@ public class AuthTest {
 		expect(request.getSessionAttribute(SessionUserLookupStrategy.USER_SESSION_ATTRIBUTE)).andReturn(new UserInfo("danilo","admin"));
 		replay(request);
 
-		this.userStrategy = new SessionUserLookupStrategy();
-		this.config.getCotopaxiConfig().setUserLookupStrategy(this.userStrategy);
-		this.auth = new AuthManager(this.config);
+		InjectionManager.registerImplementation(UserLookupStrategy.class, new SessionUserLookupStrategy());
+		InjectionManager.removeImplementation(AuthManager.class);
+		this.auth = instanceHandler.getInstance(AuthManager.class);
 		
 		// invoking the auth mechanism
 		LoginRequiredMetadata login = this.mapper.getMapping(request).getLoginMetadata();

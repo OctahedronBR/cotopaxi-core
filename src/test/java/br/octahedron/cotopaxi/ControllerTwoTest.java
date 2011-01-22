@@ -32,6 +32,7 @@ import br.octahedron.cotopaxi.controller.FacadeThree;
 import br.octahedron.cotopaxi.controller.FacadeTwo;
 import br.octahedron.cotopaxi.controller.ModelController;
 import br.octahedron.cotopaxi.controller.filter.FilterException;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.cotopaxi.metadata.MetadataMapper;
 import br.octahedron.cotopaxi.metadata.PageNotFoundExeption;
 import br.octahedron.cotopaxi.metadata.annotation.Action.HTTPMethod;
@@ -49,10 +50,11 @@ public class ControllerTwoTest {
 
 	@Before
 	public void setUp() throws SecurityException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException {
-		CotopaxiConfigView.reset();
-		CotopaxiConfig config = CotopaxiConfigView.getInstance().getCotopaxiConfig();
+		InstanceHandler instanceHandler = new InstanceHandler();
+		CotopaxiConfigView configView = instanceHandler.getInstance(CotopaxiConfigView.class); 
+		CotopaxiConfig config = configView.getCotopaxiConfig();
 		config.addModelFacade(FacadeOne.class, FacadeTwo.class, FacadeThree.class);
-		this.mapper = new MetadataMapper(CotopaxiConfigView.getInstance());
+		this.mapper = new MetadataMapper(configView);
 		this.controller = new ModelController();
 		DateConverter.setDateFormat("dd/MM/yyyy");
 	}

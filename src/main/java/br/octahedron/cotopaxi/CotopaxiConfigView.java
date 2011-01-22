@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import br.octahedron.cotopaxi.cloudservice.CloudServicesFactory;
-import br.octahedron.cotopaxi.controller.auth.UserLookupStrategy;
 import br.octahedron.cotopaxi.controller.filter.Filter;
 import br.octahedron.cotopaxi.view.formatter.Formatter;
 
@@ -33,20 +31,6 @@ import br.octahedron.cotopaxi.view.formatter.Formatter;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class CotopaxiConfigView {
-
-	// public static stuff
-	protected static CotopaxiConfigView instance = new CotopaxiConfigView();
-
-	public static CotopaxiConfigView getInstance() {
-		return instance;
-	}
-
-	/**
-	 * Resets the {@link CotopaxiConfigView} instance. This method should be used only on tests
-	 */
-	protected static void reset() {
-		instance = new CotopaxiConfigView();
-	}
 
 	/**
 	 * RSS format extension
@@ -101,14 +85,12 @@ public class CotopaxiConfigView {
 	protected Map<String, Class<? extends Formatter>> formatters = new HashMap<String, Class<? extends Formatter>>();
 	protected Collection<Class<? extends Filter>> globalFilters;
 	protected Map<String, String> redirects;
-	protected UserLookupStrategy userLookupStrategy;
-	protected CloudServicesFactory factory;
 
 	private CotopaxiConfig controllerConfig;
 
 	public LinkedList<Class<?>> modelFacades;
 
-	private CotopaxiConfigView() {
+	public CotopaxiConfigView() {
 		this.controllerConfig = new CotopaxiConfigImpl();
 	}
 
@@ -189,15 +171,6 @@ public class CotopaxiConfigView {
 	}
 
 	/**
-	 * Get the {@link CloudServicesFactory} to be used by this application
-	 * 
-	 * @return a {@link CloudServicesFactory} instance to be used.
-	 */
-	public CloudServicesFactory getCloudServicesFactory() {
-		return this.factory;
-	}
-
-	/**
 	 * Check's if the given URL is a Redirect URL.
 	 * 
 	 * @param originalURL
@@ -252,10 +225,6 @@ public class CotopaxiConfigView {
 		return this.modelFacades;
 	}
 
-	public UserLookupStrategy getUserLoginStrategy() {
-		return this.userLookupStrategy;
-	}
-
 	private class CotopaxiConfigImpl implements CotopaxiConfig {
 
 		@Override
@@ -276,11 +245,6 @@ public class CotopaxiConfigView {
 		@Override
 		public void setTemplatesRoot(String tplRoot) {
 			CotopaxiConfigView.this.templatesRoot = tplRoot;
-		}
-
-		@Override
-		public void setCloudServicesFactory(CloudServicesFactory fctory) {
-			CotopaxiConfigView.this.factory = fctory;
 		}
 
 		@Override
@@ -315,11 +279,6 @@ public class CotopaxiConfigView {
 		@Override
 		public void setForbiddenTemplate(String forbiddenHandler) {
 			CotopaxiConfigView.this.forbiddenTemplate = forbiddenHandler;
-		}
-
-		@Override
-		public void setUserLookupStrategy(UserLookupStrategy strategy) {
-			CotopaxiConfigView.this.userLookupStrategy = strategy;
 		}
 	}
 }

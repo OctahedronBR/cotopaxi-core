@@ -19,9 +19,8 @@ package br.octahedron.cotopaxi.inject;
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-@Inject(classes={UserDAO.class})
 public class UserService {
-
+	@Inject
 	private UserDAO userDAO;
 
 	public UserDAO getUserDAO() {

@@ -51,7 +51,7 @@ public class SessionUserLookupStrategy implements UserLookupStrategy {
 	}
 
 	@Override
-	public UserInfo getCurrentUSer(InputHandler input) {
+	public UserInfo getCurrentUser(InputHandler input) {
 		logger.fine("Trying to recover User from session");
 		return (UserInfo) input.getSessionAttribute(USER_SESSION_ATTRIBUTE);
 	}

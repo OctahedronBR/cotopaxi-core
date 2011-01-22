@@ -16,8 +16,6 @@
  */
 package br.octahedron.cotopaxi;
 
-import br.octahedron.cotopaxi.cloudservice.CloudServicesFactory;
-import br.octahedron.cotopaxi.controller.auth.UserLookupStrategy;
 import br.octahedron.cotopaxi.controller.filter.Filter;
 import br.octahedron.cotopaxi.view.formatter.Formatter;
 
@@ -59,24 +57,6 @@ public interface CotopaxiConfig {
 	 *            the templates root folder
 	 */
 	public abstract void setTemplatesRoot(String templatesRoot);
-
-	/**
-	 * Sets the {@link UserLookupStrategy} to be used by the authentication mechanism
-	 * 
-	 * @see UserLookupStrategy
-	 * 
-	 * @param strategy
-	 *            the {@link UserLookupStrategy}
-	 */
-	public abstract void setUserLookupStrategy(UserLookupStrategy strategy);
-
-	/**
-	 * Sets the {@link CloudServicesFactory} to be used by this application.
-	 * 
-	 * @param factory
-	 *            The factory to be used.
-	 */
-	public abstract void setCloudServicesFactory(CloudServicesFactory factory);
 
 	/**
 	 * Adds a Global Filter.
