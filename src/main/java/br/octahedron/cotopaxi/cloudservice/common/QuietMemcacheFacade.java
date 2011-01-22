@@ -11,6 +11,7 @@ package br.octahedron.cotopaxi.cloudservice.common;
 
 import br.octahedron.cotopaxi.cloudservice.DisabledMemcacheException;
 import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
+import br.octahedron.cotopaxi.inject.Inject;
 
 /**
  * A decorator for {@link MemcacheFacade} that fails silently, it means, if some error occurs
@@ -21,12 +22,15 @@ import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
  */
 public class QuietMemcacheFacade implements MemcacheFacade {
 
-	private MemcacheFacade memcache;
+	@Inject
+	private MemcacheFacade memcacheFacade;
 
-	public QuietMemcacheFacade(MemcacheFacade memcache) {
-		this.memcache = memcache;
+	/**
+	 * @param memcacheFacade the memcacheFacade to set
+	 */
+	public void setMemcacheFacade(MemcacheFacade memcacheFacade) {
+		this.memcacheFacade = memcacheFacade;
 	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -34,7 +38,7 @@ public class QuietMemcacheFacade implements MemcacheFacade {
 	 */
 	@Override
 	public boolean contains(String key) {
-		return this.memcache.contains(key);
+		return this.memcacheFacade.contains(key);
 	}
 
 	/*
@@ -46,7 +50,7 @@ public class QuietMemcacheFacade implements MemcacheFacade {
 	@Override
 	public <T> T get(Class<T> klass, String key) {
 		try {
-			return this.memcache.get(klass, key);
+			return this.memcacheFacade.get(klass, key);
 		} catch (DisabledMemcacheException e) {
 			return null;
 		}
@@ -61,7 +65,7 @@ public class QuietMemcacheFacade implements MemcacheFacade {
 	@Override
 	public <T> void put(String key, T value) {
 		try {
-			this.memcache.put(key, value);
+			this.memcacheFacade.put(key, value);
 		} catch (DisabledMemcacheException e) {
 			// nothing to do
 		}
@@ -74,7 +78,7 @@ public class QuietMemcacheFacade implements MemcacheFacade {
 	 */
 	@Override
 	public void remove(String key) {
-		this.memcache.remove(key);
+		this.memcacheFacade.remove(key);
 	}
 
 }
