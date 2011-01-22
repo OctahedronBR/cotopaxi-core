@@ -49,16 +49,18 @@ public class ResourceBundleManager {
 
 	private final Logger logger = Logger.getLogger(ResourceBundleManager.class.getName());
 	private String i18nPath;
-	
-	@Inject // TODO who will inject here?
+
+	@Inject
+	// TODO who will inject here?
 	private MemcacheFacade memcacheFacade;
 
 	public ResourceBundleManager(String i18nPath) {
 		this.i18nPath = i18nPath;
 	}
-	
+
 	/**
-	 * @param memcacheFacade sets the {@link MemcacheFacade}
+	 * @param memcacheFacade
+	 *            sets the {@link MemcacheFacade}
 	 */
 	public void setMemcacheFacade(MemcacheFacade memcacheFacade) {
 		this.memcacheFacade = memcacheFacade;

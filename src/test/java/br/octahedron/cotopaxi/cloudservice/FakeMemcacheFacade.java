@@ -16,16 +16,16 @@
  */
 package br.octahedron.cotopaxi.cloudservice;
 
-import br.octahedron.cotopaxi.cloudservice.DisabledMemcacheException;
-import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
 
 /**
  * @author Name - email@octahedron.com.br
- *
+ * 
  */
 public class FakeMemcacheFacade implements MemcacheFacade {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see br.octahedron.cotopaxi.cloudservice.MemcacheFacade#contains(java.lang.String)
 	 */
 	@Override
@@ -33,23 +33,31 @@ public class FakeMemcacheFacade implements MemcacheFacade {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.cloudservice.MemcacheFacade#get(java.lang.Class, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.octahedron.cotopaxi.cloudservice.MemcacheFacade#get(java.lang.Class,
+	 * java.lang.String)
 	 */
 	@Override
 	public <T> T get(Class<T> klass, String key) throws DisabledMemcacheException {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.cloudservice.MemcacheFacade#put(java.lang.String, java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.octahedron.cotopaxi.cloudservice.MemcacheFacade#put(java.lang.String,
+	 * java.lang.Object)
 	 */
 	@Override
 	public <T> void put(String key, T value) throws DisabledMemcacheException {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see br.octahedron.cotopaxi.cloudservice.MemcacheFacade#remove(java.lang.String)
 	 */
 	@Override

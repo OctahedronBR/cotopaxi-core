@@ -50,9 +50,9 @@ public class FacadeThree {
 	public void logout(String username, String something) {
 
 	}
-	
+
 	@Action(url = "/{event_name}/{module_name}/add", method = GET, adapter = AddModuleAdapter.class)
 	public void addModule(String eventName, String moduleName) {
-		
+
 	}
 }

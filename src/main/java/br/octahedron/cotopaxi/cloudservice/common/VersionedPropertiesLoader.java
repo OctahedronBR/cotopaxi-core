@@ -48,12 +48,13 @@ public class VersionedPropertiesLoader {
 	private static final String VERSIONING_SUFIX = ".version";
 
 	private final Logger logger = Logger.getLogger(VersionedPropertiesLoader.class.getName());
-	
+
 	@Inject
 	private MemcacheFacade memcacheFacade;
-	
+
 	/**
-	 * @param memcacheFacade Sets the memcacheFacade
+	 * @param memcacheFacade
+	 *            Sets the memcacheFacade
 	 */
 	public void setMemcacheFacade(MemcacheFacade memcacheFacade) {
 		this.memcacheFacade = memcacheFacade;

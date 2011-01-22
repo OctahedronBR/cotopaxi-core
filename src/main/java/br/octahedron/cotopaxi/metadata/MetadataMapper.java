@@ -182,9 +182,9 @@ public class MetadataMapper {
 	private void extractURLParameters(InputAdapter mapping, String mappingURL, RequestWrapper request) {
 		String[] mappingURLTokens = mappingURL.split(SEPARATOR);
 		String[] requestURLTokens = request.getURL().split(SEPARATOR);
-		for(int i = 1; i < mappingURLTokens.length; i++) {
+		for (int i = 1; i < mappingURLTokens.length; i++) {
 			Matcher m = variablePattern.matcher(mappingURLTokens[i]);
-			if ( m.matches() ) {
+			if (m.matches()) {
 				String attName = mappingURLTokens[i];
 				attName = attName.substring(1, attName.length() - 1);
 				String value = requestURLTokens[i];

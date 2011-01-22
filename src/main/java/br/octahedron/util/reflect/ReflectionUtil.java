@@ -33,7 +33,7 @@ public class ReflectionUtil {
 
 	public static <T extends Annotation> T getAnnotation(Class<?> klass, Class<T> annClass) {
 		if (klass.isAnnotationPresent(annClass)) {
-			return (T) klass.getAnnotation(annClass);
+			return klass.getAnnotation(annClass);
 
 		} else {
 			return null;

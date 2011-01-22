@@ -25,7 +25,7 @@ import br.octahedron.cotopaxi.model.attribute.validator.StringPatternValidator.C
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class AddModuleAdapter extends InputAdapter {
-	
+
 	public AddModuleAdapter() {
 		this.addAttribute("event_name", SafeStringConverter.class, new StringPatternValidator(CommonRegexs.alfanumericAtLeastLength(4)));
 		this.addAttribute("module_name", SafeStringConverter.class, new StringPatternValidator(CommonRegexs.alfanumericAtLeastLength(4)));

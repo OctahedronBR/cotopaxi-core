@@ -189,7 +189,7 @@ public class MapperTest {
 		this.mapper.getMapping(this.request);
 		verify(this.request);
 	}
-	
+
 	@Test
 	public void testExtractAtts3() throws PageNotFoundExeption, SecurityException, NoSuchMethodException {
 		expect(this.request.getURL()).andReturn("/something_really_big/a/myfullname/1/452");

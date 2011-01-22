@@ -24,7 +24,7 @@ import br.octahedron.cotopaxi.ResponseWrapper;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class RedirectViewResponse implements ViewResponse {
-	
+
 	private String redirectURL;
 
 	protected RedirectViewResponse(String redirectURL) {

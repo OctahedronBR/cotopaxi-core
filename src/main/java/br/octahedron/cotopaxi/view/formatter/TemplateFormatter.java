@@ -35,7 +35,7 @@ public abstract class TemplateFormatter extends Formatter {
 	public boolean isReady() {
 		return super.isReady() && this.template != null;
 	}
-	
+
 	/**
 	 * Gets the template used by this {@link TemplateFormatter}
 	 */

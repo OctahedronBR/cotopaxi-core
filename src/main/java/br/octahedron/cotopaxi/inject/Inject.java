@@ -22,13 +22,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Declare fields to be injected on the object. This should be used at the facade classes
- * and its injected classes.
+ * Declare fields to be injected on the object. This should be used at the facade classes and its
+ * injected classes.
  * 
  * For each fields which should be injected the class should provides a "set" method.
  * 
- * Eg.: If you want to inject an UserService at the UserFacade class, the UserFacade class
- * should have a method "public void setUserService(UserService service)" to injection works.
+ * Eg.: If you want to inject an UserService at the UserFacade class, the UserFacade class should
+ * have a method "public void setUserService(UserService service)" to injection works.
  * 
  * On the above example, the UserService class, for its time, can have some injection dependencies
  * too.
@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  * <pre>
  * 
  * public class UserFacade {
- *  &#064;Inject
+ * 	&#064;Inject
  * 	private UserService service;
  * 
  * 	public void setUserService(UserService service) {
@@ -46,9 +46,8 @@ import java.lang.annotation.Target;
  * 	}
  * }
  * 
- * 
  * public class UserService {
- *  &#064;Inject
+ * 	&#064;Inject
  * 	private UserDAO userDAO;
  * 
  * 	public void setUserDAO(UserDAO userDAO) {
@@ -56,11 +55,10 @@ import java.lang.annotation.Target;
  * 	}
  * }
  * 
- * 
  * public class UserDAO {
- *  &#064;Inject
+ * 	&#064;Inject
  * 	private DatastoreFacade datastore;
- *  &#064;Inject
+ * 	&#064;Inject
  * 	private MemcacheFacade memcache;
  * 
  * 	public void setDatastoreFacade(DatastoreFacade datastore) {
@@ -78,10 +76,10 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Inject { 
+public @interface Inject {
 	/**
-	 * Defines if it should use a singleton instance or create and use an brand new, and exclusive, instance.
-	 * By default its <code>true</code> - it will use a singleton instance.
+	 * Defines if it should use a singleton instance or create and use an brand new, and exclusive,
+	 * instance. By default its <code>true</code> - it will use a singleton instance.
 	 * 
 	 * To use a new and exclusive instance, set it to <code>false</code>
 	 */

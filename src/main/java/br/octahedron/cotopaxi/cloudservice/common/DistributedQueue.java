@@ -46,16 +46,18 @@ public class DistributedQueue<T> {
 	public DistributedQueue(String queueName) {
 		this.cacheKey = queueName;
 	}
-	
+
 	/**
-	 * @param distributedLock Sets the distributedLock 
+	 * @param distributedLock
+	 *            Sets the distributedLock
 	 */
 	public void setDistributedLock(DistributedLock distributedLock) {
 		this.distributedLock = distributedLock;
 	}
-	
+
 	/**
-	 * @param memcacheFacade Sets the memcacheFacade
+	 * @param memcacheFacade
+	 *            Sets the memcacheFacade
 	 */
 	public void setMemcacheFacade(MemcacheFacade memcacheFacade) {
 		this.memcacheFacade = memcacheFacade;

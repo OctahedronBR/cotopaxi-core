@@ -56,26 +56,27 @@ import br.octahedron.cotopaxi.view.formatter.VelocityFormatter;
  * 
  */
 public class ViewResponseBuilder {
-	
+
 	@Inject
 	private FormatterBuilder formatterBuilder;
 	@Inject
 	private CotopaxiConfigView cotopaxiConfigView;
-	
+
 	/**
-	 * @param formatterBuilder Sets the {@link FormatterBuilder}
+	 * @param formatterBuilder
+	 *            Sets the {@link FormatterBuilder}
 	 */
 	public void setFormatterBuilder(FormatterBuilder formatterBuilder) {
 		this.formatterBuilder = formatterBuilder;
 	}
-	
+
 	/**
-	 * @param cotopaxiConfigView Sets the {@link CotopaxiConfigView}
+	 * @param cotopaxiConfigView
+	 *            Sets the {@link CotopaxiConfigView}
 	 */
 	public void setCotopaxiConfigView(CotopaxiConfigView cotopaxiConfigView) {
 		this.cotopaxiConfigView = cotopaxiConfigView;
 	}
-	
 
 	/**
 	 * Creates a {@link ViewResponse}
@@ -199,7 +200,7 @@ public class ViewResponseBuilder {
 		// generate attributes map to be rendered
 		Throwable ex = actionResponse.getCause();
 		Map<String, Object> attributes = actionResponse.getAttributes();
-		extractExceptionAttributes(attributes, ex);
+		this.extractExceptionAttributes(attributes, ex);
 		// check Message
 		if (messageMetadata.getOnError() != null) {
 			attributes.put(TemplatesAttributes.MESSAGE_ON_ERROR.getAttributeKey(), messageMetadata.getOnError());
@@ -237,7 +238,7 @@ public class ViewResponseBuilder {
 	private ViewResponse createErrorResponse(Locale lc, Exception ex) {
 		// generate attributes map to be rendered
 		Map<String, Object> attributes = new HashMap<String, Object>();
-		extractExceptionAttributes(attributes, ex);
+		this.extractExceptionAttributes(attributes, ex);
 		// get and prepare formatter
 		TemplateFormatter formatter = new VelocityFormatter(this.cotopaxiConfigView.getErrorTemplate(), attributes, lc);
 		return new FormatterViewResponse(formatter, ResultCode.INTERNAL_ERROR);
@@ -246,7 +247,7 @@ public class ViewResponseBuilder {
 	private ViewResponse createForbiddenResponse(Locale lc, Exception ex) {
 		// generate attributes map to be rendered
 		Map<String, Object> attributes = new HashMap<String, Object>();
-		extractExceptionAttributes(attributes, ex);
+		this.extractExceptionAttributes(attributes, ex);
 		// get and prepare formatter
 		TemplateFormatter formatter = new VelocityFormatter(this.cotopaxiConfigView.getForbiddenTemplate(), attributes, lc);
 		return new FormatterViewResponse(formatter, ResultCode.FORBIDDEN);
@@ -255,9 +256,9 @@ public class ViewResponseBuilder {
 	private void extractExceptionAttributes(Map<String, Object> attributes, Throwable ex) {
 		attributes.put(EXCEPTION_ATTRIBUTE.getAttributeKey(), ex);
 		attributes.put(EXCEPTION_CLASS_ATTRIBUTE.getAttributeKey(), ex.getClass().getName());
-		attributes.put(EXCEPTION_STACK_TRACE_ATTRIBUTE.getAttributeKey(), extractStackTrace(ex.getStackTrace()));
+		attributes.put(EXCEPTION_STACK_TRACE_ATTRIBUTE.getAttributeKey(), this.extractStackTrace(ex.getStackTrace()));
 		// just to avoid null messages
-		if ( ex.getMessage() != null) { 
+		if (ex.getMessage() != null) {
 			attributes.put(EXCEPTION_MESSAGE_ATTRIBUTE.getAttributeKey(), ex.getMessage());
 		} else {
 			attributes.put(EXCEPTION_MESSAGE_ATTRIBUTE.getAttributeKey(), "Null");
@@ -266,7 +267,7 @@ public class ViewResponseBuilder {
 
 	private Collection<String> extractStackTrace(StackTraceElement[] stackTrace) {
 		ArrayList<String> result = new ArrayList<String>();
-		for(StackTraceElement element : stackTrace) {
+		for (StackTraceElement element : stackTrace) {
 			result.add(element.toString());
 		}
 		return result;

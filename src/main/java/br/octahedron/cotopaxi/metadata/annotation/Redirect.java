@@ -46,7 +46,7 @@ public @interface Redirect {
 	 * A wrapper for the Redirect metadata
 	 */
 	public static class RedirectMetadata {
-		
+
 		// Instance Handler for Mappings
 		private RedirectStrategy redirectStrategy;
 
@@ -77,7 +77,7 @@ public @interface Redirect {
 		}
 
 		public RedirectStrategy getRedirectStrategy() {
-			return redirectStrategy;
+			return this.redirectStrategy;
 		}
 	}
 }

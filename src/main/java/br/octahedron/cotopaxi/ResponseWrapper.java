@@ -33,7 +33,7 @@ import br.octahedron.cotopaxi.view.response.ResultCode;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class ResponseWrapper {
-	
+
 	private static final Logger logger = Logger.getLogger(ResponseWrapper.class.getName());
 
 	private HttpServletResponse response;

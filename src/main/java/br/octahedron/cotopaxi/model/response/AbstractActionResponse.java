@@ -36,7 +36,7 @@ public abstract class AbstractActionResponse implements ActionResponse {
 	public AbstractActionResponse(Result result, InputHandler input) {
 		this.result = result;
 		// copy sessions attributes to ActionResponse Attributes
-		for(String sessionAttName : input.getSessionAttributes()) {
+		for (String sessionAttName : input.getSessionAttributes()) {
 			this.attributes.put(sessionAttName, input.getSessionAttribute(sessionAttName));
 		}
 	}

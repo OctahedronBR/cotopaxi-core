@@ -32,7 +32,6 @@ public class SuccessActionResponse extends AbstractActionResponse {
 		this.returnValue = returnValue;
 	}
 
-
 	public Object getReturnValue() {
 		return this.returnValue;
 	}

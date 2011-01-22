@@ -20,7 +20,7 @@ import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
  * 
  */
 public class QuietMemcacheFacade implements MemcacheFacade {
-	
+
 	private MemcacheFacade memcache;
 
 	public QuietMemcacheFacade(MemcacheFacade memcache) {

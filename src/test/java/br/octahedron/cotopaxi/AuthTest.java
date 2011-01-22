@@ -57,15 +57,15 @@ public class AuthTest {
 	@Before
 	public void setUp() throws SecurityException, NoSuchMethodException {
 		this.userStrategy = createMock(UserLookupStrategy.class);
-		CotopaxiConfigView config = instanceHandler.getInstance(CotopaxiConfigView.class);
+		CotopaxiConfigView config = this.instanceHandler.getInstance(CotopaxiConfigView.class);
 		config.getCotopaxiConfig().addModelFacade(FacadeThree.class);
-		
+
 		InjectionManager.registerImplementation(UserLookupStrategy.class, this.userStrategy);
-		
-		this.auth = instanceHandler.getInstance(AuthManager.class);
+
+		this.auth = this.instanceHandler.getInstance(AuthManager.class);
 		this.mapper = new MetadataMapper(config);
 	}
-	
+
 	@After
 	public void tearDown() {
 		this.userStrategy = null;
@@ -174,7 +174,7 @@ public class AuthTest {
 		verify(request);
 		verify(this.userStrategy);
 	}
-	
+
 	@Test
 	public void authenticationTest5() throws PageNotFoundExeption, UserNotLoggedException, UserNotAuthorizedException {
 		/*
@@ -185,13 +185,13 @@ public class AuthTest {
 		expect(request.getURL()).andReturn("/restricted3").atLeastOnce();
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.GET).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
-		expect(request.getSessionAttribute(SessionUserLookupStrategy.USER_SESSION_ATTRIBUTE)).andReturn(new UserInfo("danilo","admin"));
+		expect(request.getSessionAttribute(SessionUserLookupStrategy.USER_SESSION_ATTRIBUTE)).andReturn(new UserInfo("danilo", "admin"));
 		replay(request);
 
 		InjectionManager.registerImplementation(UserLookupStrategy.class, new SessionUserLookupStrategy());
 		InjectionManager.removeImplementation(AuthManager.class);
-		this.auth = instanceHandler.getInstance(AuthManager.class);
-		
+		this.auth = this.instanceHandler.getInstance(AuthManager.class);
+
 		// invoking the auth mechanism
 		LoginRequiredMetadata login = this.mapper.getMapping(request).getLoginMetadata();
 		this.auth.authorizeUser(request, login);

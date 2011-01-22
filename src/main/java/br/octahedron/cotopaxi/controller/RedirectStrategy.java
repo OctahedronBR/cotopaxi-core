@@ -32,15 +32,19 @@ public interface RedirectStrategy {
 
 	/**
 	 * Decides if should redirect response, based on the given {@link ActionResponse}
-	 * @param response the {@link ActionResponse}
+	 * 
+	 * @param response
+	 *            the {@link ActionResponse}
 	 * @return <code>true</code> if it should, <code>false</code> otherwise.
 	 */
 	public boolean shouldRedirect(ActionResponse response);
 
 	/**
 	 * The URL to response be redirect.
-	 * @param response the {@link ActionResponse}
-	 * @param inputAdapter 
+	 * 
+	 * @param response
+	 *            the {@link ActionResponse}
+	 * @param inputAdapter
 	 * @return the URL to redirect response
 	 */
 	public String getRedirectURL(ActionResponse response, InputHandler inputHandler);

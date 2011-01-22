@@ -55,7 +55,6 @@ public class ModelController {
 	private final Logger logger = Logger.getLogger(ModelController.class.getName());
 	private InstanceHandler instanceHandler = new InstanceHandler();
 
-
 	/**
 	 * Executes the request, it means:
 	 * 

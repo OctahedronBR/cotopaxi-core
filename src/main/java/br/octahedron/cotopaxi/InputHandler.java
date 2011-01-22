@@ -28,20 +28,25 @@ public interface InputHandler {
 
 	/**
 	 * Gets an parameter's value from request.
-	 * @param name the parameter's name
+	 * 
+	 * @param name
+	 *            the parameter's name
 	 * @return the parameter's value, or null if doesn't exist such parameter
 	 */
 	public String getRequestParameter(String name);
 
 	/**
 	 * Gets an parameter's value from session.
-	 * @param name the parameter's name
+	 * 
+	 * @param name
+	 *            the parameter's name
 	 * @return the parameter's value, or null if doesn't exist such parameter
 	 */
 	public Object getSessionAttribute(String name);
 
 	/**
 	 * Gets a collection with all session attributes' names.
+	 * 
 	 * @return a collection with all session attributes' names.
 	 */
 	public Collection<String> getSessionAttributes();

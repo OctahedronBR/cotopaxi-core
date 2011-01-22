@@ -51,7 +51,7 @@ public class ControllerTwoTest {
 	@Before
 	public void setUp() throws SecurityException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException {
 		InstanceHandler instanceHandler = new InstanceHandler();
-		CotopaxiConfigView configView = instanceHandler.getInstance(CotopaxiConfigView.class); 
+		CotopaxiConfigView configView = instanceHandler.getInstance(CotopaxiConfigView.class);
 		CotopaxiConfig config = configView.getCotopaxiConfig();
 		config.addModelFacade(FacadeOne.class, FacadeTwo.class, FacadeThree.class);
 		this.mapper = new MetadataMapper(configView);

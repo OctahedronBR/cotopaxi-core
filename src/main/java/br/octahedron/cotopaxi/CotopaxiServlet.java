@@ -72,7 +72,7 @@ public class CotopaxiServlet extends HttpServlet {
 
 	private InstanceHandler instanceHandler = new InstanceHandler();;
 	private CotopaxiConfigView config;
-	
+
 	private ViewResponseBuilder view;
 	private MetadataMapper mapper;
 	private ModelController controller;
@@ -122,7 +122,7 @@ public class CotopaxiServlet extends HttpServlet {
 			throw new ClassNotFoundException(null);
 		}
 	}
-	
+
 	/**
 	 * @return the filter
 	 */
@@ -165,7 +165,7 @@ public class CotopaxiServlet extends HttpServlet {
 		ResponseWrapper response = new ResponseWrapper(resp);
 		String requestedURL = request.getURL();
 		// gets view response
-		ViewResponse viewResponse = getViewResponse(request, requestedURL);
+		ViewResponse viewResponse = this.getViewResponse(request, requestedURL);
 		// dispatch the view response
 		try {
 			viewResponse.dispatch(response);
@@ -188,20 +188,20 @@ public class CotopaxiServlet extends HttpServlet {
 			try {
 				// maps the request to metadata
 				MetadataHandler metadata = this.mapper.getMapping(request);
-				
+
 				// check user authorization
 				LoginRequiredMetadata loginMetadata = metadata.getLoginMetadata();
-				if ( loginMetadata.isLoginRequired() ) {
+				if (loginMetadata.isLoginRequired()) {
 					this.getAuth().authorizeUser(request, loginMetadata);
 				}
-					
+
 				// execute filters before
 				ActionMetadata actionMetadata = metadata.getActionMetadata();
 				if (this.config.hasGlobalFilters() || actionMetadata.hasFilters()) {
 					this.getFilter().executeFiltersBefore(actionMetadata, request);
-					
+
 				}
-				
+
 				// execute the controller
 				ActionResponse actionResp = this.controller.executeRequest(request, metadata.getActionMetadata());
 
@@ -225,11 +225,11 @@ public class CotopaxiServlet extends HttpServlet {
 				} else {
 					viewResponse = this.view.getViewResponse(lc, request.getFormat(), actionResp, metadata);
 				}
-				
+
 				// execute filters after
 				if (this.config.hasGlobalFilters() || actionMetadata.hasFilters()) {
 					this.getFilter().executeFiltersAfter(metadata.getActionMetadata(), request, actionResp);
-					
+
 				}
 			} catch (UserNotLoggedException e) {
 				logger.fine("Request for " + requestedURL + " failed due authorization restrictions: no user logged!");

@@ -26,25 +26,25 @@ import br.octahedron.cotopaxi.InputHandler;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class SessionUserLookupStrategy implements UserLookupStrategy {
-	
+
 	private static final Logger logger = Logger.getLogger(SessionUserLookupStrategy.class.getName());
-	
+
 	/**
-	 * The user property, used as key to the current user on session map. 
+	 * The user property, used as key to the current user on session map.
 	 */
 	public static final String USER_SESSION_ATTRIBUTE = "current_user";
-	
+
 	public static final String DEFAULT_LOGIN_URL = "/login";
 	public static final String DEFAULT_REDIRECT_ATTRIBUTE = "redirect";
 
 	private String redirectAttribute;
 	private String loginURL;
-	
+
 	public SessionUserLookupStrategy() {
 		this.loginURL = DEFAULT_LOGIN_URL;
 		this.redirectAttribute = DEFAULT_REDIRECT_ATTRIBUTE;
 	}
-	
+
 	public SessionUserLookupStrategy(String loginURL, String redirectAttribute) {
 		this.loginURL = loginURL;
 		this.redirectAttribute = redirectAttribute;
@@ -59,9 +59,9 @@ public class SessionUserLookupStrategy implements UserLookupStrategy {
 	@Override
 	public String getLoginURL(String redirectURL) {
 		String redirect = "";
-		if ( this.redirectAttribute != null) {
-			redirect = "?"+this.redirectAttribute+"="+redirectURL;
+		if (this.redirectAttribute != null) {
+			redirect = "?" + this.redirectAttribute + "=" + redirectURL;
 		}
-		return loginURL + redirect ;
-	} 
+		return this.loginURL + redirect;
+	}
 }

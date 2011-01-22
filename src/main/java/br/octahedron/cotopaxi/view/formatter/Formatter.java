@@ -28,7 +28,7 @@ import br.octahedron.cotopaxi.view.ContentType;
  * 
  */
 public abstract class Formatter {
-	
+
 	private Map<String, Object> attributes;
 	private ContentType contentType;
 	private Locale locale;
@@ -54,7 +54,7 @@ public abstract class Formatter {
 	public Map<String, Object> getAttributes() {
 		return this.attributes;
 	}
-	
+
 	/**
 	 * Gets the response's content type
 	 * 
@@ -102,14 +102,15 @@ public abstract class Formatter {
 	}
 
 	/**
-	 * Formats the response. It's a template method, subclass should implements the {@link Formatter#doFormat()} method.
+	 * Formats the response. It's a template method, subclass should implements the
+	 * {@link Formatter#doFormat()} method.
 	 */
 	protected final void format() {
 		if (this.isReady()) {
 			this.formatted = this.doFormat();
-		} 
+		}
 	}
-	
+
 	/**
 	 * Formats the content and return it as String. This method is called by the
 	 * {@link Formatter#format()} template method, that check if this format is ready before call

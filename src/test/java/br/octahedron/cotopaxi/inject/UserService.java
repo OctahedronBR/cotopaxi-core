@@ -24,7 +24,7 @@ public class UserService {
 	private UserDAO userDAO;
 
 	public UserDAO getUserDAO() {
-		return userDAO;
+		return this.userDAO;
 	}
 
 	public void setUserDAO(UserDAO userDAO) {

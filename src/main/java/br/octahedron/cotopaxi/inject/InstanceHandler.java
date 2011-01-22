@@ -32,12 +32,12 @@ import br.octahedron.util.reflect.ReflectionUtil;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
- *
+ * 
  */
 public class InstanceHandler {
-	
+
 	private static final Logger logger = Logger.getLogger(InstanceHandler.class.getName());
-	
+
 	/**
 	 * Gets a <T> instance for the given {@link Class} ready to be used.
 	 * 
@@ -56,7 +56,7 @@ public class InstanceHandler {
 			throw new InstanceLoadException("Unable to load class " + klass, e);
 		}
 	}
-	
+
 	/**
 	 * Creates a new instance of the given class.
 	 */
@@ -64,17 +64,17 @@ public class InstanceHandler {
 		Class<?> klass = Class.forName(className);
 		return this.createInstance(klass);
 	}
-	
+
 	/**
 	 * Creates a new instance of the given class.
 	 */
 	public <T> T createInstance(Class<T> klass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Class<? extends T> implClass = resolveDependency(klass);
-		T instance = (T) implClass.newInstance();
+		T instance = implClass.newInstance();
 		this.inject(instance);
 		return instance;
 	}
-	
+
 	/**
 	 * Checks if should inject any attribute and inject if necessary.
 	 */
@@ -87,7 +87,7 @@ public class InstanceHandler {
 				// create the object to inject
 				Class<?> klass = f.getType();
 				Object obj;
-				if ( inject.singleton() ) {
+				if (inject.singleton()) {
 					obj = this.getInstance(klass);
 				} else {
 					obj = this.createInstance(klass);

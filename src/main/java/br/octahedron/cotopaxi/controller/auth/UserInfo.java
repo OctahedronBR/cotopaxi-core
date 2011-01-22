@@ -47,7 +47,7 @@ public class UserInfo implements Serializable {
 			this.roles.add(role.toLowerCase());
 		}
 	}
-	
+
 	public UserInfo(String username, String... roles) {
 		this(username);
 		for (String role : roles) {

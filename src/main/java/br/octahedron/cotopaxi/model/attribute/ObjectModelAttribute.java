@@ -35,7 +35,6 @@ public class ObjectModelAttribute<T> implements ModelAttribute<T> {
 	private Collection<ModelAttribute<?>> internalAtts = new LinkedList<ModelAttribute<?>>();
 	private Class<T> klass;
 	private String name;
-	
 
 	public ObjectModelAttribute(Class<T> klass) {
 		this.klass = klass;
@@ -60,7 +59,7 @@ public class ObjectModelAttribute<T> implements ModelAttribute<T> {
 	@Override
 	public T getAttributeValue(InputHandler input) throws InvalidAttributeException, ConversionException {
 		try {
-			T instance = (T) this.klass.newInstance();
+			T instance = this.klass.newInstance();
 			for (ModelAttribute<?> att : this.internalAtts) {
 				Object value = att.getAttributeValue(input);
 				Method met = ReflectionUtil.getSetMethod(att.getName(), this.klass, value.getClass());

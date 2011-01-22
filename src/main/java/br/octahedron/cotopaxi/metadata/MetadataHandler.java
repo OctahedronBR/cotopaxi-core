@@ -25,9 +25,9 @@ import br.octahedron.cotopaxi.metadata.annotation.Template;
 import br.octahedron.cotopaxi.metadata.annotation.Action.ActionMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.LoginRequired.LoginRequiredMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.Message.MessageMetadata;
+import br.octahedron.cotopaxi.metadata.annotation.Redirect.RedirectMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.Response.ResponseMetadata;
 import br.octahedron.cotopaxi.metadata.annotation.Template.TemplateMetadata;
-import br.octahedron.cotopaxi.metadata.annotation.Redirect.RedirectMetadata;;
 
 /**
  * This entity handlers all metadata extract {@link Action} methods.
@@ -78,8 +78,8 @@ public class MetadataHandler {
 	public MessageMetadata getMessageMetadata() {
 		return this.messageMetadata;
 	}
-	
+
 	public RedirectMetadata getRedirectMetadata() {
-		return redirectMetadata;
+		return this.redirectMetadata;
 	}
 }

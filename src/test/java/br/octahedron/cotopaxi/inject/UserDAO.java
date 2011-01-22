@@ -26,21 +26,24 @@ public class UserDAO {
 
 	@Inject
 	private DatastoreFacade datastoreFacade;
-	
+
 	@Inject
 	private MemcacheFacade memcacheFacade;
-	
+
 	public DatastoreFacade getDatastoreFacade() {
-		return datastoreFacade;
+		return this.datastoreFacade;
 	}
+
 	public void setDatastoreFacade(DatastoreFacade datastoreFacade) {
 		this.datastoreFacade = datastoreFacade;
 	}
+
 	public MemcacheFacade getMemcacheFacade() {
-		return memcacheFacade;
+		return this.memcacheFacade;
 	}
+
 	public void setMemcacheFacade(MemcacheFacade memcacheFacade) {
 		this.memcacheFacade = memcacheFacade;
 	}
-	
+
 }

@@ -32,18 +32,19 @@ import br.octahedron.cotopaxi.inject.Inject;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class FormatterBuilder {
-	
+
 	@Inject
 	private CotopaxiConfigView cotopaxiConfigView;
 	private Map<String, Class<? extends Formatter>> defaultFormatters = new HashMap<String, Class<? extends Formatter>>();
-	
+
 	public FormatterBuilder() {
 		this.registerDefaultFormatter(HTML_FORMAT, VelocityFormatter.class);
 		this.registerDefaultFormatter(JSON_FORMAT, SimpleJSONFormatter.class);
 	}
-	
+
 	/**
-	 * @param cotopaxiConfigView Sets the {@link CotopaxiConfigView}
+	 * @param cotopaxiConfigView
+	 *            Sets the {@link CotopaxiConfigView}
 	 */
 	public void setCotopaxiConfigView(CotopaxiConfigView cotopaxiConfigView) {
 		this.cotopaxiConfigView = cotopaxiConfigView;

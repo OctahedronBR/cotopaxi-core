@@ -43,11 +43,11 @@ public class FilterExecutor {
 	private InstanceHandler instanceHandler;
 	@Inject
 	private CotopaxiConfigView cotopaxiConfigView;
-	
+
 	public void setInstanceHandler(InstanceHandler instanceHandler) {
 		this.instanceHandler = instanceHandler;
 	}
-	
+
 	public void setCotopaxiConfigView(CotopaxiConfigView cotopaxiConfigView) {
 		this.cotopaxiConfigView = cotopaxiConfigView;
 	}
@@ -87,7 +87,7 @@ public class FilterExecutor {
 	 */
 	private void executeFiltersBefore(Collection<Class<? extends Filter>> filters, RequestWrapper request) throws FilterException {
 		for (Class<? extends Filter> filterClass : filters) {
-			logger.fine("Executing the before filter "+ filterClass.getSimpleName() +" for " + request.getURL());
+			logger.fine("Executing the before filter " + filterClass.getSimpleName() + " for " + request.getURL());
 			Filter filter = this.instanceHandler.getInstance(filterClass);
 			filter.doBefore(request);
 		}
@@ -99,7 +99,7 @@ public class FilterExecutor {
 	private void executeFiltersAfter(Collection<Class<? extends Filter>> filters, RequestWrapper request, ActionResponse response)
 			throws FilterException {
 		for (Class<? extends Filter> filterClass : filters) {
-			logger.fine("Executing the after filter "+ filterClass.getSimpleName() +" for " + request.getURL());
+			logger.fine("Executing the after filter " + filterClass.getSimpleName() + " for " + request.getURL());
 			Filter filter = this.instanceHandler.getInstance(filterClass);
 			filter.doAfter(request, response);
 		}

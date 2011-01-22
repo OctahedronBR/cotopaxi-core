@@ -58,7 +58,7 @@ public class FakeModelFacade implements CotopaxiConfigurator {
 	public int viewUserId(String name, int id) {
 		return id;
 	}
-	
+
 	@Action(adapter = MappingGetAtts.class, url = "/something_really_big/a/{name}/1/{id}/")
 	public int viewUserId2(String name, int id) {
 		return id;

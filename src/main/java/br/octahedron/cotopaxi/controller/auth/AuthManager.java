@@ -33,7 +33,8 @@ public class AuthManager {
 	private UserLookupStrategy userLookupStrategy;
 
 	/**
-	 * @param userLookupStrategy Sets the {@link UserLookupStrategy}
+	 * @param userLookupStrategy
+	 *            Sets the {@link UserLookupStrategy}
 	 */
 	public void setUserLookupStrategy(UserLookupStrategy userLookupStrategy) {
 		this.userLookupStrategy = userLookupStrategy;

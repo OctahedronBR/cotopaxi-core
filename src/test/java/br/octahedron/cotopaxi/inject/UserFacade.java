@@ -24,7 +24,7 @@ public class UserFacade {
 	private UserService userService;
 
 	public UserService getUserService() {
-		return userService;
+		return this.userService;
 	}
 
 	public void setUserService(UserService userService) {
