@@ -82,6 +82,10 @@ public class ReflectionUtil {
 				result.add(field);
 			}
 		}
+		Class<?> superClass = klass.getSuperclass();
+		if ( superClass != null ) {
+			result.addAll(getAnnotatedFields(superClass, annClass));
+		}
 		return result;
 	}
 
