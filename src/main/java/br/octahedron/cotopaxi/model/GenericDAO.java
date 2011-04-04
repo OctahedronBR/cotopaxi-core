@@ -28,42 +28,79 @@ import br.octahedron.cotopaxi.inject.Inject;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public abstract class GenericDAO<T> {
-	
+
 	private Class<T> klass;
-	
+
 	@Inject
 	protected DatastoreFacade datastoreFacade;
-	
+
 	public GenericDAO(Class<T> klass) {
 		this.klass = klass;
 	}
-	
+
 	/**
-	 * @param datastoreFacade the datastoreFacade to set
+	 * @param datastoreFacade
+	 *            the datastoreFacade to set
 	 */
 	public void setDatastoreFacade(DatastoreFacade datastoreFacade) {
 		this.datastoreFacade = datastoreFacade;
 	}
-	
+
+	/**
+	 * Deletes an object. The given parameter can be the object to be deleted, it means an instance
+	 * of T, or can be the key for the object to be deleted.
+	 * 
+	 * @param object
+	 *            The object to be deleted or the key for the object to be deleted.
+	 */
+	public void delete(Object object) throws DatastoreException {
+		if (object.getClass().equals(this.klass)) {
+			this.datastoreFacade.deleteObject(object);
+		} else {
+			if (this.exists(object)) {
+				this.delete(this.get(object));
+			}
+		}
+	}
+
+	/**
+	 * Saves an entity. It doesn't verify if the object already exists, it just saves, overwritting the previous object, if exists. 
+	 * @param entity The entity to be save
+	 */
 	public void save(T entity) throws DatastoreException {
 		this.datastoreFacade.saveObject(entity);
 	}
-	
+
+	/**
+	 * @return Gets all T entities.
+	 */
 	public Collection<T> getAll() {
 		return this.datastoreFacade.getObjects(this.klass);
 	}
-	
+
+	/**
+	 * Gets an T entity.
+	 * @param key the entity's key.
+	 * @return The entity with the given key, if exists, null otherwise.
+	 */
 	public T get(Object key) {
 		return this.datastoreFacade.getObjectByKey(this.klass, key);
 	}
 
+	/**
+	 * Checks if exists an entity with the given key.
+	 * @param key the entity's key
+	 * @return <code>true</code> if exists, <code>false</code> otherwise.
+	 */
 	public boolean exists(Object key) {
 		return this.datastoreFacade.existsObject(this.klass, key);
 	}
-	
+
+	/**
+	 * @return The number of T entities stored
+	 */
 	public int count() {
 		return this.datastoreFacade.countObjects(this.klass);
 	}
-	
 
 }

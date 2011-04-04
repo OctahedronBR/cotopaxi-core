@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.net.URL;
 import java.util.Date;
 
 import org.junit.Test;
@@ -142,5 +143,13 @@ public class ConversorsTest {
 		number = converter.convert("-191082.818281f");
 		assertTrue(number == -191082.818281f);
 		converter.convert("191082n");
+	}
+	
+	@Test(expected = ConversionException.class)
+	public void testURL() throws ConversionException {
+		URLConverter converter = new URLConverter();
+		URL url = converter.convert("http://www.octahedron.com.br");
+		assertEquals("http://www.octahedron.com.br", url.toExternalForm());
+		url = converter.convert("octahedron.com.br");
 	}
 }
