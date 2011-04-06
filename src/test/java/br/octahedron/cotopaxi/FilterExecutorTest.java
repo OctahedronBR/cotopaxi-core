@@ -49,12 +49,11 @@ public class FilterExecutorTest {
 	@Before
 	public void setUp() throws SecurityException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		FiltersHelper.reset();
-		InstanceHandler instanceHandler = new InstanceHandler();
-		CotopaxiConfigView configView = instanceHandler.getInstance(CotopaxiConfigView.class);
+		CotopaxiConfigView configView = InstanceHandler.getInstance(CotopaxiConfigView.class);
 		CotopaxiConfig config = configView.getCotopaxiConfig();
 		config.addModelFacade(FacadeTwo.class);
 		this.mapper = new MetadataMapper(configView);
-		this.filterExec = instanceHandler.createInstance(FilterExecutor.class);
+		this.filterExec = InstanceHandler.createInstance(FilterExecutor.class);
 
 	}
 
@@ -93,8 +92,7 @@ public class FilterExecutorTest {
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
 		//
-		InstanceHandler instanceHandler = new InstanceHandler();
-		CotopaxiConfigView configView = instanceHandler.getInstance(CotopaxiConfigView.class);
+		CotopaxiConfigView configView = InstanceHandler.getInstance(CotopaxiConfigView.class);
 		CotopaxiConfig config = configView.getCotopaxiConfig();
 		config.addGlobalFilter(MyFilter.class);
 
@@ -145,8 +143,7 @@ public class FilterExecutorTest {
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
 		// 		
-		InstanceHandler instanceHandler = new InstanceHandler();
-		CotopaxiConfigView configView = instanceHandler.getInstance(CotopaxiConfigView.class);
+		CotopaxiConfigView configView = InstanceHandler.getInstance(CotopaxiConfigView.class);
 		CotopaxiConfig config = configView.getCotopaxiConfig();
 		config.addGlobalFilter(MyExceptionFilterAfter.class);
 
@@ -174,8 +171,7 @@ public class FilterExecutorTest {
 		expect(request.getHTTPMethod()).andReturn(HTTPMethod.POST).atLeastOnce();
 		expect(request.getFormat()).andReturn(null);
 		replay(request);
-		InstanceHandler instanceHandler = new InstanceHandler();
-		CotopaxiConfigView configView = instanceHandler.getInstance(CotopaxiConfigView.class);
+		CotopaxiConfigView configView = InstanceHandler.getInstance(CotopaxiConfigView.class);
 		CotopaxiConfig config = configView.getCotopaxiConfig();
 		config.addGlobalFilter(MyExceptionFilterBefore.class);
 		try {

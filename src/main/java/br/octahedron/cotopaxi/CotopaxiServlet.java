@@ -70,7 +70,6 @@ public class CotopaxiServlet extends HttpServlet {
 
 	private static final Logger logger = Logger.getLogger(CotopaxiServlet.class.getName());
 
-	private InstanceHandler instanceHandler = new InstanceHandler();;
 	private CotopaxiConfigView config;
 
 	private ViewResponseBuilder view;
@@ -90,7 +89,7 @@ public class CotopaxiServlet extends HttpServlet {
 			// create the Model Controller
 			this.controller = new ModelController();
 			// create the ViewerManager
-			this.view = this.instanceHandler.getInstance(ViewResponseBuilder.class);
+			this.view = InstanceHandler.getInstance(ViewResponseBuilder.class);
 			this.localeManager = LocaleManager.getInstance();
 			// Done!
 			logger.info("Cotopaxi is ready to serve!");
@@ -113,10 +112,10 @@ public class CotopaxiServlet extends HttpServlet {
 	 */
 	protected void configure(String configuratorClassName) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		// Config
-		this.config = this.instanceHandler.getInstance(CotopaxiConfigView.class);
+		this.config = InstanceHandler.getInstance(CotopaxiConfigView.class);
 		if (configuratorClassName != null) {
 			CotopaxiConfig configurable = this.config.getCotopaxiConfig();
-			CotopaxiConfigurator configurator = (CotopaxiConfigurator) this.instanceHandler.createInstance(configuratorClassName);
+			CotopaxiConfigurator configurator = (CotopaxiConfigurator) InstanceHandler.createInstance(configuratorClassName);
 			configurator.configure(configurable);
 		} else {
 			throw new ClassNotFoundException(null);
@@ -127,14 +126,14 @@ public class CotopaxiServlet extends HttpServlet {
 	 * @return the filter
 	 */
 	public FilterExecutor getFilter() {
-		return this.instanceHandler.getInstance(FilterExecutor.class);
+		return InstanceHandler.getInstance(FilterExecutor.class);
 	}
 
 	/**
 	 * @return the auth
 	 */
 	public AuthManager getAuth() {
-		return this.instanceHandler.getInstance(AuthManager.class);
+		return InstanceHandler.getInstance(AuthManager.class);
 	}
 
 	@Override

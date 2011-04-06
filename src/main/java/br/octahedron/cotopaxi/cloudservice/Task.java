@@ -19,7 +19,8 @@ package br.octahedron.cotopaxi.cloudservice;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.octahedron.cotopaxi.inject.InstanceHandler;
+import br.octahedron.cotopaxi.inject.Inject;
+import br.octahedron.cotopaxi.inject.SelfInjector;
 
 /**
  * Creates a task to be executed after a given delay time. The task will be scheduled using the
@@ -30,14 +31,15 @@ import br.octahedron.cotopaxi.inject.InstanceHandler;
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-public class Task {
+public class Task extends SelfInjector {
 	
-	private static TaskEnqueuer enqueuer;
-	static {
-		InstanceHandler handler = new InstanceHandler();
-		enqueuer = handler.getInstance(TaskEnqueuer.class);
+	@Inject
+	private TaskEnqueuer taskEnqueuer;
+	
+	public void setTaskEnqueuer(TaskEnqueuer taskEnqueuer) {
+		this.taskEnqueuer = taskEnqueuer;
 	}
-
+	
 	private Map<String, String> params;
 	private String url;
 	private String queue;
@@ -139,7 +141,7 @@ public class Task {
 	 * The task will run only after be enqueued.
 	 */
 	public void enqueue() {
-		enqueuer.enqueue(this);
+		taskEnqueuer.enqueue(this);
 	}
 
 	/**

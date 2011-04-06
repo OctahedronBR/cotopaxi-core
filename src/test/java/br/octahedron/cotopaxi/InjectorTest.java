@@ -37,18 +37,16 @@ import br.octahedron.cotopaxi.inject.UserService;
  */
 public class InjectorTest {
 
-	private InstanceHandler injector;
 
 	@Before
 	public void setUp() {
 		InjectionManager.registerDependency(DatastoreFacade.class, FakeDatastoreFacade.class);
 		InjectionManager.registerDependency(MemcacheFacade.class, FakeMemcacheFacade.class);
-		this.injector = new InstanceHandler();
 	}
 
 	@Test
 	public void testInjection() {
-		UserFacade facade = this.injector.getInstance(UserFacade.class);
+		UserFacade facade = InstanceHandler.getInstance(UserFacade.class);
 		assertNotNull(facade);
 		UserService service = facade.getUserService();
 		assertNotNull(service);

@@ -14,21 +14,22 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.inject;
+package br.octahedron.cotopaxi;
 
 import static junit.framework.Assert.*;
 import org.junit.Test;
+
+import br.octahedron.cotopaxi.inject.InjectHere;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class InjectableTest {
 	
-	private InstanceHandler handler = new InstanceHandler();
-	
 	@Test
 	public void injectable() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		InjectHere test = handler.createInstance(InjectHere.class);
+		InjectHere test = InstanceHandler.createInstance(InjectHere.class);
 		assertNull(test.onlyPackage);
 		assertNotNull(test.superPackage);
 	}

@@ -84,9 +84,6 @@ public @interface Action {
 	 * A wrapper for the Action metadata
 	 */
 	public static class ActionMetadata {
-		// Instance Handler for Mappings
-		private static InstanceHandler instanceHandler = new InstanceHandler();
-
 		private Class<? extends Filter>[] filters;
 		private HTTPMethod httpMethod;
 		private String url;
@@ -123,7 +120,7 @@ public @interface Action {
 		}
 
 		public InputAdapter getInputAdapter() {
-			return instanceHandler.getInstance(this.adapterClass);
+			return InstanceHandler.getInstance(this.adapterClass);
 		}
 
 		public Method getMethod() {

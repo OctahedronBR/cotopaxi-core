@@ -49,7 +49,6 @@ import br.octahedron.cotopaxi.metadata.annotation.LoginRequired.LoginRequiredMet
  */
 public class AuthTest {
 
-	private InstanceHandler instanceHandler = new InstanceHandler();
 	private UserLookupStrategy userStrategy;
 	private AuthManager auth;
 	private MetadataMapper mapper;
@@ -57,12 +56,12 @@ public class AuthTest {
 	@Before
 	public void setUp() throws SecurityException, NoSuchMethodException {
 		this.userStrategy = createMock(UserLookupStrategy.class);
-		CotopaxiConfigView config = this.instanceHandler.getInstance(CotopaxiConfigView.class);
+		CotopaxiConfigView config = InstanceHandler.getInstance(CotopaxiConfigView.class);
 		config.getCotopaxiConfig().addModelFacade(FacadeThree.class);
 
 		InjectionManager.registerImplementation(UserLookupStrategy.class, this.userStrategy);
 
-		this.auth = this.instanceHandler.getInstance(AuthManager.class);
+		this.auth = InstanceHandler.getInstance(AuthManager.class);
 		this.mapper = new MetadataMapper(config);
 	}
 
@@ -144,8 +143,8 @@ public class AuthTest {
 			LoginRequiredMetadata login = this.mapper.getMapping(request).getLoginMetadata();
 			this.auth.authorizeUser(request, login);
 		} finally {
-			assertTrue(this.userStrategy == this.instanceHandler.getInstance(UserLookupStrategy.class));
-			assertEquals(this.userStrategy, this.instanceHandler.getInstance(UserLookupStrategy.class));
+			assertTrue(this.userStrategy == InstanceHandler.getInstance(UserLookupStrategy.class));
+			assertEquals(this.userStrategy, InstanceHandler.getInstance(UserLookupStrategy.class));
 			// check test results
 			verify(request);
 			verify(this.userStrategy);
@@ -190,7 +189,7 @@ public class AuthTest {
 
 		InjectionManager.registerImplementation(UserLookupStrategy.class, new SessionUserLookupStrategy());
 		InjectionManager.removeImplementation(AuthManager.class);
-		this.auth = this.instanceHandler.getInstance(AuthManager.class);
+		this.auth = InstanceHandler.getInstance(AuthManager.class);
 
 		// invoking the auth mechanism
 		LoginRequiredMetadata login = this.mapper.getMapping(request).getLoginMetadata();

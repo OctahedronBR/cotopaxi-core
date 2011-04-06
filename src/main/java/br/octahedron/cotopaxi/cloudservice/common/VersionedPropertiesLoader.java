@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import br.octahedron.cotopaxi.cloudservice.DisabledMemcacheException;
 import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
 import br.octahedron.cotopaxi.inject.Inject;
+import br.octahedron.cotopaxi.inject.SelfInjector;
 
 /**
  * This class is responsible by load <code>VersionedProperties</code> entities. It caches properties
@@ -43,7 +44,7 @@ import br.octahedron.cotopaxi.inject.Inject;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-public class VersionedPropertiesLoader {
+public class VersionedPropertiesLoader extends SelfInjector {
 
 	private static final String VERSIONING_SUFIX = ".version";
 
@@ -93,7 +94,7 @@ public class VersionedPropertiesLoader {
 	 * Gets the last version number, defined at appconfig.xml file.
 	 */
 	private long getLastVersionNumber(String propertiesFileName) {
-		return Long.parseLong(System.getProperty(propertiesFileName + VERSIONING_SUFIX, "0l"));
+		return Long.parseLong(System.getProperty(propertiesFileName + VERSIONING_SUFIX, "0"));
 	}
 
 	/**

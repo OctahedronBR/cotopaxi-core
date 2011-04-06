@@ -32,8 +32,6 @@ import br.octahedron.cotopaxi.model.attribute.validator.Validator;
  */
 public class RequestModelAttribute<T> implements ModelAttribute<T> {
 
-	private static InstanceHandler instanceHandler = new InstanceHandler();
-
 	private String name;
 	private Class<? extends TypeConverter<T>> typeConverter;
 	private Validator<T> validator;
@@ -68,7 +66,7 @@ public class RequestModelAttribute<T> implements ModelAttribute<T> {
 		String strAttValue = input.getRequestParameter(this.name);
 
 		// try to convert
-		TypeConverter<T> converter = instanceHandler.getInstance(this.typeConverter);
+		TypeConverter<T> converter = InstanceHandler.getInstance(this.typeConverter);
 		T converted = converter.convert(strAttValue);
 		// check if there's a validator register for the att
 		if (this.validator != null) {

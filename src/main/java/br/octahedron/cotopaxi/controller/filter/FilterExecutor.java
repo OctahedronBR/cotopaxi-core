@@ -39,7 +39,6 @@ import br.octahedron.cotopaxi.view.response.ViewResponse;
 public class FilterExecutor {
 
 	private static final Logger logger = Logger.getLogger(FilterExecutor.class.getName());
-	private InstanceHandler instanceHandler = new InstanceHandler();
 	@Inject
 	private CotopaxiConfigView cotopaxiConfigView;
 	
@@ -83,7 +82,7 @@ public class FilterExecutor {
 	private void executeFiltersBefore(Collection<Class<? extends Filter>> filters, RequestWrapper request) throws FilterException {
 		for (Class<? extends Filter> filterClass : filters) {
 			logger.fine("Executing the before filter " + filterClass.getSimpleName() + " for " + request.getURL());
-			Filter filter = this.instanceHandler.getInstance(filterClass);
+			Filter filter = InstanceHandler.getInstance(filterClass);
 			filter.doBefore(request);
 		}
 	}
@@ -95,7 +94,7 @@ public class FilterExecutor {
 			throws FilterException {
 		for (Class<? extends Filter> filterClass : filters) {
 			logger.fine("Executing the after filter " + filterClass.getSimpleName() + " for " + request.getURL());
-			Filter filter = this.instanceHandler.getInstance(filterClass);
+			Filter filter = InstanceHandler.getInstance(filterClass);
 			filter.doAfter(request, response);
 		}
 	}

@@ -31,8 +31,9 @@ import br.octahedron.util.reflect.InstanceLoadException;
 import br.octahedron.util.reflect.ReflectionUtil;
 
 /**
+ * You should not use this class directly. 
+ * // TODO Improve this comment.
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
- * 
  */
 public class InstanceHandler {
 
@@ -45,10 +46,10 @@ public class InstanceHandler {
 	 *            the T's class
 	 * @return The T instance.
 	 */
-	public <T> T getInstance(Class<T> klass) {
+	public static <T> T getInstance(Class<T> klass) {
 		try {
 			if (!containsImplementation(klass)) {
-				T instance = this.createInstance(klass);
+				T instance = createInstance(klass);
 				registerImplementation(klass, instance);
 			}
 			return getImplementation(klass);
@@ -60,25 +61,25 @@ public class InstanceHandler {
 	/**
 	 * Creates a new instance of the given class.
 	 */
-	public Object createInstance(String className) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public static Object createInstance(String className) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Class<?> klass = Class.forName(className);
-		return this.createInstance(klass);
+		return createInstance(klass);
 	}
 
 	/**
 	 * Creates a new instance of the given class.
 	 */
-	public <T> T createInstance(Class<T> klass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public static <T> T createInstance(Class<T> klass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Class<? extends T> implClass = resolveDependency(klass);
 		T instance = implClass.newInstance();
-		this.inject(instance);
+		inject(instance);
 		return instance;
 	}
 
 	/**
 	 * Checks if should inject any attribute and inject if necessary.
 	 */
-	private void inject(Object instance) {
+	protected static void inject(Object instance) {
 		Collection<Field> fields = ReflectionUtil.getAnnotatedFields(instance.getClass(), Inject.class);
 		// for each annotated field
 		for (Field f : fields) {
@@ -105,9 +106,9 @@ public class InstanceHandler {
 				}
 				Object obj;
 				if (inject.singleton()) {
-					obj = this.getInstance(klass);
+					obj = getInstance(klass);
 				} else {
-					obj = this.createInstance(klass);
+					obj = createInstance(klass);
 				}
 				// gets the instance's method to inject the object created above
 				logger.info("Injecting object " + obj.getClass().getSimpleName() + " into object " + instance.getClass().getSimpleName());

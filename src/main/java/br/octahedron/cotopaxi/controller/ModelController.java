@@ -52,7 +52,6 @@ import br.octahedron.cotopaxi.model.response.SuccessActionResponse;
 public class ModelController {
 
 	private final Logger logger = Logger.getLogger(ModelController.class.getName());
-	private InstanceHandler instanceHandler = new InstanceHandler();
 
 	/**
 	 * Executes the request, it means:
@@ -136,7 +135,7 @@ public class ModelController {
 	 */
 	private Object executeModel(Method method, InputAdapter mapping, Object[] params) throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
-		Object facade = this.instanceHandler.getInstance(method.getDeclaringClass());
+		Object facade = InstanceHandler.getInstance(method.getDeclaringClass());
 		return method.invoke(facade, params);
 	}
 }

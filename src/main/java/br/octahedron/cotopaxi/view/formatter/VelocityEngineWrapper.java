@@ -38,7 +38,7 @@ public final class VelocityEngineWrapper {
 	private static final Logger logger = Logger.getLogger(VelocityEngineWrapper.class.getName());
 	private static final VelocityEngine engine = new VelocityEngine();
 	private static boolean init = false;
-	private static CotopaxiConfigView cotopaxiConfigView = new InstanceHandler().getInstance(CotopaxiConfigView.class);
+	private static CotopaxiConfigView cotopaxiConfigView = InstanceHandler.getInstance(CotopaxiConfigView.class);
 
 	/**
 	 * Inits and configure the VelocityEngine
