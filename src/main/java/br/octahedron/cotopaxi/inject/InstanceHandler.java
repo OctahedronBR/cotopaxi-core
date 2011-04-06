@@ -86,6 +86,23 @@ public class InstanceHandler {
 				Inject inject = f.getAnnotation(Inject.class);
 				// create the object to inject
 				Class<?> klass = f.getType();
+				Injectable injectable = klass.getAnnotation(Injectable.class);
+				if (injectable != null) {
+					String instancePackage = instance.getClass().getPackage().getName();
+					String classPackage = klass.getPackage().getName();
+					switch (injectable.scope()) {
+					case PACKAGE:
+						if (!classPackage.equals(instancePackage)) {
+							continue;
+						}
+						break;
+					case SUPERPACKAGE:
+						if (!classPackage.substring(0, classPackage.lastIndexOf('.')).equals(instancePackage)) {
+							continue;
+						}
+						break;
+					}
+				}
 				Object obj;
 				if (inject.singleton()) {
 					obj = this.getInstance(klass);
