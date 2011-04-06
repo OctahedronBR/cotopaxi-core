@@ -61,16 +61,6 @@ public class VersionedPropertiesLoader {
 	}
 
 	/**
-	 * Creates a new VersionedPropertiesLoader that will use the given cache.
-	 * 
-	 * @param cache
-	 *            The cache to be used.
-	 */
-	public VersionedPropertiesLoader(MemcacheFacade cache) {
-		this.memcacheFacade = cache;
-	}
-
-	/**
 	 * @param propertiesFileName
 	 *            the properties' file name.
 	 * @return the most recent version of the properties file.

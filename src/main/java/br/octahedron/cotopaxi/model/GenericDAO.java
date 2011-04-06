@@ -64,7 +64,7 @@ public abstract class GenericDAO<T> {
 	}
 
 	/**
-	 * Saves an entity. It doesn't verify if the object already exists, it just saves, overwritting the previous object, if exists. 
+	 * Saves an entity. It doesn't verify if the object already exists, it just saves, overwriting the previous object, if exists. 
 	 * @param entity The entity to be save
 	 */
 	public void save(T entity) throws DatastoreException {
