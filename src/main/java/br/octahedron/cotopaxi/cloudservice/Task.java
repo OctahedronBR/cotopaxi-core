@@ -32,14 +32,14 @@ import br.octahedron.cotopaxi.inject.SelfInjector;
  * 
  */
 public class Task extends SelfInjector {
-	
+
 	@Inject
 	private TaskEnqueuer taskEnqueuer;
-	
+
 	public void setTaskEnqueuer(TaskEnqueuer taskEnqueuer) {
 		this.taskEnqueuer = taskEnqueuer;
 	}
-	
+
 	private Map<String, String> params;
 	private String url;
 	private String queue;
@@ -48,17 +48,20 @@ public class Task extends SelfInjector {
 	/**
 	 * Creates a new Task to be executed.
 	 * 
-	 * @param url The url to be executed 
+	 * @param url
+	 *            The url to be executed
 	 */
 	public Task(String url) {
 		this(url, new HashMap<String, String>());
 	}
-	
+
 	/**
 	 * Creates a new Task to be executed.
 	 * 
-	 * @param url The url to be executed
-	 * @param delay the number of milliseconds delay before execution of the task. 	 
+	 * @param url
+	 *            The url to be executed
+	 * @param delay
+	 *            the number of milliseconds delay before execution of the task.
 	 */
 	public Task(String url, long delay) {
 		this(url, new HashMap<String, String>(), delay);
@@ -67,67 +70,80 @@ public class Task extends SelfInjector {
 	/**
 	 * Creates a new Task to be executed.
 	 * 
-	 * @param url The url to be executed
+	 * @param url
+	 *            The url to be executed
 	 * @param params
 	 *            A String x String Map contain the params for task execution.
 	 */
 	public Task(String url, Map<String, String> params) {
 		this(url, params, null);
 	}
-	
+
 	/**
 	 * Creates a new Task to be executed.
 	 * 
-	 * @param url The url to be executed
+	 * @param url
+	 *            The url to be executed
 	 * @param params
 	 *            A String x String Map contain the params for task execution.
-	 * @param delay the number of milliseconds delay before execution of the task.
+	 * @param delay
+	 *            the number of milliseconds delay before execution of the task.
 	 */
 	public Task(String url, Map<String, String> params, long delay) {
 		this(url, params, null, delay);
 	}
-	
+
 	/**
 	 * Creates a new Task to be executed.
 	 * 
-	 * @param url url The url to be executed
-	 * @param queue The queue to enqueue the task
-	 * @param delay the number of milliseconds delay before execution of the task. 
+	 * @param url
+	 *            url The url to be executed
+	 * @param queue
+	 *            The queue to enqueue the task
+	 * @param delay
+	 *            the number of milliseconds delay before execution of the task.
 	 */
 	public Task(String url, String queue, long delay) {
 		this(url, new HashMap<String, String>(), queue, delay);
 	}
-	
+
 	/**
 	 * Creates a new Task to be executed.
 	 * 
-	 * @param url url The url to be executed
-	 * @param queue The queue to enqueue the task
+	 * @param url
+	 *            url The url to be executed
+	 * @param queue
+	 *            The queue to enqueue the task
 	 */
 	public Task(String url, String queue) {
 		this(url, new HashMap<String, String>(), queue);
 	}
-	
+
 	/**
 	 * Creates a new Task to be executed.
 	 * 
-	 * @param url The url to be executed
+	 * @param url
+	 *            The url to be executed
 	 * @param params
 	 *            A String x String Map contain the params for task execution.
-	 * @param queue The queue to enqueue the task
+	 * @param queue
+	 *            The queue to enqueue the task
 	 */
 	public Task(String url, Map<String, String> params, String queue) {
 		this(url, params, queue, 0);
 	}
-	
+
 	/**
 	 * Creates a new Task to be executed.
 	 * 
-	 * @param url The url to be executed
+	 * @param url
+	 *            The url to be executed
 	 * @param params
 	 *            A String x String Map contain the params for task execution.
-	 * @param queue The queue to enqueue the task
-	 * @param queue The queue to enqueue the task
+	 * @param queue
+	 *            The queue to enqueue the task
+	 * @param queue
+	 *            The queue to enqueue the task
 	 */
 	public Task(String url, Map<String, String> params, String queue, long delay) {
 		this.url = url;
@@ -137,38 +153,66 @@ public class Task extends SelfInjector {
 	}
 
 	/**
-	 * Enqueue this task to be executed.
-	 * The task will run only after be enqueued.
+	 * Enqueue this task to be executed. The task will run only after be enqueued.
 	 */
 	public void enqueue() {
-		taskEnqueuer.enqueue(this);
+		this.taskEnqueuer.enqueue(this);
 	}
 
 	/**
 	 * @return the params
 	 */
 	public Map<String, String> getParams() {
-		return params;
+		return this.params;
 	}
 
 	/**
 	 * @return the url
 	 */
 	public String getUrl() {
-		return url;
+		return this.url;
 	}
 
 	/**
 	 * @return the queue
 	 */
 	public String getQueue() {
-		return queue;
+		return this.queue;
 	}
 
 	/**
 	 * @return the delay
 	 */
 	public long getDelay() {
-		return delay;
+		return this.delay;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Task) {
+			Task other = (Task) obj;
+			boolean queuesEquals = false;
+			if (this.getQueue() == null) {
+				queuesEquals = other.getQueue() == null;
+			} else if (other.getQueue() == null) {
+				queuesEquals = false;
+			} else {
+				queuesEquals = this.getQueue().equals(other.getQueue());
+			}
+			return (this.getDelay() == other.getDelay() && this.getUrl().equals(other.getUrl()) && this.getParams().equals(other.getParams()) && queuesEquals);
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		int queueHashcode = (this.getQueue() != null) ? this.getQueue().hashCode() : 0;
+		return (int) (this.getDelay() + this.getUrl().hashCode() + this.getParams().hashCode() + queueHashcode);
+	}
+
+	@Override
+	public String toString() {
+		return "{" + " url: " + this.getUrl() + ", queue:" + this.getQueue() + ", delay: " + this.getDelay() + ", params: "
+				+ this.getParams().toString() + " }";
 	}
 }

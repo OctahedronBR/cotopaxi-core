@@ -30,7 +30,11 @@ public class DateUtil {
 	 * @return a data do dia atual.
 	 */
 	public static Date getDate() {
-		return Calendar.getInstance().getTime();
+		if (TestUtil.isTestModeEnabled()) {
+			return new Date(1302200408);
+		} else {
+			return Calendar.getInstance().getTime();
+		}
 	}
 
 	/**

@@ -23,6 +23,7 @@ import br.octahedron.cotopaxi.cloudservice.DisabledMemcacheException;
 import br.octahedron.cotopaxi.cloudservice.MemcacheFacade;
 import br.octahedron.cotopaxi.inject.Inject;
 import br.octahedron.cotopaxi.inject.SelfInjector;
+import br.octahedron.util.TestUtil;
 
 /**
  * This class is responsible by load <code>VersionedProperties</code> entities. It caches properties
@@ -72,7 +73,11 @@ public class VersionedPropertiesLoader extends SelfInjector {
 		long lastVersion = this.getLastVersionNumber(propertiesFileName);
 		long memcacheVersion = Long.MIN_VALUE;
 
-		VersionedProperties<T> properties = this.loadFromMemcache(propertiesFileName);
+		VersionedProperties<T> properties = null;
+		if ( ! TestUtil.isTestModeEnabled()) {
+			/* Doesn't try to load from memcache when running on test mode */
+			properties = this.loadFromMemcache(propertiesFileName);
+		}
 		if (properties != null) {
 			// checks the memcache version number
 			memcacheVersion = properties.getVersionNumber();
