@@ -32,15 +32,19 @@ import java.util.Set;
  * 
  */
 public class ThreadProperties {
+	
+	public enum ThreadPropertiesKeys {
+		REQUEST, RESPONSE, REQUESTED_URL;
+	}
 
-	private static ThreadLocal<Map<String, Object>> threadProperties = new ThreadLocalProperties();
+	private static ThreadLocal<Map<ThreadPropertiesKeys, Object>> threadProperties = new ThreadLocalProperties();
 
 	/**
 	 * Gets a property's value for the current Thread.
 	 * 
 	 * @return the property key, or <code>null</code> if the property doesn't exists.
 	 */
-	public static Object getProperty(String key) {
+	public static Object getProperty(ThreadPropertiesKeys key) {
 		return threadProperties.get().get(key);
 	}
 
@@ -53,7 +57,7 @@ public class ThreadProperties {
 		return threadProperties.get().containsKey(key);
 	}
 
-	public static Set<String> keys() {
+	public static Set<ThreadPropertiesKeys> keys() {
 		return threadProperties.get().keySet();
 	}
 
@@ -65,7 +69,7 @@ public class ThreadProperties {
 	 * @param value
 	 *            the property's value.
 	 */
-	public static void setProperty(String key, Object value) {
+	public static void setProperty(ThreadPropertiesKeys key, Object value) {
 		threadProperties.get().put(key, value);
 	}
 
@@ -83,10 +87,10 @@ public class ThreadProperties {
 	/**
 	 * A Thread Local that store a <code>Properties</code> instance.
 	 */
-	private static class ThreadLocalProperties extends ThreadLocal<Map<String, Object>> {
+	private static class ThreadLocalProperties extends ThreadLocal<Map<ThreadPropertiesKeys, Object>> {
 		@Override
-		protected Map<String, Object> initialValue() {
-			return new HashMap<String, Object>();
+		protected Map<ThreadPropertiesKeys, Object> initialValue() {
+			return new HashMap<ThreadPropertiesKeys, Object>();
 		}
 	}
 }

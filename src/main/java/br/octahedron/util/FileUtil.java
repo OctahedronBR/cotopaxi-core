@@ -29,7 +29,7 @@ import java.io.InputStream;
  * 
  */
 public class FileUtil {
-
+	
 	public static InputStream getInputStream(String filepath) throws FileNotFoundException {
 		return new FileInputStream(getFile(filepath));
 	}

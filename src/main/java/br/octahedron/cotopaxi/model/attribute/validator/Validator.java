@@ -16,7 +16,6 @@
  */
 package br.octahedron.cotopaxi.model.attribute.validator;
 
-import br.octahedron.cotopaxi.model.attribute.RequestModelAttribute;
 
 /**
  * It provides a commun interface for validate input parameters.

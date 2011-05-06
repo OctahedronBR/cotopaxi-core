@@ -14,12 +14,41 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.controller;
+package br.octahedron.cotopaxi.request;
+
+import br.octahedron.cotopaxi.HTTPMethod;
+import br.octahedron.cotopaxi.controller.Controller;
 
 /**
- * @author Name - email@octahedron.com.br
- *
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class ValidationException extends Exception {
+public interface Request {
+	
+	/**
+	 * @return
+	 */
+	public abstract HTTPMethod getMethod();
 
+	/**
+	 * @return
+	 */
+	public abstract String getURL();
+
+	/**
+	 * @param instance
+	 */
+	public abstract void setController(Controller instance);
+
+	/**
+	 * @param attName
+	 * @param value
+	 */
+	public abstract void setRequestParameter(String key, String value);
+
+	/**
+	 * @return
+	 */
+	public abstract Controller getController();
+
+	
 }

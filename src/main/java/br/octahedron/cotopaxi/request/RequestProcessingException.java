@@ -14,12 +14,23 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.controller;
+package br.octahedron.cotopaxi.request;
 
 /**
- * @author Name - email@octahedron.com.br
- *
+ * Indicates an error at request processing.
+ * 
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class ValidationException extends Exception {
+public class RequestProcessingException extends Exception {
+
+	private static final long serialVersionUID = -8939804848311473649L;
+	
+	public RequestProcessingException() {
+		super();
+	}
+
+	public RequestProcessingException(String message, Exception cause) {
+		super(message, cause);
+	}
 
 }

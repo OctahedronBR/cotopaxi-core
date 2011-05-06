@@ -27,8 +27,7 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import br.octahedron.util.reflect.InstanceLoadException;
-import br.octahedron.util.reflect.ReflectionUtil;
+import br.octahedron.util.ReflectionUtil;
 
 /**
  * You should not use this class directly. 
@@ -45,8 +44,9 @@ public class InstanceHandler {
 	 * @param klass
 	 *            the T's class
 	 * @return The T instance.
+	 * @throws InstantiationException 
 	 */
-	public static <T> T getInstance(Class<T> klass) {
+	public static <T> T getInstance(Class<T> klass) throws InstantiationException {
 		try {
 			if (!containsImplementation(klass)) {
 				T instance = createInstance(klass);
@@ -54,7 +54,7 @@ public class InstanceHandler {
 			}
 			return getImplementation(klass);
 		} catch (Exception e) {
-			throw new InstanceLoadException("Unable to load class " + klass, e);
+			throw new InstantiationException("Unable to load class " + klass);
 		}
 	}
 
@@ -105,7 +105,7 @@ public class InstanceHandler {
 					}
 				}
 				Object obj;
-				if (inject.singleton()) {
+				if (inject.newInstance()) {
 					obj = getInstance(klass);
 				} else {
 					obj = createInstance(klass);

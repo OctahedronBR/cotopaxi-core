@@ -78,10 +78,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Inject {
 	/**
-	 * Defines if it should use a singleton instance or create and use an brand new, and exclusive,
-	 * instance. By default its <code>true</code> - it will use a singleton instance.
+	 * Defines if it should use a brand new, and exclusive, instance, or if ith should uses an
+	 * already existent instance. By default its <code>false</code> - it will use an already
+	 * existent instance.
 	 * 
-	 * To use a new and exclusive instance, set it to <code>false</code>
+	 * To use a new and exclusive instance, set it to <code>true</code>
 	 */
-	boolean singleton() default true;
+	boolean newInstance() default false;
 }

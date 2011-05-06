@@ -21,10 +21,11 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
+ * The class responsible 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-public abstract class InjectionManager {
+public class InjectionManager {
 
 	private static final Logger logger = Logger.getLogger(InjectionManager.class.getName());
 

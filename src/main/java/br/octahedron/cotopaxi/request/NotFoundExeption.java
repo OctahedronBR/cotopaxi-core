@@ -14,12 +14,41 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.controller;
+package br.octahedron.cotopaxi.request;
+
+import br.octahedron.cotopaxi.HTTPMethod;
+
 
 /**
- * @author Name - email@octahedron.com.br
- *
+ * Indicates an 404 error.
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class ValidationException extends Exception {
+public class NotFoundExeption extends RequestProcessingException {
+
+	private static final long serialVersionUID = -2698123149015608338L;
+	private String url;
+	private HTTPMethod method;
+
+	public NotFoundExeption(String url, HTTPMethod method) {
+		super();
+		this.url = url;
+		this.method = method;
+	}
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @return the method
+	 */
+	public HTTPMethod getMethod() {
+		return method;
+	}
+
+
 
 }

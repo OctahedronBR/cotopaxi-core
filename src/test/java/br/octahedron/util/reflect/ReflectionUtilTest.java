@@ -29,6 +29,7 @@ import org.junit.Test;
 import br.octahedron.cotopaxi.CotopaxiConfigurator;
 import br.octahedron.cotopaxi.metadata.annotation.Action;
 import br.octahedron.cotopaxi.model.InputAdapter;
+import br.octahedron.util.ReflectionUtil;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br

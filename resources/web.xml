@@ -38,30 +38,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		</auth-constraint>
 	</security-constraint>
 
-	<!-- Security Constraint for Internal URLs-->
-	<!-- CHANGE IT FOR YOUR APPLICATION -->
-	<security-constraint>
-		<web-resource-collection>
-				<url-pattern>/tasks/*</url-pattern>
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>admin</role-name>
-		</auth-constraint>
-		<user-data-constraint>
-			<transport-guarantee>NONE</transport-guarantee>
-		</user-data-constraint>
-	</security-constraint>
-
-
 	<!-- Cotopaxi controller -->
-	<!-- YOU MUST SET THE CONFIGURATOR and MODELFACADES value -->
 	<servlet>
 		<servlet-name>Controller</servlet-name>
 		<servlet-class>br.octahedron.cotopaxi.CotopaxiServlet</servlet-class>
-		<init-param>
-			<param-name>CONFIGURATOR</param-name>
-			<param-value>package.MyConfigurator</param-value>
-		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>

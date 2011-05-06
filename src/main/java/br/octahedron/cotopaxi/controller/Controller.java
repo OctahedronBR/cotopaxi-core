@@ -16,10 +16,23 @@
  */
 package br.octahedron.cotopaxi.controller;
 
-/**
- * @author Name - email@octahedron.com.br
- *
- */
-public class ValidationException extends Exception {
+import br.octahedron.cotopaxi.request.Request;
+import br.octahedron.cotopaxi.response.Response;
+import br.octahedron.cotopaxi.response.ResponseProcessor;
 
+/**
+ * Controllers interface
+ * 
+ * @author Danilo Penna Queiroz - dpenna.queiroz@octahedron.com.br
+ */
+public interface Controller {
+
+	/**
+	 * Executes the {@link Controller} processing the given {@link Request} and delivering the {@link Response} to the given {@link ResponseProcessor}
+	 * @param request
+	 * @param responseProcessor
+	 */
+	public abstract void process(Request request, ResponseProcessor responseProcessor);
+	
+	public Object getMiddlewareConfigs();
 }
