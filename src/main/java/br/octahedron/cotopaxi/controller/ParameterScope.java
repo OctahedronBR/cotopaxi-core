@@ -14,27 +14,13 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.attribute.converter;
+package br.octahedron.cotopaxi.controller;
 
 /**
- * Thrown to indicate that an error occurs when converting an attribute.
+ * The valid scopes for input and output attributes. 
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
- * 
  */
-public class ConversionException extends Exception {
-
-	private static final long serialVersionUID = 4585075014874074385L;
-
-	public ConversionException(Throwable cause) {
-		super(cause);
-	}
-
-	public ConversionException(String message) {
-		super(message);
-	}
-
-	public ConversionException(String message, Throwable cause) {
-		super(message, cause);
-	}
+public enum ParameterScope {
+	COOKIE, HEADER, REQUEST, RESPONSE, SESSION;
 }

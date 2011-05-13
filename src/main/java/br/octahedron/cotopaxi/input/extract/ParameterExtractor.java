@@ -14,12 +14,21 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.controller;
+package br.octahedron.cotopaxi.input.extract;
+
+import br.octahedron.cotopaxi.input.InputException;
+import br.octahedron.cotopaxi.request.Request;
 
 /**
- * @author Name - email@octahedron.com.br
- *
+ * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class ValidationException extends Exception {
+public interface ParameterExtractor {
+
+	/**
+	 * Extracts an parameter with the given parameterName from the input, and converts to the given class.
+	 * 
+	 * @return
+	 */
+	public abstract <T> T extractParameter(Request request, String parameterName, Class<T> parameterClass) throws InputException;
 
 }

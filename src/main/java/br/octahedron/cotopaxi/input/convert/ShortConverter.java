@@ -14,15 +14,19 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.attribute.converter;
+package br.octahedron.cotopaxi.input.convert;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class BooleanConverter implements TypeConverter<Boolean> {
+public class ShortConverter implements TypeConverter<Short> {
 
 	@Override
-	public Boolean convert(String strValue) {
-		return Boolean.parseBoolean(strValue);
+	public Short convert(String strValue) throws ConversionException {
+		try {
+			return Short.parseShort(strValue);
+		} catch (NumberFormatException nfex) {
+			throw new ConversionException(nfex);
+		}
 	}
 }

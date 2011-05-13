@@ -14,19 +14,28 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.attribute.converter;
+package br.octahedron.cotopaxi.input.convert;
+
+import br.octahedron.cotopaxi.input.InputException;
 
 /**
+ * Thrown to indicate that an error occurs when converting an attribute.
+ * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class LongConverter implements TypeConverter<Long> {
+public class ConversionException extends InputException {
 
-	@Override
-	public Long convert(String strValue) throws ConversionException {
-		try {
-			return Long.parseLong(strValue);
-		} catch (NumberFormatException nfex) {
-			throw new ConversionException(nfex);
-		}
+	private static final long serialVersionUID = 4585075014874074385L;
+
+	public ConversionException(Throwable cause) {
+		super(cause);
+	}
+
+	public ConversionException(String message) {
+		super(message);
+	}
+
+	public ConversionException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }

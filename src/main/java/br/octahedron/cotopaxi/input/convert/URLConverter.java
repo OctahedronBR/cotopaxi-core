@@ -14,27 +14,24 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.attribute.converter;
+package br.octahedron.cotopaxi.input.convert;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
- * This converter strips HTML codes from String.
- * 
- * @author Danilo Penna Queiroz - email@octahedron.com.br
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
+ *
  */
-public class SafeStringConverter implements TypeConverter<String> {
-
-	private static final String[] REGEXS = { "<[\\w =\"/]+>", "&[a-zA-Z]+;" };
-
+public class URLConverter implements TypeConverter<URL> {
+	
 	@Override
-	public String convert(String strValue) throws ConversionException {
-		if (strValue != null) {
-			String result = strValue;
-			for (String regex : REGEXS) {
-				result = result.replaceAll(regex, "");
-			}
-			return result;
-		} else {
-			throw new ConversionException("String is null");
+	public URL convert(String strValue) throws ConversionException {
+		try {
+			return new URL(strValue);
+		} catch (MalformedURLException ex) {
+			throw new ConversionException(ex.getLocalizedMessage());
 		}
 	}
+
 }

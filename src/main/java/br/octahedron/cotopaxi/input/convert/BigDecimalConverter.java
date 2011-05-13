@@ -14,17 +14,23 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.attribute.converter;
+package br.octahedron.cotopaxi.input.convert;
+
+import java.math.BigDecimal;
 
 /**
+ * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class IntegerConverter implements TypeConverter<Integer> {
+public class BigDecimalConverter implements TypeConverter<BigDecimal> {
 
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.input.convert.TypeConverter#convert(java.lang.String)
+	 */
 	@Override
-	public Integer convert(String strValue) throws ConversionException {
+	public BigDecimal convert(String strValue) throws ConversionException {
 		try {
-			return Integer.parseInt(strValue);
+			return new BigDecimal(strValue);
 		} catch (NumberFormatException nfex) {
 			throw new ConversionException(nfex);
 		}

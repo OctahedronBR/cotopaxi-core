@@ -14,7 +14,7 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.attribute.converter;
+package br.octahedron.cotopaxi.input.convert;
 
 import java.text.DateFormat;
 import java.text.ParsePosition;

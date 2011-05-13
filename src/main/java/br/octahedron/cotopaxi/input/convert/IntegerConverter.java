@@ -14,20 +14,19 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.attribute.converter;
+package br.octahedron.cotopaxi.input.convert;
 
 /**
- * @author nome - email@octahedron.com.br
- * 
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class RawStringConverter implements TypeConverter<String> {
+public class IntegerConverter implements TypeConverter<Integer> {
 
 	@Override
-	public String convert(String strValue) throws ConversionException {
-		if (strValue != null) {
-			return strValue;
-		} else {
-			throw new ConversionException("String is null");
+	public Integer convert(String strValue) throws ConversionException {
+		try {
+			return Integer.parseInt(strValue);
+		} catch (NumberFormatException nfex) {
+			throw new ConversionException(nfex);
 		}
 	}
 }

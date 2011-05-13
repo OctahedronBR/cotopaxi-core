@@ -20,18 +20,22 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Logger;
 
 import br.octahedron.cotopaxi.inject.InstanceHandler;
+import br.octahedron.cotopaxi.input.InputException;
+import br.octahedron.cotopaxi.input.ModelInput;
+import br.octahedron.cotopaxi.input.extract.ParameterExtractorManager;
 import br.octahedron.cotopaxi.request.Request;
 import br.octahedron.cotopaxi.response.Response;
 import br.octahedron.cotopaxi.response.ResponseProcessor;
 import br.octahedron.util.ReflectionUtil;
 
 /**
- * @author Name - email@octahedron.com.br
- *
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public abstract class AbstractController implements Controller {
 	
 	protected static final Logger logger = Logger.getLogger(AbstractController.class.getName());
+	@SuppressWarnings("unused")
+	private ParameterExtractorManager extractor = new ParameterExtractorManager();
 	private Object facade;
 	private String method;
 	
@@ -47,10 +51,10 @@ public abstract class AbstractController implements Controller {
 	public final void process(Request request, ResponseProcessor responseProcessor) {
 		Response response = null;
 		try {
-			ControllerInput in = this.getInput(request);
-			Object result = this.executeModel(in);
+			ModelInput input = this.getInput(request);
+			Object result = this.executeModel(this.validate(input));
 			response = this.successResponse(result);
-		} catch (ValidationException ex) {
+		} catch (InputException ex) {
 			response = this.invalidResponse(ex);
 		} catch (Exception ex) {
 			response = this.errorResponse(ex);
@@ -59,11 +63,26 @@ public abstract class AbstractController implements Controller {
 		
 	}
 	
-	private final Object executeModel(ControllerInput in) throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		return ReflectionUtil.invoke(facade, this.method, in.getParams());
+	/**
+	 * @param input
+	 * @return
+	 */
+	private ModelInput validate(ModelInput input) {
+		return input;
 	}
 
-	protected abstract ControllerInput getInput(Request request) throws ValidationException;
+	private final Object executeModel(ModelInput in) throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		return ReflectionUtil.invoke(facade, this.method, in.getModelParameters());
+	}
+
+	protected abstract ModelInput getInput(Request request) throws InputException;
+	/*	Method template
+	 * 
+	 * ModelInput in = new ModelInput();
+	 * in.addParameter(parameterName, this.extractor.extractParameter(scope,request,parameterName,parameterClass));
+	 * ...
+	 * return in;
+	 */
 
 	
 	/**
@@ -76,24 +95,11 @@ public abstract class AbstractController implements Controller {
 	 * @param ex
 	 * @return
 	 */
-	protected abstract Response invalidResponse(ValidationException ex);
+	protected abstract Response invalidResponse(InputException ex);
 
 	/**
 	 * @param result
 	 * @return
 	 */
 	protected abstract Response successResponse(Object result);
-
-
-	protected static class ControllerInput {
-
-		/**
-		 * @return
-		 */
-		public Object[] getParams() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-	}
 }

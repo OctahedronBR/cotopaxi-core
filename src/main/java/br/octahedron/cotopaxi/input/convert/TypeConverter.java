@@ -14,35 +14,23 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.middleware;
-
-import br.octahedron.cotopaxi.request.Request;
-import br.octahedron.cotopaxi.response.Response;
+package br.octahedron.cotopaxi.input.convert;
 
 /**
- * Defines a interface for middleware . Middlewares are a kind of interceptors that act during the
- * {@link Request} processing.
+ * Interface for the TypeConverter. It should provide a common method to convert an String to an
+ * specific type.
  * 
- * TODO improve it!
+ * Its a strategy pattern implementation.
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
+ * 
  */
-public abstract class Middleware {
+public interface TypeConverter<T> {
 
-	public void processPreRoute(Request request) {
-		// nothing to do! Just override if necessary
-	}
-	
-	public void processPreExcecution(Request request) {
-		// nothing to do! Just override if necessary
-	}
-	
-	public void processPreRender(Response response) {
-		// nothing to do! Just override if necessary
-	}
+	/**
+	 * @param strValue
+	 * @return
+	 */
+	public T convert(String strValue) throws ConversionException;
 
-	public void processPreDeliver(Response response) {
-		// nothing to do! Just override if necessary
-	}
-	
 }

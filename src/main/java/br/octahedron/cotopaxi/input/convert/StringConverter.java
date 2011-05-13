@@ -14,27 +14,19 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.attribute.converter;
+package br.octahedron.cotopaxi.input.convert;
 
 /**
- * Converts an String to a String Array separating substrings by comma.
- * 
- * Eg.: "hello,world!" -> ["hello","world!"]
- * 
- * @see String#split(String)
- * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class StringCommaSeparatedArrayConverter implements TypeConverter<String[]> {
+public class StringConverter implements TypeConverter<String>{
 
-	private static final String DELIMITER = ",";
-
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.input.convert.TypeConverter#convert(java.lang.String)
+	 */
 	@Override
-	public String[] convert(String strValue) throws ConversionException {
-		if (strValue != null) {
-			return strValue.split(DELIMITER);
-		} else {
-			throw new ConversionException("String is null");
-		}
+	public String convert(String strValue) throws ConversionException {
+		return strValue;
 	}
+
 }

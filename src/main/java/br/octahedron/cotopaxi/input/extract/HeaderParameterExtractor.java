@@ -14,35 +14,28 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.middleware;
+package br.octahedron.cotopaxi.input.extract;
 
+import br.octahedron.cotopaxi.input.InputException;
+import br.octahedron.cotopaxi.input.convert.ConverterManager;
 import br.octahedron.cotopaxi.request.Request;
-import br.octahedron.cotopaxi.response.Response;
 
 /**
- * Defines a interface for middleware . Middlewares are a kind of interceptors that act during the
- * {@link Request} processing.
- * 
- * TODO improve it!
+ * Extracts parameters from a requests' headers.
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public abstract class Middleware {
+public class HeaderParameterExtractor implements ParameterExtractor {
+	
+	private ConverterManager converter = ConverterManager.getInstance();
 
-	public void processPreRoute(Request request) {
-		// nothing to do! Just override if necessary
-	}
-	
-	public void processPreExcecution(Request request) {
-		// nothing to do! Just override if necessary
-	}
-	
-	public void processPreRender(Response response) {
-		// nothing to do! Just override if necessary
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.input.extract.ParameterExtractor#extractParameter(br.octahedron.cotopaxi.request.Request, java.lang.String, java.lang.Class)
+	 */
+	@Override
+	public <T> T extractParameter(Request request, String parameterName, Class<T> parameterClass) throws InputException {
+		String value = request.getHeaderParameter(parameterName);
+		return (value != null) ? converter.convert(parameterClass, value) : null;
 	}
 
-	public void processPreDeliver(Response response) {
-		// nothing to do! Just override if necessary
-	}
-	
 }

@@ -14,24 +14,25 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.attribute.converter;
-
-import java.net.MalformedURLException;
-import java.net.URL;
+package br.octahedron.cotopaxi.input.convert;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
- *
  */
-public class URLConverter implements TypeConverter<URL> {
-	
+public class CharacterConverter implements TypeConverter<Character> {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.octahedron.cotopaxi.input.convert.TypeConverter#convert(java.lang.String)
+	 */
 	@Override
-	public URL convert(String strValue) throws ConversionException {
-		try {
-			return new URL(strValue);
-		} catch (MalformedURLException ex) {
-			throw new ConversionException(ex.getLocalizedMessage());
+	public Character convert(String strValue) throws ConversionException {
+		strValue = strValue.trim();
+		if (strValue.length() == 1) {
+			return strValue.charAt(0);
+		} else {
+			throw new ConversionException("Cannot convert the given java.lang.String to java.lang.Character");
 		}
 	}
-
 }

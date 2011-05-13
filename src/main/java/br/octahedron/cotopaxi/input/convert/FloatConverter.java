@@ -14,35 +14,19 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.middleware;
-
-import br.octahedron.cotopaxi.request.Request;
-import br.octahedron.cotopaxi.response.Response;
+package br.octahedron.cotopaxi.input.convert;
 
 /**
- * Defines a interface for middleware . Middlewares are a kind of interceptors that act during the
- * {@link Request} processing.
- * 
- * TODO improve it!
- * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public abstract class Middleware {
+public class FloatConverter implements TypeConverter<Float> {
 
-	public void processPreRoute(Request request) {
-		// nothing to do! Just override if necessary
+	@Override
+	public Float convert(String strValue) throws ConversionException {
+		try {
+			return Float.parseFloat(strValue);
+		} catch (NumberFormatException nfex) {
+			throw new ConversionException(nfex);
+		}
 	}
-	
-	public void processPreExcecution(Request request) {
-		// nothing to do! Just override if necessary
-	}
-	
-	public void processPreRender(Response response) {
-		// nothing to do! Just override if necessary
-	}
-
-	public void processPreDeliver(Response response) {
-		// nothing to do! Just override if necessary
-	}
-	
 }

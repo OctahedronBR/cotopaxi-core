@@ -14,19 +14,26 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.attribute.converter;
+package br.octahedron.cotopaxi.input;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class DoubleConverter implements TypeConverter<Double> {
+public class InputException extends Exception {
 
-	@Override
-	public Double convert(String strValue) throws ConversionException {
-		try {
-			return Double.parseDouble(strValue);
-		} catch (NumberFormatException nfex) {
-			throw new ConversionException(nfex);
-		}
+	private static final long serialVersionUID = 1492057200339744153L;
+
+	public InputException() {}
+	
+	public InputException(String message) {
+		super(message);
+	}
+	
+	public InputException(Throwable cause) {
+		super(cause);
+	}
+	
+	public InputException(String message, Throwable cause) {
+		super(message,cause);
 	}
 }

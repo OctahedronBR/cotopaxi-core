@@ -14,23 +14,25 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.model.attribute.converter;
+package br.octahedron.cotopaxi.input.convert;
+
+import java.math.BigInteger;
 
 /**
- * Interface for the TypeConverter. It should provide a common method to convert an String to an
- * specific type.
- * 
- * Its a strategy pattern implementation.
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
- * 
  */
-public interface TypeConverter<T> {
+public class BigIntegerConverter implements TypeConverter<BigInteger> {
 
-	/**
-	 * @param strValue
-	 * @return
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.input.convert.TypeConverter#convert(java.lang.String)
 	 */
-	public T convert(String strValue) throws ConversionException;
-
+	@Override
+	public BigInteger convert(String strValue) throws ConversionException {
+		try {
+			return new BigInteger(strValue);
+		} catch (NumberFormatException nfex) {
+			throw new ConversionException(nfex);
+		}
+	}
 }

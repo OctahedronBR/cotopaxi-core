@@ -21,5 +21,10 @@ package br.octahedron.cotopaxi.response;
  *
  */
 public interface Response {
+	
+	public enum Type { 
+		REDIRECT, RENDER;
+	}
 
+	public Type getType();
 }

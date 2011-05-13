@@ -14,31 +14,24 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.util.reflect;
+package br.octahedron.cotopaxi.input.convert;
 
-import javax.jdo.annotations.PrimaryKey;
 
-import br.octahedron.cotopaxi.CotopaxiConfig;
-import br.octahedron.cotopaxi.CotopaxiConfigurator;
-import br.octahedron.cotopaxi.metadata.annotation.Action;
-import br.octahedron.cotopaxi.model.InputAdapter;
+/**
+ * 
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
+ */
+public class ByteConverter implements TypeConverter<Byte> {
 
-public class FakeObj implements CotopaxiConfigurator {
-
-	@PrimaryKey
-	private String key = "key";
-
-	public String getKey() {
-		return this.key;
-	}
-
-	@Action(adapter = InputAdapter.class, url = "/{mimi}")
-	public boolean test() {
-		return true;
-	}
-
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.input.convert.TypeConverter#convert(java.lang.String)
+	 */
 	@Override
-	public void configure(CotopaxiConfig configure) {
-
+	public Byte convert(String strValue) throws ConversionException {
+		try {
+			return Byte.parseByte(strValue);
+		} catch (NumberFormatException nfex) {
+			throw new ConversionException(nfex);
+		}
 	}
 }
