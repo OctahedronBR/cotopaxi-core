@@ -14,25 +14,25 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.inject;
+package br.octahedron.cotopaxi.config;
 
-import br.octahedron.cotopaxi.database.DatastoreFacade;
-
+import br.octahedron.cotopaxi.config.ConfigurationParser.Token;
 
 /**
- * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
+ * Indicates a Syntax error at configuration file.
+ * 
+ * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class UserDAO {
+public class ConfigurationSyntaxException extends Exception {
+	private static final long serialVersionUID = -1191136147336690521L;
+	private Token token;
 
-	@Inject
-	private DatastoreFacade datastoreFacade;
-
-
-	public DatastoreFacade getDatastoreFacade() {
-		return this.datastoreFacade;
+	public ConfigurationSyntaxException(Token tk) {
+		this.token = tk;
 	}
 
-	public void setDatastoreFacade(DatastoreFacade datastoreFacade) {
-		this.datastoreFacade = datastoreFacade;
+	public Token getToken() {
+		return token;
 	}
+
 }

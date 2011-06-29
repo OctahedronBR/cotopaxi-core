@@ -14,25 +14,39 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.inject;
-
-import br.octahedron.cotopaxi.database.DatastoreFacade;
-
+package br.octahedron.cotopaxi.route;
 
 /**
+ * Indicates an 404 error.
+ * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class UserDAO {
+public class NotFoundExeption extends Exception {
 
-	@Inject
-	private DatastoreFacade datastoreFacade;
+	private static final long serialVersionUID = -2698123149015608338L;
+	private String url;
+	private String method;
 
-
-	public DatastoreFacade getDatastoreFacade() {
-		return this.datastoreFacade;
+	public NotFoundExeption(String url, String method) {
+		super();
+		this.url = url;
+		this.method = method;
 	}
 
-	public void setDatastoreFacade(DatastoreFacade datastoreFacade) {
-		this.datastoreFacade = datastoreFacade;
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
 	}
+
+	/**
+	 * @return the method
+	 */
+	public String getMethod() {
+		return method;
+	}
+
+
+
 }

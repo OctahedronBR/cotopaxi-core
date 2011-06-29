@@ -14,25 +14,24 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.inject;
+package br.octahedron.cotopaxi.view.response;
 
-import br.octahedron.cotopaxi.database.DatastoreFacade;
-
+import br.octahedron.cotopaxi.controller.ControllerResponse;
 
 /**
- * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
+ * A redirect Response
+ * 
+ * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class UserDAO {
+public class RedirectResponse implements ControllerResponse {
+	
+	private String url;
 
-	@Inject
-	private DatastoreFacade datastoreFacade;
-
-
-	public DatastoreFacade getDatastoreFacade() {
-		return this.datastoreFacade;
+	public RedirectResponse(String url) {
+		this.url = url;
 	}
-
-	public void setDatastoreFacade(DatastoreFacade datastoreFacade) {
-		this.datastoreFacade = datastoreFacade;
+	
+	public String getUrl() {
+		return this.url;
 	}
 }

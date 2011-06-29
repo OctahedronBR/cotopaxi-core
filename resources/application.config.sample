@@ -1,0 +1,20 @@
+properties 
+    # adjust to your application url
+    APPLICATION_BASE_URL http://localhost:8080
+
+interceptors
+    br.octahedron.cotopaxi.database.PersistenceManagerInterceptor
+    #br.octahedron.cotopaxi.view.GzipInterceptor
+
+dependencies
+	# dependencies (interface -> implementation)
+    br.octahedron.cotopaxi.FakeIF br.octahedron.cotopaxi.FakeImpl
+    
+controllers
+    br.octahedron.cotopaxi.FakeImpl
+        /test 	get test
+        /{user} get showUser
+
+    br.octahedron.cotopaxi.FakeImpl
+		/edit/{user} 	post 	editUser
+        /				get 	index

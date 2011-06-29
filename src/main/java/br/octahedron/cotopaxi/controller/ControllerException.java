@@ -14,25 +14,28 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.inject;
-
-import br.octahedron.cotopaxi.database.DatastoreFacade;
-
+package br.octahedron.cotopaxi.controller;
 
 /**
- * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
+ * Indicates an error on controller execution
+ * 
+ * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class UserDAO {
+public class ControllerException extends Exception {
 
-	@Inject
-	private DatastoreFacade datastoreFacade;
+	private static final long serialVersionUID = -6897728898833320239L;
 
+	public ControllerException() {}
 
-	public DatastoreFacade getDatastoreFacade() {
-		return this.datastoreFacade;
+	public ControllerException(String message) {
+		super(message);
 	}
 
-	public void setDatastoreFacade(DatastoreFacade datastoreFacade) {
-		this.datastoreFacade = datastoreFacade;
+	public ControllerException(Throwable cause) {
+		super(cause);
+	}
+
+	public ControllerException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }

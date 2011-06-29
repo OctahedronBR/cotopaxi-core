@@ -14,25 +14,28 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.inject;
+package br.octahedron.cotopaxi.database;
 
-import br.octahedron.cotopaxi.database.DatastoreFacade;
+import javax.jdo.PersistenceManager;
 
+import br.octahedron.cotopaxi.interceptor.ResponseDispatcherInterceptor;
 
 /**
- * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
+ * A {@link ResponseDispatcherInterceptor} for close opened {@link PersistenceManager}.
+ * 
+ * @author Danilo Queiroz
  */
-public class UserDAO {
+public class PersistenceManagerInterceptor extends ResponseDispatcherInterceptor {
 
-	@Inject
-	private DatastoreFacade datastoreFacade;
+	private PersistenceManagerPool pmp = PersistenceManagerPool.getInstance();
 
-
-	public DatastoreFacade getDatastoreFacade() {
-		return this.datastoreFacade;
-	}
-
-	public void setDatastoreFacade(DatastoreFacade datastoreFacade) {
-		this.datastoreFacade = datastoreFacade;
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.interceptor.ResponseDispatcherInterceptor#finish()
+	 */
+	@Override
+	public void finish() {
+		if (this.pmp.isPersistenceManagerOpened()) {
+			this.pmp.close();
+		}
 	}
 }

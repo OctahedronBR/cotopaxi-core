@@ -16,27 +16,27 @@
  */
 package br.octahedron.cotopaxi.inject;
 
-import static br.octahedron.cotopaxi.inject.InjectionManager.containsImplementation;
-import static br.octahedron.cotopaxi.inject.InjectionManager.getImplementation;
-import static br.octahedron.cotopaxi.inject.InjectionManager.registerImplementation;
-import static br.octahedron.cotopaxi.inject.InjectionManager.resolveDependency;
+import static br.octahedron.cotopaxi.inject.DependencyManager.containsImplementation;
+import static br.octahedron.cotopaxi.inject.DependencyManager.getImplementation;
+import static br.octahedron.cotopaxi.inject.DependencyManager.registerImplementation;
+import static br.octahedron.cotopaxi.inject.DependencyManager.resolveDependency;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import br.octahedron.util.Log;
 import br.octahedron.util.ReflectionUtil;
 
 /**
- * You should not use this class directly. 
- * // TODO Improve this comment.
+ * This entity handles classes' instances. It provide access to unique instances of the classes, and
+ * it's responsible to perform dependency injection.
+ * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class InstanceHandler {
 
-	private static final Logger logger = Logger.getLogger(InstanceHandler.class.getName());
+	private static final Log log = new Log(InstanceHandler.class);
 
 	/**
 	 * Gets a <T> instance for the given {@link Class} ready to be used.
@@ -44,9 +44,9 @@ public class InstanceHandler {
 	 * @param klass
 	 *            the T's class
 	 * @return The T instance.
-	 * @throws InstantiationException 
+	 * @throws InstantiationException
 	 */
-	public static <T> T getInstance(Class<T> klass) throws InstantiationException {
+	public <T> T getInstance(Class<T> klass) throws InstantiationException {
 		try {
 			if (!containsImplementation(klass)) {
 				T instance = createInstance(klass);
@@ -61,15 +61,7 @@ public class InstanceHandler {
 	/**
 	 * Creates a new instance of the given class.
 	 */
-	public static Object createInstance(String className) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		Class<?> klass = Class.forName(className);
-		return createInstance(klass);
-	}
-
-	/**
-	 * Creates a new instance of the given class.
-	 */
-	public static <T> T createInstance(Class<T> klass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public <T> T createInstance(Class<T> klass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Class<? extends T> implClass = resolveDependency(klass);
 		T instance = implClass.newInstance();
 		inject(instance);
@@ -79,7 +71,7 @@ public class InstanceHandler {
 	/**
 	 * Checks if should inject any attribute and inject if necessary.
 	 */
-	protected static void inject(Object instance) {
+	protected void inject(Object instance) {
 		Collection<Field> fields = ReflectionUtil.getAnnotatedFields(instance.getClass(), Inject.class);
 		// for each annotated field
 		for (Field f : fields) {
@@ -87,23 +79,6 @@ public class InstanceHandler {
 				Inject inject = f.getAnnotation(Inject.class);
 				// create the object to inject
 				Class<?> klass = f.getType();
-				Injectable injectable = klass.getAnnotation(Injectable.class);
-				if (injectable != null) {
-					String instancePackage = instance.getClass().getPackage().getName();
-					String classPackage = klass.getPackage().getName();
-					switch (injectable.scope()) {
-					case PACKAGE:
-						if (!classPackage.equals(instancePackage)) {
-							continue;
-						}
-						break;
-					case SUPERPACKAGE:
-						if (!classPackage.substring(0, classPackage.lastIndexOf('.')).equals(instancePackage)) {
-							continue;
-						}
-						break;
-					}
-				}
 				Object obj;
 				if (inject.newInstance()) {
 					obj = getInstance(klass);
@@ -111,12 +86,14 @@ public class InstanceHandler {
 					obj = createInstance(klass);
 				}
 				// gets the instance's method to inject the object created above
-				logger.info("Injecting object " + obj.getClass().getSimpleName() + " into object " + instance.getClass().getSimpleName());
+				log.info("Injecting object %s  into object %s", obj.getClass().getSimpleName(), instance.getClass().getSimpleName());
 				Method set = ReflectionUtil.getSetMethod(klass.getSimpleName(), instance.getClass(), klass);
 				set.invoke(instance, obj);
 			} catch (Exception ex) {
-				logger.log(Level.SEVERE, "Unable to performe injection: " + ex.getLocalizedMessage(), ex);
+				log.error("Unable to performe injection: %s", ex.getLocalizedMessage());
+				log.error("Unable to performe injection", ex);
 			}
 		}
 	}
 }
+

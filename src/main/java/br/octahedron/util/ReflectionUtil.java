@@ -30,6 +30,8 @@ import java.util.LinkedList;
  * 
  */
 public class ReflectionUtil {
+	
+	private static final Class<?>[] EMPTY_CLASS_PARAMS = new Class[0];
 
 	public static <T extends Annotation> T getAnnotation(Class<?> klass, Class<T> annClass) {
 		if (klass.isAnnotationPresent(annClass)) {
@@ -110,24 +112,18 @@ public class ReflectionUtil {
 		return method.invoke(instance, params);
 	}
 
-	/**
-	 * @param facade
-	 * @param method
-	 * @param params
-	 * @return
-	 * @throws NoSuchMethodException 
-	 * @throws SecurityException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
-	 * @throws IllegalArgumentException 
-	 */
-	public static Object invoke(Object facade, String method, Object[] params) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		Class<?>[] classes = new Class<?>[params.length];
+	public static Object invoke(Object facade, String method, Object ... params) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		Method m = getMethod(facade.getClass(), method, params);
+		return invoke(facade, m, params);
+	}
+	
+	public static Method getMethod(Class<?> klass, String methodName, Object ... params) throws SecurityException, NoSuchMethodException {
+		Class<?>[] classes = (params.length != 0)?new Class<?>[params.length]:EMPTY_CLASS_PARAMS;
+		
 		for(int i =0; i < params.length; i++) {
 			classes[i] = params[i].getClass();			
 		}
-		Method m = facade.getClass().getMethod(method, classes);
-		return invoke(facade, m, params);
+		return klass.getMethod(methodName, classes);
 	}
 
 	/**
