@@ -9,6 +9,7 @@ interceptors
 dependencies
 	# dependencies (interface -> implementation)
     br.octahedron.cotopaxi.FakeIF br.octahedron.cotopaxi.FakeImpl
+    br.octahedron.cotopaxi.eventbus.EventPublisher br.octahedron.cotopaxi.eventbus.AppEngineEventPublisher
     
 controllers
     br.octahedron.cotopaxi.FakeImpl

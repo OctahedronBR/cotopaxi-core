@@ -14,26 +14,32 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package br.octahedron.cotopaxi.inject;
 
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
+import org.junit.Test;
+
 import br.octahedron.cotopaxi.database.DatastoreFacade;
-import br.octahedron.cotopaxi.inject.Inject;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class UserDAO {
+public class InjectorTest {
+	
+	private InstanceHandler handler = new InstanceHandler();
 
-	@Inject
-	private DatastoreFacade datastoreFacade;
-
-
-	public DatastoreFacade getDatastoreFacade() {
-		return this.datastoreFacade;
-	}
-
-	public void setDatastoreFacade(DatastoreFacade datastoreFacade) {
-		this.datastoreFacade = datastoreFacade;
+	@Test
+	public void testInjection() throws InstantiationException {
+		UserFacade facade = handler.getInstance(UserFacade.class);
+		assertNotNull(facade);
+		UserService service = facade.getUserService();
+		assertNotNull(service);
+		UserDAO userDAO = service.getUserDAO();
+		assertNotNull(userDAO);
+		DatastoreFacade ds = userDAO.getDatastoreFacade();
+		assertTrue(ds instanceof DatastoreFacade);
 	}
 }
