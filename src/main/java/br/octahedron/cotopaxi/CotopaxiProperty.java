@@ -41,7 +41,7 @@ public enum CotopaxiProperty {
 	/**
 	 * Forbidden Error (403) template. Default: forbidden.vm 
 	 */
-	FORBIDDEN_TEMPLATE("forbidden.vm"),
+	FORBIDDEN_TEMPLATE("notauthorized.vm"),
 	/**
 	 * Bad Request Error (400) template. Default: invalid.vm 
 	 */
@@ -49,7 +49,7 @@ public enum CotopaxiProperty {
 	/**
 	 * Not Found Error (404) template. Default: notFound.vm 
 	 */
-	NOT_FOUND_TEMPLATE("notFound.vm"),
+	NOT_FOUND_TEMPLATE("notfound.vm"),
 	/**
 	 * The property used to binds errors on controller top level. Default: error
 	 */
