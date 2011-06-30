@@ -18,8 +18,6 @@ package br.octahedron.cotopaxi.datastore;
 
 import java.util.Collection;
 
-import br.octahedron.cotopaxi.inject.Inject;
-
 /**
  * An generic DAO interface to be extended.
  * 
@@ -27,22 +25,19 @@ import br.octahedron.cotopaxi.inject.Inject;
  */
 public abstract class GenericDAO<T> {
 
-	@Inject
-	protected DatastoreFacade datastoreFacade;
+	protected DatastoreFacade datastoreFacade = new DatastoreFacade();
 	private Class<T> klass;
 	
-
 	public GenericDAO(Class<T> klass) {
 		this.klass = klass;
 	}
-	
+
 	/**
 	 * @param datastoreFacade the datastoreFacade to set
 	 */
 	public void setDatastoreFacade(DatastoreFacade datastoreFacade) {
 		this.datastoreFacade = datastoreFacade;
 	}
-
 	/**
 	 * Deletes an object. The given parameter can be the object to be deleted, it means an instance
 	 * of T, or can be the key for the object to be deleted.
