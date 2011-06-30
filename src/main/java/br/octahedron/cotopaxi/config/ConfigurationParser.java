@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 public class ConfigurationParser {
 
 	public enum TokenType {
-		INTERCEPTORS("interceptors"), DEPENDENCIES("dependencies"), PROPERTIES("properties"), CONTROLLERS("controllers"), URL(
+		INTERCEPTORS("interceptors"), DEPENDENCIES("dependencies"), PROPERTIES("properties"), CONTROLLERS("controllers"), BOOTLOADERS("bootloaders"), URL(
 				"^((/[a-zA-Z_0-9]+)*(/\\{[a-zA-Z_0-9]+\\})*(/[a-zA-Z_0-9]+)*)+/?$"), PROPERTY("([A-Z]+_?[A-Z]+)*"), CLASS("(\\w+\\.)+\\w+"), STRING(
 				"\\S+");
 

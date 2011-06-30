@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.NoSuchElementException;
 
+import br.octahedron.cotopaxi.Bootloader.Booter;
 import br.octahedron.cotopaxi.config.ConfigurationParser.Token;
 import br.octahedron.cotopaxi.config.ConfigurationParser.TokenType;
 import br.octahedron.cotopaxi.controller.ControllerDescriptor;
@@ -41,11 +42,13 @@ public class ConfigurationLoader {
 	private ConfigurationParser parser;
 	private InterceptorManager interceptor;
 	private Router router;
+	private Booter booter;
 
-	public ConfigurationLoader(Router router, InterceptorManager interceptor) throws FileNotFoundException {
+	public ConfigurationLoader(Router router, InterceptorManager interceptor, Booter booter) throws FileNotFoundException {
 		this.parser = new ConfigurationParser(FileUtil.getInputStream(CONFIGURATION_FILENAME));
 		this.router = router;
 		this.interceptor = interceptor;
+		this.booter = booter;
 	}
 
 	protected ConfigurationLoader(Router router, InterceptorManager interceptor, InputStream in) {
@@ -53,7 +56,7 @@ public class ConfigurationLoader {
 		this.router = router;
 		this.interceptor = interceptor;
 	}
-	
+
 	/**
 	 * Loads configuration file from disk
 	 */
@@ -72,16 +75,24 @@ public class ConfigurationLoader {
 		try {
 			switch (tk.getTokenType()) {
 			case CONTROLLERS:
+				log.debug("%s block found", tk.getTokenType());
 				this.processControllers(parser.nextToken());
 				break;
 			case INTERCEPTORS:
+				log.debug("%s block found", tk.getTokenType());
 				this.processInterceptors();
 				break;
 			case PROPERTIES:
+				log.debug("%s block found", tk.getTokenType());
 				this.processProperties();
 				break;
 			case DEPENDENCIES:
+				log.debug("%s block found", tk.getTokenType());
 				this.processDependencies();
+				break;
+			case BOOTLOADERS:
+				log.debug("%s block found", tk.getTokenType());
+				this.processBootloaders();
 				break;
 			default:
 				throw new ConfigurationSyntaxException(tk);
@@ -117,6 +128,14 @@ public class ConfigurationLoader {
 		} while (true);
 	}
 
+	private void processBootloaders() throws UnexpectedTokenException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		do {
+			String bootloader = this.getContent(TokenType.CLASS);
+			log.info("Configuration bootloader found: %s", bootloader);
+			this.booter.addBootloader(bootloader);
+		} while (true);
+	}
+
 	private void processControllers(Token tk) throws UnexpectedTokenException {
 		if (tk.getTokenType() == TokenType.CLASS) {
 			try {
@@ -149,7 +168,7 @@ public class ConfigurationLoader {
 	}
 
 	/**
-	 *	Unexpected token exception
+	 * Unexpected token exception
 	 */
 	class UnexpectedTokenException extends Exception {
 		private static final long serialVersionUID = 1L;

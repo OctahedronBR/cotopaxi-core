@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import br.octahedron.cotopaxi.Bootloader.Booter;
 import br.octahedron.cotopaxi.config.ConfigurationLoader;
 import br.octahedron.cotopaxi.config.ConfigurationSyntaxException;
 import br.octahedron.cotopaxi.controller.ControllerDescriptor;
@@ -42,10 +43,9 @@ import br.octahedron.cotopaxi.view.response.TemplateResponse;
 import br.octahedron.util.Log;
 
 /**
- * 
+ * The Cotopaxi Framework entry point.
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
- * 
  */
 public class CotopaxiServlet extends HttpServlet {
 
@@ -64,11 +64,13 @@ public class CotopaxiServlet extends HttpServlet {
 	public void init() throws ServletException {
 		try {
 			log.info("Loading cotopaxi configuration...");
-			ConfigurationLoader loader = new ConfigurationLoader(this.router, this.interceptor);
+			Booter booter = new Bootloader.Booter();
+			ConfigurationLoader loader = new ConfigurationLoader(this.router, this.interceptor, booter);
 			loader.loadConfiguration();
 			this.executor = new ControllerExecutor(this.interceptor);
 			this.dispatcher = new ResponseDispatcher(this.interceptor);
 			log.info("Cotopaxi is ready to serve...");
+			booter.boot();
 		} catch (FileNotFoundException ex) {
 			log.error("Configuration file not found. Make sure the %s file exists", ConfigurationLoader.CONFIGURATION_FILENAME);
 			throw new ServletException(ex);
