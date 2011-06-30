@@ -14,11 +14,11 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.database;
+package br.octahedron.cotopaxi.datastore;
 
 import javax.jdo.PersistenceManager;
 
-import br.octahedron.cotopaxi.database.DatastoreFacade.PMFWrapper;
+import br.octahedron.cotopaxi.datastore.DatastoreFacade.PMFWrapper;
 import br.octahedron.util.Log;
 
 /**

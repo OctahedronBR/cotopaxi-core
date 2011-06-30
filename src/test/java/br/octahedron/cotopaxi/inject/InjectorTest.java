@@ -21,7 +21,7 @@ import static junit.framework.Assert.assertTrue;
 
 import org.junit.Test;
 
-import br.octahedron.cotopaxi.database.DatastoreFacade;
+import br.octahedron.cotopaxi.datastore.DatastoreFacade;
 import br.octahedron.cotopaxi.inject.InstanceHandler;
 
 /**

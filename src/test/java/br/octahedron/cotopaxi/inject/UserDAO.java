@@ -17,7 +17,7 @@
 
 package br.octahedron.cotopaxi.inject;
 
-import br.octahedron.cotopaxi.database.DatastoreFacade;
+import br.octahedron.cotopaxi.datastore.DatastoreFacade;
 import br.octahedron.cotopaxi.inject.Inject;
 
 /**
