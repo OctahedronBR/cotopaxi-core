@@ -36,7 +36,7 @@ public class PersistenceManagerPool {
 	}
 
 	// Object stuff
-	private ThreadLocal<PersistenceManager> pool = new PMThreadLocal();
+	private ThreadLocal<PersistenceManager> pool = new ThreadLocal<PersistenceManager>();
 
 	private PersistenceManagerPool() {
 		// private constructor
@@ -55,26 +55,13 @@ public class PersistenceManagerPool {
 	}
 
 	public PersistenceManager getPersistenceManagerForThread() {
-		PersistenceManagerPool.log.debug("Getting a PersistenceManager.");
+		log.debug("Getting a PersistenceManager.");
 		PersistenceManager pm = this.pool.get();
-		if (pm.isClosed()) {
-			// if pm is closed remove. a new one will be created
-			PersistenceManagerPool.log.debug("Removing old PersistenceManager.");
-			this.pool.remove();
-		}
-		return this.pool.get();
-	}
-
-	/**
-	 * A <code>ThreadLocal</code> thats create a PersistenceManager as initial value.
-	 * 
-	 * @see ThreadLocal
-	 */
-	private class PMThreadLocal extends ThreadLocal<PersistenceManager> {
-		@Override
-		protected PersistenceManager initialValue() {
+		if ( pm == null || pm.isClosed()) {
 			log.debug("Creating a new PersistenceManager.");
-			return PMFWrapper.getPersistenceManager();
+			pm = PMFWrapper.getPersistenceManager();
+			this.pool.set(pm);
 		}
+		return pm; 
 	}
 }
