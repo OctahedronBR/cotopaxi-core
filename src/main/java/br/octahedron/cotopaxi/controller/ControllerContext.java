@@ -38,8 +38,8 @@ final class ControllerContext {
 
 	protected static final ThreadLocal<ControllerContext> threadContexts = new ThreadLocal<ControllerContext>();
 
-	protected static void setContext(HttpServletRequest request) {
-		threadContexts.set(new ControllerContext(request));
+	protected static void setContext(HttpServletRequest request, String controllerName) {
+		threadContexts.set(new ControllerContext(request, controllerName));
 	}
 
 	protected static void clearContext() {
@@ -53,16 +53,22 @@ final class ControllerContext {
 	private Map<String, String> headers;
 	private Map<String, Object> output;
 	private HttpServletRequest request;
+	private String controllerName;
 
-	private ControllerContext(HttpServletRequest request) {
+	private ControllerContext(HttpServletRequest request, String controllerName) {
 		this.request = request;
 		this.locale = request.getLocale();
+		this.controllerName = controllerName;
 	}
 
 	// internal private methods
 
 	protected HttpServletRequest getRequest() {
 		return this.request;
+	}
+	
+	public String getControllerName() {
+		return controllerName;
 	}
 
 	protected Map<String, String> getHeaders() {

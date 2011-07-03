@@ -72,4 +72,8 @@ public enum CotopaxiProperty {
 	public static String getProperty(CotopaxiProperty property) {
 		return System.getProperty(property.name(), property.defaultValue());
 	}
+	
+	public static String getProperty(String property) {
+		return System.getProperty(property);
+	}
 }

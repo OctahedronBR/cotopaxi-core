@@ -45,25 +45,62 @@ import javax.servlet.http.HttpSession;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 public abstract class Controller {
+	
+	/*
+	 * Internal methods
+	 */
 
+	/**
+	 * Gets the {@link HttpServletRequest}
+	 */
 	private final HttpServletRequest request() {
 		return threadContexts.get().getRequest();
 	}
 
+	/**
+	 * Checks if the request was already answered
+	 */
 	private final boolean isAnswered() {
 		return threadContexts.get().isAnswered();
 	}
 
+	/**
+	 * Gets the output objects map
+	 */
 	private final Map<String, Object> output() {
 		return threadContexts.get().getOutput();
 	}
 
+	/**
+	 * Gets the output cookies map
+	 */
 	private final Map<String, String> cookies() {
 		return threadContexts.get().getCookies();
 	}
 
+	/**
+	 * Gets the output headers map
+	 */
 	private final Map<String, String> headers() {
 		return threadContexts.get().getHeaders();
+	}
+	
+	/**
+	 * Gets the controller name
+	 */
+	protected final String controllerName() {
+		return threadContexts.get().getControllerName();
+	}
+	
+	/**
+	 * Gets the requested relative URL
+	 * 
+	 * E.g.: /dashboard
+	 * 
+	 * @return the requested URL
+	 */
+	protected final String requestedUrl() {
+		return this.request().getRequestURI();
 	}
 
 	/**

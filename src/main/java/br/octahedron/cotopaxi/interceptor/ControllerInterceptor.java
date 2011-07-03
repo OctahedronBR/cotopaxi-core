@@ -17,7 +17,6 @@
 package br.octahedron.cotopaxi.interceptor;
 
 import java.lang.annotation.Annotation;
-import java.util.Collection;
 
 import br.octahedron.cotopaxi.controller.Controller;
 
@@ -46,6 +45,6 @@ public abstract class ControllerInterceptor extends Controller {
 	/**
 	 * Get all the annotations this intercept is interested.
 	 */
-	public abstract Collection<Class<? extends Annotation>> getInterceptorAnnotations();
+	public abstract Class<? extends Annotation>[] getInterceptorAnnotations();
 
 }

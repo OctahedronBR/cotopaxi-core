@@ -55,12 +55,12 @@ public class ControllerExecutor {
 
 	public ControllerResponse execute(ControllerDescriptor controllerDesc, HttpServletRequest request) throws IOException, NotFoundExeption,
 			ControllerException {
-		setContext(request);
 		try {
 			// load controller
 			ControllerContext context = threadContexts.get();
 			Controller controller = this.loadController(controllerDesc);
 			Method method = this.getMethod(controllerDesc, controller);
+			setContext(request, controllerDesc.getControllerName());
 			interceptor.execute(method.getAnnotations());
 			// execute controller
 			if (!context.isAnswered()) {
