@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import br.octahedron.cotopaxi.controller.Controller;
+import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.util.Log;
 import br.octahedron.util.ReflectionUtil;
 
@@ -35,25 +36,26 @@ import br.octahedron.util.ReflectionUtil;
 public class InterceptorManager {
 
 	private static final Log log = new Log(InterceptorManager.class);
+	private InstanceHandler injector = new InstanceHandler();
 	private Map<Class<? extends Annotation>, ControllerInterceptor> controllerInterceptors = new HashMap<Class<? extends Annotation>, ControllerInterceptor>();
-	private Collection<ResponseDispatcherInterceptor> responseInterceptors = new LinkedList<ResponseDispatcherInterceptor>(); 
+	private Collection<ResponseDispatcherInterceptor> responseInterceptors = new LinkedList<ResponseDispatcherInterceptor>();
 
 	/**
-	 * TODO comment
+	 * Adds a new interceptor to the application
 	 */
 	public void addInterceptor(String interceptorClass) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-			Class<?> klass = ReflectionUtil.getClass(interceptorClass);
-			if (ControllerInterceptor.class.isAssignableFrom(klass)) {
-				ControllerInterceptor interceptor = (ControllerInterceptor) klass.newInstance();
-				for(Class<? extends Annotation> ann : interceptor.getInterceptorAnnotations()) {
-					this.controllerInterceptors.put(ann, interceptor);
-				}
-			} else if (ResponseDispatcherInterceptor.class.isAssignableFrom(klass)) {
-				ResponseDispatcherInterceptor interceptor = (ResponseDispatcherInterceptor) klass.newInstance();
-				this.responseInterceptors.add(interceptor);
-			} else {
-				log.error("The %s isn't an interceptor class", interceptorClass);
+		Class<?> klass = ReflectionUtil.getClass(interceptorClass);
+		if (ControllerInterceptor.class.isAssignableFrom(klass)) {
+			ControllerInterceptor interceptor = (ControllerInterceptor) this.injector.getInstance(klass);
+			for (Class<? extends Annotation> ann : interceptor.getInterceptorAnnotations()) {
+				this.controllerInterceptors.put(ann, interceptor);
 			}
+		} else if (ResponseDispatcherInterceptor.class.isAssignableFrom(klass)) {
+			ResponseDispatcherInterceptor interceptor = (ResponseDispatcherInterceptor) this.injector.getInstance(klass);
+			this.responseInterceptors.add(interceptor);
+		} else {
+			log.error("The %s isn't an interceptor class", interceptorClass);
+		}
 	}
 
 	/**
@@ -64,7 +66,7 @@ public class InterceptorManager {
 	 */
 	public void execute(Annotation[] annotations) {
 		for (Annotation ann : annotations) {
-			if (controllerInterceptors.containsKey(ann)) {
+			if (this.controllerInterceptors.containsKey(ann)) {
 				ControllerInterceptor interceptor = this.controllerInterceptors.get(ann);
 				log.debug("Executing ControllerInterceptor %s with annotation %s", interceptor.getClass(), annotations.getClass());
 				interceptor.execute(ann);
@@ -73,10 +75,10 @@ public class InterceptorManager {
 	}
 
 	/**
-	 * Executes the {@link ResponseDispatcherInterceptor} get writer. 
+	 * Executes the {@link ResponseDispatcherInterceptor} get writer.
 	 */
 	public Writer getWriter(Writer writer) {
-		for(ResponseDispatcherInterceptor interceptor : responseInterceptors) {
+		for (ResponseDispatcherInterceptor interceptor : this.responseInterceptors) {
 			log.debug("Executing ResponseDispatcherInterceptor get writer %s", interceptor.getClass());
 			writer = interceptor.getWriter(writer);
 		}
@@ -84,10 +86,10 @@ public class InterceptorManager {
 	}
 
 	/**
-	 * Executes the {@link ResponseDispatcherInterceptor} finish. 
+	 * Executes the {@link ResponseDispatcherInterceptor} finish.
 	 */
 	public void finish() {
-		for(ResponseDispatcherInterceptor interceptor : responseInterceptors) {
+		for (ResponseDispatcherInterceptor interceptor : this.responseInterceptors) {
 			log.debug("Executing ResponseDispatcherInterceptor finish %s", interceptor.getClass());
 			interceptor.finish();
 		}
