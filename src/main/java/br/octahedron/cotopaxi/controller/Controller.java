@@ -99,7 +99,18 @@ public abstract class Controller {
 	 * 
 	 * @return the requested URL
 	 */
-	protected final String requestedUrl() {
+	protected final String fullRequestedUrl() {
+		return this.request().getRequestURL().toString();
+	}
+	
+	/**
+	 * Gets the requested relative URL
+	 * 
+	 * E.g.: /dashboard
+	 * 
+	 * @return the requested URL
+	 */
+	protected final String relativeRequestedUrl() {
 		return this.request().getRequestURI();
 	}
 
