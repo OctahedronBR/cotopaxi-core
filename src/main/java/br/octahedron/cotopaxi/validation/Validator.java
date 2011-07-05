@@ -61,9 +61,8 @@ public final class Validator extends Controller {
 				boolean validRule = rule.isValid(this.in(entry.getKey()));
 				if (!validRule) {
 					valid = false;
-				} else {
-					invalidMessages.put(entry.getKey(), this.messages.remove(entry.getKey()));
-				}
+					invalidMessages.put(entry.getKey(), this.messages.get(entry.getKey()));
+				} 
 			}
 		}
 		log.debug("Validation result: %b. Invalid attributes: count %d; list %s", valid, invalidMessages.size(), invalidMessages.keySet().toString());
