@@ -57,11 +57,11 @@ public class ControllerExecutor {
 			ControllerException {
 		try {
 			// load controller
-			ControllerContext context = threadContexts.get();
 			Controller controller = this.loadController(controllerDesc);
 			Method method = this.getMethod(controllerDesc, controller);
 			setContext(request, controllerDesc.getControllerName());
-			interceptor.execute(method.getAnnotations());
+			ControllerContext context = threadContexts.get();
+			interceptor.execute(method);
 			// execute controller
 			if (!context.isAnswered()) {
 				log.debug("Executing controller %s - %s", controller.getClass().getName(), method.getName());
@@ -75,6 +75,7 @@ public class ControllerExecutor {
 			throw new ControllerException(ex.getCause());
 		} catch (Exception ex) {
 			log.error("Unable to load controller %s", controllerDesc);
+			log.terror("Unable to load controller", ex);
 			throw new NotFoundExeption(request.getRequestURI(), request.getMethod());
 		} finally {
 			clearContext();

@@ -29,7 +29,7 @@ import br.octahedron.cotopaxi.controller.Controller;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 @Retention(value = RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target(value={ElementType.METHOD})
 public @interface AuthenticationRequired {
 	
 	public enum AuthenticationLevel {

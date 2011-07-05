@@ -114,7 +114,7 @@ public class ConfigurationLoader {
 	private void processProperties() throws UnexpectedTokenException {
 		do {
 			String propertyName = this.getContent(TokenType.PROPERTY);
-			String propertyValue = this.getContent(TokenType.STRING);
+			String propertyValue = this.getContent(TokenType.STRING, TokenType.CLASS);
 			log.info("Configuration property found: %s -> %s", propertyName, propertyValue);
 			System.setProperty(propertyName, propertyValue);
 		} while (true);
@@ -141,7 +141,7 @@ public class ConfigurationLoader {
 			try {
 				getControllerDescriptor(tk.getContent());
 			} catch (UnexpectedTokenException ex) {
-				this.processControllers(tk);
+				this.processControllers(ex.getToken());
 			}
 		} else {
 			throw new UnexpectedTokenException(tk);
@@ -149,22 +149,24 @@ public class ConfigurationLoader {
 	}
 
 	private void getControllerDescriptor(String controllerClass) throws UnexpectedTokenException {
-		log.info("Configuration controller found: %s", controllerClass);
+		log.debug("Configuration controller found: %s", controllerClass);
 		do {
 			String url = this.getContent(TokenType.URL);
 			String method = this.getContent(TokenType.STRING);
 			String controllerName = this.getContent(TokenType.STRING);
+			log.info("Adding controller descriptor %s - %s - %s - %s", controllerClass, url, method, controllerName);
 			this.router.addRoute(new ControllerDescriptor(url, method, controllerName, controllerClass));
 		} while (true);
 	}
 
-	private String getContent(TokenType type) throws UnexpectedTokenException {
+	private String getContent(TokenType... types) throws UnexpectedTokenException {
 		Token tk = parser.nextToken();
-		if (tk.getTokenType() == type) {
-			return tk.getContent();
-		} else {
-			throw new UnexpectedTokenException(tk);
+		for (TokenType type : types) {
+			if (tk.getTokenType() == type) {
+				return tk.getContent();
+			}
 		}
+		throw new UnexpectedTokenException(tk);
 	}
 
 	/**

@@ -91,7 +91,7 @@ public class InstanceHandler {
 				set.invoke(instance, obj);
 			} catch (Exception ex) {
 				log.error("Unable to performe injection: %s", ex.getLocalizedMessage());
-				log.error("Unable to performe injection", ex);
+				log.terror("Unable to performe injection", ex);
 			}
 		}
 	}

@@ -35,7 +35,7 @@ public abstract class AbstractAuthenticationInterceptor extends ControllerInterc
 		AuthenticationRequired auth = (AuthenticationRequired) ann;
 
 		this.checkUserAuthentication();
-		if (auth.authenticationLevel() == AuthenticationLevel.AUTHENTICATE_AND_VALID) {
+		if (auth.authenticationLevel() == AuthenticationLevel.AUTHENTICATE_AND_VALID && !this.isAnswered()) {
 			this.checkUserValidation();
 		}
 	}

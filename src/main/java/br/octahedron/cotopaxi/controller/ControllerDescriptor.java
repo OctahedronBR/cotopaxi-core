@@ -72,7 +72,7 @@ public class ControllerDescriptor {
 	 */
 	@Override
 	public String toString() {
-		return String.format("COntrollerDescriptor - controller class: %s; controller name: %s; controller url: %s; controller http method: %s",
+		return String.format("class: %s; name: %s; url: %s; http method: %s",
 				this.controllerClass, this.controllerName, this.url, this.httpMethod);
 	}
 

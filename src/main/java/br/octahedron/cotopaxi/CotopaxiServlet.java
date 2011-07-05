@@ -78,7 +78,7 @@ public class CotopaxiServlet extends HttpServlet {
 			log.error("Error parsing configuration file: Invalid Syntax. Check you configuration file and try again");
 			throw new ServletException(ex);
 		} catch (Exception ex) {
-			log.error("Unexpected error loading cotopaxi!", ex);
+			log.terror("Unexpected error loading cotopaxi!", ex);
 			throw new ServletException(ex);
 		}
 	}
@@ -107,7 +107,7 @@ public class CotopaxiServlet extends HttpServlet {
 			controllerResponse = new TemplateResponse(getProperty(NOT_FOUND_TEMPLATE), 404, output, null, null, request.getLocale());
 		} catch (ControllerException ex) {
 			log.warning("Unexpected error executing controller for %s. Message: %s", request.getRequestURI(), ex.getMessage());
-			log.warning("ControllerException", ex);
+			log.twarning("ControllerException", ex);
 			Map<String, Object> output = new HashMap<String, Object>();
 			output.put(getProperty(ERROR_PROPERTY), ex);
 			controllerResponse = new TemplateResponse(getProperty(ERROR_TEMPLATE), 500, output, null, null, request.getLocale());

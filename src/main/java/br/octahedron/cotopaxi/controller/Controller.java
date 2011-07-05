@@ -58,13 +58,6 @@ public abstract class Controller {
 	}
 
 	/**
-	 * Checks if the request was already answered
-	 */
-	private final boolean isAnswered() {
-		return threadContexts.get().isAnswered();
-	}
-
-	/**
 	 * Gets the output objects map
 	 */
 	private final Map<String, Object> output() {
@@ -83,6 +76,27 @@ public abstract class Controller {
 	 */
 	private final Map<String, String> headers() {
 		return threadContexts.get().getHeaders();
+	}
+
+	/**
+	 * Checks if the request was already answered
+	 */
+	protected final boolean isAnswered() {
+		return threadContexts.get().isAnswered();
+	}
+	
+	/**
+	 * Gets the server name. E.g.: www.octahedron.com.br
+	 */
+	protected final String getServerName() {
+		return this.request().getServerName();
+	}
+	
+	/**
+	 * Gets the lower sub-domain name. E.g.: www
+	 */
+	protected final String getSubDomain() {
+		return this.request().getServerName().split("\\.")[0];
 	}
 	
 	/**

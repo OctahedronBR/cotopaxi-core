@@ -55,6 +55,10 @@ public enum CotopaxiProperty {
 	 */
 	ERROR_PROPERTY("error"),
 	/**
+	 * The property used to binds validation errors on controller top level. Default: invalid
+	 */
+	INVALID_PROPERTY("invalid"),
+	/**
 	 * The application base url. Default: http://localhost:8080
 	 */
 	APPLICATION_BASE_URL("http://localhost:8080");

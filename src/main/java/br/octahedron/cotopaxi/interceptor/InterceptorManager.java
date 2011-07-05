@@ -18,6 +18,7 @@ package br.octahedron.cotopaxi.interceptor;
 
 import java.io.Writer;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -64,11 +65,12 @@ public class InterceptorManager {
 	 * @param annotations
 	 *            the {@link Controller} method {@link Annotation}
 	 */
-	public void execute(Annotation[] annotations) {
-		for (Annotation ann : annotations) {
-			if (this.controllerInterceptors.containsKey(ann)) {
-				ControllerInterceptor interceptor = this.controllerInterceptors.get(ann);
-				log.debug("Executing ControllerInterceptor %s with annotation %s", interceptor.getClass(), annotations.getClass());
+	public void execute(AnnotatedElement controllerAnnotatedElement) {
+		for (Class<? extends Annotation> annClass : this.controllerInterceptors.keySet()) {
+			Annotation ann = controllerAnnotatedElement.getAnnotation(annClass);
+			if (ann != null) {
+				ControllerInterceptor interceptor = this.controllerInterceptors.get(annClass);
+				log.debug("Executing ControllerInterceptor %s with annotation %s", interceptor.getClass(), annClass);
 				interceptor.execute(ann);
 			}
 		}
