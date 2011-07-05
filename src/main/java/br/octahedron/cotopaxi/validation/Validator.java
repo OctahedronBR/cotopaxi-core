@@ -23,6 +23,7 @@ import java.util.Map;
 
 import br.octahedron.cotopaxi.CotopaxiProperty;
 import br.octahedron.cotopaxi.controller.Controller;
+import br.octahedron.util.Log;
 import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
 
 /**
@@ -32,6 +33,7 @@ import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
  */
 public final class Validator extends Controller {
 	
+	private static final Log log = new Log(Validator.class);
 	private Map<String, Collection<ValidationRule>> rules = new HashMap<String, Collection<ValidationRule>>();
 	private Map<String, String> messages = new HashMap<String, String>();
 
@@ -64,6 +66,7 @@ public final class Validator extends Controller {
 				}
 			}
 		}
+		log.debug("Validation result: %b. Invalid attributes: count %d; list %s", valid, invalidMessages.size(), invalidMessages.keySet().toString());
 		this.out(getProperty(CotopaxiProperty.INVALID_PROPERTY), invalidMessages);
 		return valid;	
 	}
