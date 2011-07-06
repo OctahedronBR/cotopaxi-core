@@ -132,20 +132,40 @@ public abstract class Controller {
 	 * Get an input parameter with the given key.
 	 * 
 	 * Input parameter can be parameters passed using both POST and GET method, or parameters passed
-	 * at the url address;
+	 * at the url address, with leading and trailing white spaces removed;
+	 * 
+	 * The same as call in(name,true);
 	 * 
 	 * @param name
 	 *            The parameter's name
 	 * @return The parameter's value if exists, or <code>null</code> if there's no input parameter
 	 *         with the given name.
+	 *         
+	 * @see Controller#in(String, boolean)
 	 */
 	protected final String in(String name) {
+		return this.in(name, true);
+	}
+	
+	/**
+	 * Get an input parameter with the given key.
+	 * 
+	 * Input parameter can be parameters passed using both POST and GET method, or parameters passed
+	 * at the url address;
+	 * 
+	 * @param name
+	 *            The parameter's name
+	 * @param shouldTrim <code>true</code> if should remove leading and trailing white spaces, <code>false</code> to return the raw String
+	 * @return The parameter's value if exists, or <code>null</code> if there's no input parameter
+	 *         with the given name.
+	 */
+	protected final String in(String name, boolean shouldTrim) {
 		HttpServletRequest request = this.request();
 		String result = request.getParameter(name);
 		if (result == null || result.equals("")) {
 			result = (String) request.getAttribute(name);
 		}
-		return result;
+		return (result != null && shouldTrim) ? result.trim(): result;
 	}
 
 	/**
