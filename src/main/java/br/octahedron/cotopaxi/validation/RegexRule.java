@@ -33,6 +33,8 @@ public class RegexRule implements ValidationRule {
 
 	@Override
 	public boolean isValid(String input) {
-		return this.pattern.matcher(input.trim()).matches();
+		if (input == null)
+			input = "";
+		return this.pattern.matcher(input).matches();
 	}
 }

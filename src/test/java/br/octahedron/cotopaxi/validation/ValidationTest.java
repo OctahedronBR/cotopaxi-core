@@ -37,6 +37,9 @@ public class ValidationTest {
 		regex = new RegexRule("([a-zA-ZáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûÃÕãõçÇ] *){2,}");
 		assertTrue(regex.isValid("Danilo Queiroz"));
 		assertTrue(regex.isValid("Da"));
+		regex = new RegexRule(".*");
+		assertTrue(regex.isValid(""));
+		assertTrue(regex.isValid(null));
 	}
 
 	@Test
