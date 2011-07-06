@@ -18,7 +18,7 @@ package br.octahedron.cotopaxi.controller;
 
 import static br.octahedron.cotopaxi.controller.ControllerContext.clearContext;
 import static br.octahedron.cotopaxi.controller.ControllerContext.setContext;
-import static br.octahedron.cotopaxi.controller.ControllerContext.threadContexts;
+import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -60,7 +60,7 @@ public class ControllerExecutor {
 			Controller controller = this.loadController(controllerDesc);
 			Method method = this.getMethod(controllerDesc, controller);
 			setContext(request, controllerDesc.getControllerName());
-			ControllerContext context = threadContexts.get();
+			ControllerContext context = getContext();
 			interceptor.execute(method);
 			// execute controller
 			if (!context.isAnswered()) {

@@ -16,22 +16,23 @@
  */
 package br.octahedron.cotopaxi.validation;
 
+import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
 import br.octahedron.cotopaxi.CotopaxiProperty;
-import br.octahedron.cotopaxi.controller.Controller;
+import br.octahedron.cotopaxi.controller.BaseController;
 import br.octahedron.util.Log;
-import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
 
 /**
  * This entity is responsible by Validates inputs using validation rules;
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public final class Validator extends Controller {
+public final class Validator extends BaseController {
 	
 	private static final Log log = new Log(Validator.class);
 	private Map<String, Collection<ValidationRule>> rules = new HashMap<String, Collection<ValidationRule>>();

@@ -36,7 +36,11 @@ final class ControllerContext {
 
 	// static stuff
 
-	protected static final ThreadLocal<ControllerContext> threadContexts = new ThreadLocal<ControllerContext>();
+	private static final ThreadLocal<ControllerContext> threadContexts = new ThreadLocal<ControllerContext>();
+	
+	protected static ControllerContext getContext() {
+		return threadContexts.get();
+	}
 
 	protected static void setContext(HttpServletRequest request, String controllerName) {
 		threadContexts.set(new ControllerContext(request, controllerName));
