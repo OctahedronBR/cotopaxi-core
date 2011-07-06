@@ -39,5 +39,11 @@ public class ValidationTest {
 		assertTrue(regex.isValid("Da"));
 	}
 
-
+	@Test
+	public void requiredRuleTest() {
+		ValidationRule required = new RequiredRule();
+		assertTrue(required.isValid("a"));
+		assertFalse(required.isValid(""));
+		assertFalse(required.isValid(null));
+	}
 }
