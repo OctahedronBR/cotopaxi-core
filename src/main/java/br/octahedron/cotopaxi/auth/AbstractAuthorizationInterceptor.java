@@ -16,29 +16,38 @@
  */
 package br.octahedron.cotopaxi.auth;
 
-import static br.octahedron.cotopaxi.auth.AuthorizationRequired.CONTROLLER_NAME;
+import static br.octahedron.cotopaxi.CotopaxiProperty.*;
+import static br.octahedron.cotopaxi.auth.AuthorizationRequired.*;
 import java.lang.annotation.Annotation;
 
+import br.octahedron.cotopaxi.auth.AuthorizationRequired.NonAuthorizedConsequence;
 import br.octahedron.cotopaxi.interceptor.ControllerInterceptor;
 
 /**
  * An abstract interceptor to be used to create authorization interceptors.
  * 
  * @see ControllerInterceptor
- *  
+ * 
  * @author Danilo Queiroz - daniloqueiro@octahedron.com.br
  */
 public abstract class AbstractAuthorizationInterceptor extends ControllerInterceptor {
+
+	private static final String RESTRICTED_USER = "restricted_user";
 
 	@Override
 	public final void execute(Annotation ann) {
 		AuthorizationRequired auth = (AuthorizationRequired) ann;
 		if ( !this.isAnswered() ) {
-			String action = auth.action();
+			String action = auth.actionName();
 			if (CONTROLLER_NAME.equals(action)) {
 				action = this.controllerName();
 			}
-			this.authorizeUser(action);
+			String redirect = auth.redirect();
+			if ( FORBIDDEN_PAGE.equals( redirect)) {
+				redirect = getProperty(FORBIDDEN_TEMPLATE);
+			}
+			
+			this.authorizeUser(action, auth.consequence(), redirect);
 		}
 	}
 
@@ -47,11 +56,26 @@ public abstract class AbstractAuthorizationInterceptor extends ControllerInterce
 	public final Class<? extends Annotation>[] getInterceptorAnnotations() {
 		return (Class<? extends Annotation>[]) new Class<?>[] { AuthorizationRequired.class };
 	}
-	
+
 	/**
-	 * This method should check if the current logged user, is a authorized to perform the given action.
-	 * 
-	 * The action is the {@link AuthorizationRequired#action()}, if defined, or the controller name.
+	 * Adds the RESTRICTED_USER property to out as <code>true</code>
 	 */
-	protected abstract void authorizeUser(String controllerName);
+	protected void setRestricted() {
+		out(RESTRICTED_USER, Boolean.TRUE);
+	}
+
+	/**
+	 * This method should check if the current logged user, is a authorized to perform the given
+	 * action.
+	 * 
+	 * The action is the {@link AuthorizationRequired#actionName()}, if defined, or the controller
+	 * name.
+	 * 
+	 * @param actionName
+	 *            the action being executed
+	 * @param consequence
+	 *            the consequence for non authorized users
+	 * @param redirect 
+	 */
+	protected abstract void authorizeUser(String actionName, NonAuthorizedConsequence consequence, String redirect);
 }
