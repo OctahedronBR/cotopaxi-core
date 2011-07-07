@@ -61,14 +61,16 @@ public abstract class BaseController {
 	/**
 	 * Gets the server name. E.g.: www.octahedron.com.br
 	 */
-	protected final String getServerName() {
+	protected final String serverName() {
 		return this.request().getServerName();
 	}
 	
 	/**
-	 * Gets the lower sub-domain name. E.g.: www
+	 * Gets the lower sub-domain name. 
+	 * 
+	 * E.g.: for server name 'tech.octahedron.com.br' it returns 'tech' 
 	 */
-	protected final String getSubDomain() {
+	protected final String subDomain() {
 		return this.request().getServerName().split("\\.")[0];
 	}
 	
