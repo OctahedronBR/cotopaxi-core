@@ -32,10 +32,14 @@ public abstract class AbstractAuthenticationInterceptor extends ControllerInterc
 
 	@Override
 	public final void execute(Annotation ann) {
-		AuthenticationRequired auth = (AuthenticationRequired) ann;
+		AuthenticationLevel level = AuthenticationLevel.AUTHENTICATE_AND_VALID;
+		if ( ann instanceof AuthenticationRequired) {
+			AuthenticationRequired auth = (AuthenticationRequired) ann;
+			level = auth.authenticationLevel();
+		}
 
 		this.checkUserAuthentication();
-		if (auth.authenticationLevel() == AuthenticationLevel.AUTHENTICATE_AND_VALID && !this.isAnswered()) {
+		if (level == AuthenticationLevel.AUTHENTICATE_AND_VALID && !this.isAnswered()) {
 			this.checkUserValidation();
 		}
 	}
@@ -43,7 +47,7 @@ public abstract class AbstractAuthenticationInterceptor extends ControllerInterc
 	@SuppressWarnings("unchecked")
 	@Override
 	public final Class<? extends Annotation>[] getInterceptorAnnotations() {
-		return (Class<? extends Annotation>[]) new Class<?>[] { AuthenticationRequired.class };
+		return (Class<? extends Annotation>[]) new Class<?>[] { AuthenticationRequired.class, AuthorizationRequired.class };
 	}
 
 	/**
