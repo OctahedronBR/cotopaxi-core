@@ -38,7 +38,7 @@ import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public abstract class Controller {
+public abstract class Controller extends BaseController{
 	
 	/**
 	 * Checks if the request was already answered
