@@ -83,7 +83,7 @@ public class ControllerDescriptor {
 	 */
 	@Override
 	public int hashCode() {
-		return this.url.hashCode() & this.httpMethod.hashCode() & this.controllerClass.hashCode() & this.controllerName.hashCode();
+		return this.url.hashCode() ^ this.httpMethod.hashCode() ^ this.controllerClass.hashCode() ^ this.controllerName.hashCode();
 	}
 
 	/*

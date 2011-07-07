@@ -88,6 +88,7 @@ public class ControllerExecutor {
 	private Method getMethod(ControllerDescriptor controllerDesc, Controller controller) throws SecurityException, NoSuchMethodException {
 		int hash = controllerDesc.hashCode();
 		if (this.methodsCache.containsKey(hash)) {
+			log.debug("Method founded at cache table. Hash: %i", hash);
 			return this.methodsCache.get(hash);
 		} else {
 			String name = controllerDesc.getControllerName();
