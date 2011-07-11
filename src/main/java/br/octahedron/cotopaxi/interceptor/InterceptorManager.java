@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi.interceptor;
 
+import static br.octahedron.cotopaxi.inject.InstanceHandler.getInstance;
+
 import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -25,7 +27,6 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import br.octahedron.cotopaxi.controller.Controller;
-import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.util.Log;
 import br.octahedron.util.ReflectionUtil;
 
@@ -37,7 +38,6 @@ import br.octahedron.util.ReflectionUtil;
 public class InterceptorManager {
 
 	private static final Log log = new Log(InterceptorManager.class);
-	private InstanceHandler injector = new InstanceHandler();
 	private Map<Class<? extends Annotation>, ControllerInterceptor> controllerInterceptors = new HashMap<Class<? extends Annotation>, ControllerInterceptor>();
 	private Collection<ResponseDispatcherInterceptor> responseInterceptors = new LinkedList<ResponseDispatcherInterceptor>();
 
@@ -47,12 +47,12 @@ public class InterceptorManager {
 	public void addInterceptor(String interceptorClass) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		Class<?> klass = ReflectionUtil.getClass(interceptorClass);
 		if (ControllerInterceptor.class.isAssignableFrom(klass)) {
-			ControllerInterceptor interceptor = (ControllerInterceptor) this.injector.getInstance(klass);
+			ControllerInterceptor interceptor = (ControllerInterceptor) getInstance(klass);
 			for (Class<? extends Annotation> ann : interceptor.getInterceptorAnnotations()) {
 				this.controllerInterceptors.put(ann, interceptor);
 			}
 		} else if (ResponseDispatcherInterceptor.class.isAssignableFrom(klass)) {
-			ResponseDispatcherInterceptor interceptor = (ResponseDispatcherInterceptor) this.injector.getInstance(klass);
+			ResponseDispatcherInterceptor interceptor = (ResponseDispatcherInterceptor) getInstance(klass);
 			this.responseInterceptors.add(interceptor);
 		} else {
 			log.error("The %s isn't an interceptor class", interceptorClass);

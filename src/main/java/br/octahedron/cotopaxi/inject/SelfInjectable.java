@@ -16,15 +16,15 @@
  */
 package br.octahedron.cotopaxi.inject;
 
+import static br.octahedron.cotopaxi.inject.InstanceHandler.inject;
+
 /**
  * TODO comments
  * @author Danilo Queiroz
  */
 public abstract class SelfInjectable {
-	
-	private static final InstanceHandler handler = new InstanceHandler();
 
 	public SelfInjectable() {
-		handler.inject(this);
+		inject(this);
 	}
 }

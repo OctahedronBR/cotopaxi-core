@@ -46,7 +46,7 @@ public class InstanceHandler {
 	 * @return The T instance.
 	 * @throws InstantiationException
 	 */
-	public <T> T getInstance(Class<T> klass) throws InstantiationException {
+	public static <T> T getInstance(Class<T> klass) throws InstantiationException {
 		try {
 			if (!containsImplementation(klass)) {
 				T instance = createInstance(klass);
@@ -61,7 +61,7 @@ public class InstanceHandler {
 	/**
 	 * Creates a new instance of the given class.
 	 */
-	public <T> T createInstance(Class<T> klass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public static <T> T createInstance(Class<T> klass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Class<? extends T> implClass = resolveDependency(klass);
 		T instance = implClass.newInstance();
 		inject(instance);
@@ -71,7 +71,7 @@ public class InstanceHandler {
 	/**
 	 * Checks if should inject any attribute and inject if necessary.
 	 */
-	protected void inject(Object instance) {
+	protected static void inject(Object instance) {
 		Collection<Field> fields = ReflectionUtil.getAnnotatedFields(instance.getClass(), Inject.class);
 		// for each annotated field
 		for (Field f : fields) {

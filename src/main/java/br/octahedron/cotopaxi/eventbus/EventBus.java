@@ -32,25 +32,24 @@ import br.octahedron.cotopaxi.inject.Inject;
  * @author Danilo Penna Queiroz
  */
 public class EventBus {
-
-	private static final Lock monitor = new ReentrantLock();
-	protected static final Map<Class<? extends Event>, LinkedList<Class<? extends Subscriber>>> subscribers = new HashMap<Class<? extends Event>, LinkedList<Class<? extends Subscriber>>>();
 	
 	@Inject
-	protected static EventPublisher eventPublisher;
+	protected EventPublisher eventPublisher;
+	private final Lock monitor = new ReentrantLock();
+	protected final Map<Class<? extends Event>, LinkedList<Class<? extends Subscriber>>> subscribers = new HashMap<Class<? extends Event>, LinkedList<Class<? extends Subscriber>>>();
 
 	/**
-	 * To be used by tests
+	 * @param eventPublisher the eventPublisher to set
 	 */
-	protected static void reset() {
-		subscribers.clear();
+	public void setEventPublisher(EventPublisher eventPublisher) {
+		this.eventPublisher = eventPublisher;
 	}
 
 	/**
 	 * To be used by tests
 	 */
-	protected static void setEventPublisher(EventPublisher publisher) {
-		eventPublisher = publisher;
+	protected void reset() {
+		subscribers.clear();
 	}
 
 	/**
@@ -58,7 +57,7 @@ public class EventBus {
 	 * subscriber will start receive notifications each time an {@link Event} of one of the given
 	 * types be published by any one.
 	 */
-	public static void subscribe(Class<? extends Subscriber> subscriber) {
+	public void subscribe(Class<? extends Subscriber> subscriber) {
 		try {
 			monitor.lock();
 			if (subscriber.isAnnotationPresent(InterestedEvent.class)) {
@@ -79,7 +78,7 @@ public class EventBus {
 	 * Publishes the given event to every {@link Subscriber} interested in the given event.
 	 */
 	@SuppressWarnings("unchecked")
-	public static void publish(Event event) {
+	public void publish(Event event) {
 		try {
 			monitor.lock();
 			if (subscribers.containsKey(event.getClass())) {

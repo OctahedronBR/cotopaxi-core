@@ -36,14 +36,15 @@ public class EventBusTest {
 	private Subscriber consumerOne;
 	private Subscriber consumerTwo;
 	private EventPublisher publisher;
+	private EventBus bus = new EventBus();
 
 	@Before
 	public void setUp() {
-		EventBus.reset();
+		this.publisher = createMock(EventPublisher.class);
 		this.consumerOne = createMock(Subscriber.class);
 		this.consumerTwo = createMock(Subscriber.class);
-		this.publisher = createMock(EventPublisher.class);
-		EventBus.setEventPublisher(this.publisher);
+		bus.reset();
+		bus.setEventPublisher(this.publisher);
 	}
 
 //	@Test
@@ -57,16 +58,16 @@ public class EventBusTest {
 	public void subscribeTest() {
 		replay(this.consumerOne, this.consumerTwo, this.publisher);
 
-		assertFalse(EventBus.subscribers.containsKey(EventOne.class));
-		assertFalse(EventBus.subscribers.containsKey(EventTwo.class));
+		assertFalse(bus.subscribers.containsKey(EventOne.class));
+		assertFalse(bus.subscribers.containsKey(EventTwo.class));
 
-		EventBus.subscribe(SubscriberOne.class);
-		EventBus.subscribe(SubscriberTwo.class);
+		bus.subscribe(SubscriberOne.class);
+		bus.subscribe(SubscriberTwo.class);
 
-		assertTrue(EventBus.subscribers.containsKey(EventOne.class));
-		assertEquals(1, EventBus.subscribers.get(EventOne.class).size());
-		assertTrue(EventBus.subscribers.containsKey(EventTwo.class));
-		assertEquals(2, EventBus.subscribers.get(EventTwo.class).size());
+		assertTrue(bus.subscribers.containsKey(EventOne.class));
+		assertEquals(1, bus.subscribers.get(EventOne.class).size());
+		assertTrue(bus.subscribers.containsKey(EventTwo.class));
+		assertEquals(2, bus.subscribers.get(EventTwo.class).size());
 
 		verify(this.consumerOne, this.consumerTwo, this.publisher);
 	}
@@ -83,9 +84,9 @@ public class EventBusTest {
 		this.publisher.publish(Arrays.asList(SubscriberOne.class, SubscriberTwo.class), event);
 		replay(this.consumerOne, this.consumerTwo, this.publisher);
 
-		EventBus.subscribe(SubscriberOne.class);
-		EventBus.subscribe(SubscriberTwo.class);
-		EventBus.publish(event);
+		bus.subscribe(SubscriberOne.class);
+		bus.subscribe(SubscriberTwo.class);
+		bus.publish(event);
 
 		verify(this.consumerOne, this.consumerTwo, this.publisher);
 	}

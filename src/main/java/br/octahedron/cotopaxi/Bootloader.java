@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi;
 
+import static br.octahedron.cotopaxi.inject.InstanceHandler.createInstance;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -42,7 +44,7 @@ public interface Bootloader {
 		private Collection<Bootloader> bootloaders = new LinkedList<Bootloader>();
 
 		public void addBootloader(String bootloaderClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-			Bootloader bootloader = (Bootloader) ReflectionUtil.getClass(bootloaderClass).newInstance();
+			Bootloader bootloader = (Bootloader) createInstance(ReflectionUtil.getClass(bootloaderClass));
 			log.debug("Bootloader %s loaded - but no executed yet!", bootloaderClass);
 			this.bootloaders.add(bootloader);
 		}

@@ -29,11 +29,10 @@ import br.octahedron.cotopaxi.inject.InstanceHandler;
  */
 public class InjectorTest {
 	
-	private InstanceHandler handler = new InstanceHandler();
 
 	@Test
 	public void testInjection() throws InstantiationException {
-		UserFacade facade = handler.getInstance(UserFacade.class);
+		UserFacade facade = InstanceHandler.getInstance(UserFacade.class);
 		assertNotNull(facade);
 		UserService service = facade.getUserService();
 		assertNotNull(service);

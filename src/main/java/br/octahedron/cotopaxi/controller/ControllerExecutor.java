@@ -16,6 +16,7 @@
  */
 package br.octahedron.cotopaxi.controller;
 
+import static br.octahedron.cotopaxi.inject.InstanceHandler.*;
 import static br.octahedron.cotopaxi.controller.ControllerContext.clearContext;
 import static br.octahedron.cotopaxi.controller.ControllerContext.setContext;
 import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
@@ -45,7 +46,6 @@ public class ControllerExecutor {
 
 	private static final Log log = new Log(ControllerExecutor.class);
 
-	private InstanceHandler handler = new InstanceHandler();
 	private Map<Integer, Method> methodsCache = new HashMap<Integer, Method>();
 	private InterceptorManager interceptor;
 	
@@ -105,6 +105,6 @@ public class ControllerExecutor {
 	 * Loads the controller instance
 	 */
 	private Controller loadController(ControllerDescriptor controllerDesc) throws InstantiationException, ClassNotFoundException {
-		return (Controller) handler.getInstance(ReflectionUtil.getClass(controllerDesc.getControllerClass()));
+		return (Controller) getInstance(ReflectionUtil.getClass(controllerDesc.getControllerClass()));
 	}
 }
