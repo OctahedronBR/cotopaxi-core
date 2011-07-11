@@ -16,10 +16,10 @@
  */
 package br.octahedron.cotopaxi.controller;
 
-import static br.octahedron.cotopaxi.inject.InstanceHandler.*;
 import static br.octahedron.cotopaxi.controller.ControllerContext.clearContext;
-import static br.octahedron.cotopaxi.controller.ControllerContext.setContext;
 import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
+import static br.octahedron.cotopaxi.controller.ControllerContext.setContext;
+import static br.octahedron.cotopaxi.inject.InstanceHandler.getInstance;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +29,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import br.octahedron.cotopaxi.inject.InstanceHandler;
 import br.octahedron.cotopaxi.interceptor.InterceptorManager;
 import br.octahedron.cotopaxi.route.NotFoundExeption;
 import br.octahedron.util.Log;
