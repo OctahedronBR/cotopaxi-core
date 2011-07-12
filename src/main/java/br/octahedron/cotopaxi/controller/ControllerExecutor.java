@@ -19,7 +19,7 @@ package br.octahedron.cotopaxi.controller;
 import static br.octahedron.cotopaxi.controller.ControllerContext.clearContext;
 import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
 import static br.octahedron.cotopaxi.controller.ControllerContext.setContext;
-import static br.octahedron.cotopaxi.inject.InstanceHandler.getInstance;
+import static br.octahedron.cotopaxi.inject.Injector.getInstance;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

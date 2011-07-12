@@ -16,7 +16,7 @@
  */
 package br.octahedron.cotopaxi.inject;
 
-import static br.octahedron.cotopaxi.inject.InstanceHandler.inject;
+import static br.octahedron.cotopaxi.inject.Injector.inject;
 
 /**
  * TODO comments

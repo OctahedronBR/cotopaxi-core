@@ -16,7 +16,7 @@
  */
 package br.octahedron.cotopaxi;
 
-import static br.octahedron.cotopaxi.inject.InstanceHandler.createInstance;
+import static br.octahedron.cotopaxi.inject.Injector.createInstance;
 
 import java.util.Collection;
 import java.util.LinkedList;

@@ -16,7 +16,7 @@
  */
 package br.octahedron.cotopaxi.interceptor;
 
-import static br.octahedron.cotopaxi.inject.InstanceHandler.getInstance;
+import static br.octahedron.cotopaxi.inject.Injector.getInstance;
 
 import java.io.Writer;
 import java.lang.annotation.Annotation;

@@ -34,9 +34,11 @@ import br.octahedron.util.ReflectionUtil;
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class InstanceHandler {
+public class Injector {
+	
+	private Injector() { }
 
-	private static final Log log = new Log(InstanceHandler.class);
+	private static final Log log = new Log(Injector.class);
 
 	/**
 	 * Gets a <T> instance for the given {@link Class} ready to be used.
