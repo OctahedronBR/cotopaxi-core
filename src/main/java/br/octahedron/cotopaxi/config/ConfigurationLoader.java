@@ -166,6 +166,7 @@ public class ConfigurationLoader {
 				return tk.getContent();
 			}
 		}
+		log.debug("Unexpected token type [%s, %s]", tk.getContent(), tk.getTokenType());
 		throw new UnexpectedTokenException(tk);
 	}
 
