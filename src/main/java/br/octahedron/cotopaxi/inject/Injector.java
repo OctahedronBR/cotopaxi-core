@@ -83,12 +83,12 @@ public class Injector {
 				Class<?> klass = f.getType();
 				Object obj;
 				if (inject.newInstance()) {
-					obj = getInstance(klass);
-				} else {
 					obj = createInstance(klass);
+				} else {
+					obj = getInstance(klass);
 				}
 				// gets the instance's method to inject the object created above
-				log.info("Injecting object %s  into object %s", obj.getClass().getSimpleName(), instance.getClass().getSimpleName());
+				log.info("Injecting object %s into object %s", obj.getClass().getSimpleName(), instance.getClass().getSimpleName());
 				Method set = ReflectionUtil.getSetMethod(klass.getSimpleName(), instance.getClass(), klass);
 				set.invoke(instance, obj);
 			} catch (Exception ex) {
