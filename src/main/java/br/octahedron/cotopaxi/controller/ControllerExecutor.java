@@ -60,6 +60,7 @@ public class ControllerExecutor {
 			Method method = this.getMethod(controllerDesc, controller);
 			setContext(request, controllerDesc.getControllerName());
 			ControllerContext context = getContext();
+			interceptor.execute(method.getDeclaringClass());
 			interceptor.execute(method);
 			// execute controller
 			if (!context.isAnswered()) {
