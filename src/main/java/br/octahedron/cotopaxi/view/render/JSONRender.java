@@ -17,13 +17,7 @@
 package br.octahedron.cotopaxi.view.render;
 
 import java.io.IOException;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
-import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
+import java.io.Writer;
 
 import br.octahedron.util.Log;
 import flexjson.JSONSerializer;
@@ -40,12 +34,14 @@ public class JSONRender {
 
 	private static final long serialVersionUID = -6755680559427788645L;
 	private static final Log log = new Log(JSONRender.class);
-	
 
-	public static void render(Object object, ServletRequest req, ServletResponse res) throws ResourceNotFoundException, ParseErrorException, MethodInvocationException, IOException {
-		// TODO refactor
-		res.getWriter().write(new JSONSerializer().prettyPrint(true).serialize(object));
-		log.debug("Written json in response writer");
-		res.flushBuffer();
+	public void render(Object object, Writer writer) {
+		try {
+			writer.write(new JSONSerializer().prettyPrint(true).serialize(object));
+			log.debug("Written json in response writer");
+		} catch (IOException ex) {
+			log.terror("Impossible to parse objects into json format to be used on writer", ex);
+			throw new RuntimeException(ex);
+		}
 	}
 }

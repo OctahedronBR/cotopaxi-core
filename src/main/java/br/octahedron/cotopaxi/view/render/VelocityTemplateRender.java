@@ -39,7 +39,6 @@ public class VelocityTemplateRender {
 
 	private static final Log log = new Log(VelocityTemplateRender.class);
 
-	
 	private final VelocityEngine engine = new VelocityEngine();
 	private String templateFolder;
 	

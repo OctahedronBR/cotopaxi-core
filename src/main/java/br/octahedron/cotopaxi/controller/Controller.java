@@ -48,6 +48,15 @@ public abstract class Controller extends BaseController{
 	}
 
 	/**
+	 * Renders {@link Controller#out(String, Object)} objects with SUCCESS (200) code
+	 * 
+	 * The same as call asJSON(200)
+	 */
+	protected final void jsonSuccess() {
+		this.asJSON(200);
+	}
+	
+	/**
 	 * Render the given template with SUCCESS (200) code
 	 * 
 	 * The same as call render(template, 200)
@@ -155,9 +164,20 @@ public abstract class Controller extends BaseController{
 		}
 	}
 
-	protected final void asJson(int code) {
+	/**
+	 * Renders the objects set using the {@link Controller#out(String, Object)} 
+	 * as JSON format. After render, the code continues to execute, and the code 
+	 * will be written to client only after the {@link Controller} execution 
+	 * flow ends.
+	 * 
+	 * @param code
+	 *            the http code
+	 * 
+	 * @throws IllegalStateException
+	 */
+	protected final void asJSON(int code) {
 		if (!this.isAnswered()) {
-			throw new UnsupportedOperationException("Method not implemented yet. Maybe on future releases");
+			getContext().asJson(code);
 		} else {
 			throw new IllegalStateException("Response already defined");
 		}

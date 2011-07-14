@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import br.octahedron.cotopaxi.view.response.JSONResponse;
 import br.octahedron.cotopaxi.view.response.RedirectResponse;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
 
@@ -102,6 +103,10 @@ final class ControllerContext {
 
 	protected void render(String template, int code) {
 		this.controllerResp = new TemplateResponse(template, code, this.output, this.cookies, this.headers, this.locale);
+	}
+	
+	protected void asJson(int code) {
+		this.controllerResp = new JSONResponse(code, this.output, this.cookies, this.headers, this.locale);
 	}
 
 	public void redirect(String dest) {
