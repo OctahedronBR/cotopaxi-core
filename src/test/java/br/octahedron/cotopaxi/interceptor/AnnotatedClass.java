@@ -14,20 +14,14 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.datastore;
-
-import java.lang.annotation.Annotation;
-
-import br.octahedron.cotopaxi.interceptor.ControllerInterceptor;
+package br.octahedron.cotopaxi.interceptor;
 
 /**
- * @author Vítor Avelino - vitoravelino@octahedron.com.br
- *
+ * @author Danilo Queiroz - DaniloQueiroz@octahedron.com.br
  */
-public abstract class AbstractNamespaceManagerInterceptor extends ControllerInterceptor {
+@TestingTwo
+@TestingOne
+@TestingThree
+public class AnnotatedClass {
 
-	@Override
-	public final Class<? extends Annotation> getInterceptorAnnotation() {
-		return  NamespaceRequired.class;
-	}
 }

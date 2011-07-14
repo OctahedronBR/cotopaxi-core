@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 @Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.METHOD })
+@Target(value = {ElementType.METHOD, ElementType.TYPE})
 public @interface AuthorizationRequired {
 
 	static final String CONTROLLER_NAME = "%%%controller_name%%%";

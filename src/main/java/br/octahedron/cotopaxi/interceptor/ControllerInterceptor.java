@@ -45,6 +45,6 @@ public abstract class ControllerInterceptor extends Controller {
 	/**
 	 * Get all the annotations this intercept is interested.
 	 */
-	public abstract Class<? extends Annotation>[] getInterceptorAnnotations();
+	public abstract Class<? extends Annotation> getInterceptorAnnotation();
 
 }

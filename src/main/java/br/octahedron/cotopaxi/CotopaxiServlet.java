@@ -52,8 +52,8 @@ public class CotopaxiServlet extends HttpServlet {
 	private static final long serialVersionUID = 8958499809792016589L;
 	
 	private static final Log log = new Log(CotopaxiServlet.class); 
-	private Router router = new Router();
 	private InterceptorManager interceptor = new InterceptorManager();
+	private Router router = new Router();
 	private ControllerExecutor executor;
 	private ResponseDispatcher dispatcher;
 	

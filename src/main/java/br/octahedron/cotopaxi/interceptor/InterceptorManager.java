@@ -22,7 +22,7 @@ import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -38,7 +38,7 @@ import br.octahedron.util.ReflectionUtil;
 public class InterceptorManager {
 
 	private static final Log log = new Log(InterceptorManager.class);
-	private Map<Class<? extends Annotation>, ControllerInterceptor> controllerInterceptors = new HashMap<Class<? extends Annotation>, ControllerInterceptor>();
+	private Map<Class<? extends Annotation>, ControllerInterceptor> controllerInterceptors = new LinkedHashMap<Class<? extends Annotation>, ControllerInterceptor>();
 	private Collection<ResponseDispatcherInterceptor> responseInterceptors = new LinkedList<ResponseDispatcherInterceptor>();
 
 	/**
@@ -48,15 +48,18 @@ public class InterceptorManager {
 		Class<?> klass = ReflectionUtil.getClass(interceptorClass);
 		if (ControllerInterceptor.class.isAssignableFrom(klass)) {
 			ControllerInterceptor interceptor = (ControllerInterceptor) getInstance(klass);
-			for (Class<? extends Annotation> ann : interceptor.getInterceptorAnnotations()) {
-				this.controllerInterceptors.put(ann, interceptor);
-			}
+			this.addControllerInterceptor(interceptor);
 		} else if (ResponseDispatcherInterceptor.class.isAssignableFrom(klass)) {
 			ResponseDispatcherInterceptor interceptor = (ResponseDispatcherInterceptor) getInstance(klass);
 			this.responseInterceptors.add(interceptor);
 		} else {
 			log.error("The %s isn't an interceptor class", interceptorClass);
 		}
+	}
+
+	protected void addControllerInterceptor(ControllerInterceptor interceptor) {
+		Class<? extends Annotation> ann = interceptor.getInterceptorAnnotation();
+		this.controllerInterceptors.put(ann, interceptor);
 	}
 
 	/**

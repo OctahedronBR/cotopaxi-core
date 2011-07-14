@@ -46,10 +46,9 @@ public abstract class AbstractAuthenticationInterceptor extends ControllerInterc
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public final Class<? extends Annotation>[] getInterceptorAnnotations() {
-		return (Class<? extends Annotation>[]) new Class<?>[] { AuthenticationRequired.class, AuthorizationRequired.class };
+	public final Class<? extends Annotation> getInterceptorAnnotation() {
+		return AuthenticationRequired.class;
 	}
 
 	/**
