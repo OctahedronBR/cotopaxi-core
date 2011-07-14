@@ -35,29 +35,11 @@ import java.lang.annotation.Target;
 public @interface AuthorizationRequired {
 
 	static final String CONTROLLER_NAME = "%%%controller_name%%%";
-	static final String FORBIDDEN_PAGE = "%%%forbidden_page%%%";
 	
-	/**
-	 * Consequences for non authorized users.  
-	 */
-	public enum NonAuthorizedConsequence {
-		/**
-		 * Indicates that used should be redirected to default not authorized page
-		 */
-		REDIRECT,
-		/** 
-		 * Indicates that should add a flag to out put indicating that user hasn't the right authorizations.
-		 */
-		SET_RESTRICTED;
-	}
-
-
 	/**
 	 * The action name to be used to authorize. If not defined, it will use the controller name.
 	 */
 	String actionName() default CONTROLLER_NAME;
 	
-	String redirect() default FORBIDDEN_PAGE;
-	
-	NonAuthorizedConsequence consequence() default NonAuthorizedConsequence.REDIRECT;
+	boolean showForbiddenPage() default true;
 }

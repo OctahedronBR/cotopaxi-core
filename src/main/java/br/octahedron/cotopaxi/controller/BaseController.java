@@ -29,7 +29,19 @@ import javax.servlet.http.HttpSession;
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
+/**
+ * @author Name - email@octahedron.com.br
+ *
+ */
+/**
+ * @author Name - email@octahedron.com.br
+ * 
+ */
 public abstract class BaseController {
+
+	private static final String USERNAME_KEY = "{CURRENT_USER_NAME}";
+	private static final String USER_AUTHORIZED = "{IS_CURRENT_USER_AUTHORIZED}";
+
 	/**
 	 * Gets the {@link HttpServletRequest}
 	 */
@@ -64,23 +76,23 @@ public abstract class BaseController {
 	protected final String serverName() {
 		return this.request().getServerName();
 	}
-	
+
 	/**
-	 * Gets the lower sub-domain name. 
+	 * Gets the lower sub-domain name.
 	 * 
-	 * E.g.: for server name 'tech.octahedron.com.br' it returns 'tech' 
+	 * E.g.: for server name 'tech.octahedron.com.br' it returns 'tech'
 	 */
 	protected final String subDomain() {
 		return this.request().getServerName().split("\\.")[0];
 	}
-	
+
 	/**
 	 * Gets the controller name
 	 */
 	protected final String controllerName() {
 		return getContext().getControllerName();
 	}
-	
+
 	/**
 	 * Gets the requested relative URL
 	 * 
@@ -91,7 +103,7 @@ public abstract class BaseController {
 	protected final String fullRequestedUrl() {
 		return this.request().getRequestURL().toString();
 	}
-	
+
 	/**
 	 * Gets the requested relative URL
 	 * 
@@ -115,13 +127,13 @@ public abstract class BaseController {
 	 *            The parameter's name
 	 * @return The parameter's value if exists, or <code>null</code> if there's no input parameter
 	 *         with the given name.
-	 *         
+	 * 
 	 * @see Controller#in(String, boolean)
 	 */
 	protected final String in(String name) {
 		return this.in(name, true);
 	}
-	
+
 	/**
 	 * Get an input parameter with the given key.
 	 * 
@@ -130,7 +142,9 @@ public abstract class BaseController {
 	 * 
 	 * @param name
 	 *            The parameter's name
-	 * @param shouldTrim <code>true</code> if should remove leading and trailing white spaces, <code>false</code> to return the raw String
+	 * @param shouldTrim
+	 *            <code>true</code> if should remove leading and trailing white spaces,
+	 *            <code>false</code> to return the raw String
 	 * @return The parameter's value if exists, or <code>null</code> if there's no input parameter
 	 *         with the given name.
 	 */
@@ -140,7 +154,7 @@ public abstract class BaseController {
 		if (result == null || result.equals("")) {
 			result = (String) request.getAttribute(name);
 		}
-		return (result != null && shouldTrim) ? result.trim(): result;
+		return (result != null && shouldTrim) ? result.trim() : result;
 	}
 
 	/**
@@ -202,7 +216,14 @@ public abstract class BaseController {
 	 *            the object
 	 */
 	protected final void session(String key, Object value) {
-		this.request().getSession(true).setAttribute(key, value);
+		if (value != null) {
+			this.request().getSession(true).setAttribute(key, value);
+		} else {
+			HttpSession session = this.request().getSession(false);
+			if (session != null) {
+				session.removeAttribute(key);
+			}
+		}
 	}
 
 	/**
@@ -239,5 +260,53 @@ public abstract class BaseController {
 	 */
 	protected final void cookie(String name, String value) {
 		this.cookies().put(name, value);
-	}	
+	}
+
+	/**
+	 * Sets the given user name as the current user.
+	 * 
+	 * This method is useful for authentication mechanisms
+	 */
+	protected final void currentUser(String username) {
+		this.session(USERNAME_KEY, username);
+	}
+
+	/**
+	 * Gets the current user for request, if exists.
+	 * 
+	 * This method is useful for authentication mechanisms
+	 * 
+	 * @return the user's name, or <code>null</code> if not set
+	 */
+	protected final String currentUser() {
+		return (String) this.session(USERNAME_KEY);
+	}
+
+	/**
+	 * Mark the request as authorized
+	 * 
+	 * This method is useful for authorization mechanisms
+	 */
+	protected final void authorized() {
+		this.request().setAttribute(USER_AUTHORIZED, "true");
+	}
+
+	/**
+	 * Verify if this request was marked as authorized
+	 * 
+	 * This method is useful for authentication mechanisms
+	 * 
+	 * @return <code>true</code> if the request was marked as authorized, <code>false</code>
+	 *         otherwise.
+	 */
+	protected final boolean isAuthorized() {
+		return Boolean.parseBoolean((String) this.request().getAttribute(USER_AUTHORIZED));
+	}
+
+	/**
+	 * Checks if the request was already answered
+	 */
+	protected final boolean isAnswered() {
+		return getContext().isAnswered();
+	}
 }

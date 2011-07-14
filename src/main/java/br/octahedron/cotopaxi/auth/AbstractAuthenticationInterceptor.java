@@ -30,8 +30,6 @@ import br.octahedron.cotopaxi.interceptor.ControllerInterceptor;
  */
 public abstract class AbstractAuthenticationInterceptor extends ControllerInterceptor {
 
-	public static final String CURRENT_USER_EMAIL = "%%%current_user_email%%%";
-
 	@Override
 	public final void execute(Annotation ann) {
 		AuthenticationLevel level = AuthenticationLevel.AUTHENTICATE_AND_VALID;
@@ -52,41 +50,12 @@ public abstract class AbstractAuthenticationInterceptor extends ControllerInterc
 	}
 
 	/**
-	 * @param username
-	 *            Adds the user as logged at current session
-	 */
-	protected void setUserLogged(String username) {
-		session(CURRENT_USER_EMAIL, username);
-	}
-
-	/**
-	 * Check if the user is logged at current session. Should use the setUserLogger to set the user
-	 * as logged in current session.
-	 * 
-	 * @param username The user's name
-	 * @return <code>true</code> if the user is logged in current session, <code>false</code> otherwise
-	 */
-	protected boolean isUserLogged() {
-		return session(CURRENT_USER_EMAIL) != null;
-	}
-	
-	/**
-	 * Gets the current logged user's name. It should be used with the setUserLogged(String) method.
-	 * 
-	 * @param username The user's name
-	 * @return <code>true</code> if the user is logged in current session, <code>false</code> otherwise
-	 */
-	protected String currentLoggedUser() {
-		return (String) session(CURRENT_USER_EMAIL);
-	}
-
-	/**
 	 * This method should check if the current user requesting to access a data is authenticate.
 	 * 
 	 * You should handle all authentication check operation, and redirect the user, if necessary
 	 * (e.g.: if user not logged). For this you can use the method <code>redirect</code>.
 	 * 
-	 * If the user is authenticate, nothing should be done.
+	 * If the user is authenticate, you should call the method <code>currentUser(String username)</code>
 	 */
 	protected abstract void checkUserAuthentication();
 

@@ -38,14 +38,7 @@ import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public abstract class Controller extends BaseController{
-	
-	/**
-	 * Checks if the request was already answered
-	 */
-	protected final boolean isAnswered() {
-		return getContext().isAnswered();
-	}
+public abstract class Controller extends BaseController {
 
 	/**
 	 * Renders {@link Controller#out(String, Object)} objects with SUCCESS (200) code
@@ -73,12 +66,12 @@ public abstract class Controller extends BaseController{
 	protected final void error(String template) {
 		this.render(template, 500);
 	}
-	
+
 	/**
 	 * Render the default SERVER ERROR (500) page
 	 */
 	protected final void error() {
-		this.render(getProperty(ERROR_TEMPLATE),500);
+		this.render(getProperty(ERROR_TEMPLATE), 500);
 	}
 
 	/**
@@ -89,12 +82,12 @@ public abstract class Controller extends BaseController{
 	protected final void notFound(String template) {
 		this.render(template, 404);
 	}
-	
+
 	/**
 	 * Render the default NOT FOUND (404) page
 	 */
 	protected final void notFound() {
-		this.render(getProperty(NOT_FOUND_TEMPLATE),404);
+		this.render(getProperty(NOT_FOUND_TEMPLATE), 404);
 	}
 
 	/**
@@ -105,12 +98,12 @@ public abstract class Controller extends BaseController{
 	protected final void forbidden(String template) {
 		this.render(template, 403);
 	}
-	
+
 	/**
 	 * Render the default FORBIDDEN (403) page
 	 */
 	protected final void forbidden() {
-		this.render(getProperty(FORBIDDEN_TEMPLATE),403);
+		this.render(getProperty(FORBIDDEN_TEMPLATE), 403);
 	}
 
 	/**
@@ -121,12 +114,12 @@ public abstract class Controller extends BaseController{
 	protected final void invalid(String template) {
 		this.render(template, 400);
 	}
-	
+
 	/**
 	 * Render the default BAD REQUEST (400) page
 	 */
 	protected final void invalid() {
-		this.render(getProperty(INVALID_TEMPLATE),400);
+		this.render(getProperty(INVALID_TEMPLATE), 400);
 	}
 
 	/**

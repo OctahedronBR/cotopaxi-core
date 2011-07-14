@@ -16,11 +16,10 @@
  */
 package br.octahedron.cotopaxi.auth;
 
-import static br.octahedron.cotopaxi.CotopaxiProperty.*;
-import static br.octahedron.cotopaxi.auth.AuthorizationRequired.*;
+import static br.octahedron.cotopaxi.auth.AuthorizationRequired.CONTROLLER_NAME;
+
 import java.lang.annotation.Annotation;
 
-import br.octahedron.cotopaxi.auth.AuthorizationRequired.NonAuthorizedConsequence;
 import br.octahedron.cotopaxi.interceptor.ControllerInterceptor;
 
 /**
@@ -32,22 +31,15 @@ import br.octahedron.cotopaxi.interceptor.ControllerInterceptor;
  */
 public abstract class AbstractAuthorizationInterceptor extends ControllerInterceptor {
 
-	private static final String RESTRICTED_USER = "restricted_user";
-
 	@Override
 	public final void execute(Annotation ann) {
 		AuthorizationRequired auth = (AuthorizationRequired) ann;
-		if ( !this.isAnswered() ) {
+		if (!this.isAnswered()) {
 			String action = auth.actionName();
 			if (CONTROLLER_NAME.equals(action)) {
 				action = this.controllerName();
 			}
-			String redirect = auth.redirect();
-			if ( FORBIDDEN_PAGE.equals( redirect)) {
-				redirect = getProperty(FORBIDDEN_TEMPLATE);
-			}
-			
-			this.authorizeUser(action, auth.consequence(), redirect);
+			this.authorizeUser(action, this.currentUser(), auth.showForbiddenPage());
 		}
 	}
 
@@ -57,24 +49,20 @@ public abstract class AbstractAuthorizationInterceptor extends ControllerInterce
 	}
 
 	/**
-	 * Adds the RESTRICTED_USER property to out as <code>true</code>
-	 */
-	protected void setRestricted() {
-		out(RESTRICTED_USER, Boolean.TRUE);
-	}
-
-	/**
 	 * This method should check if the current logged user, is a authorized to perform the given
 	 * action.
 	 * 
 	 * The action is the {@link AuthorizationRequired#actionName()}, if defined, or the controller
 	 * name.
 	 * 
+	 * If the user is authorized, you should mark the request as authorized using the method
+	 * <code>authorized()</code>
+	 * 
 	 * @param actionName
 	 *            the action being executed
-	 * @param consequence
-	 *            the consequence for non authorized users
-	 * @param redirect 
+	 * @param currentUser
+	 *            The current user's name, or <code>null</code> if no current user set.
+	 * @param showForbiddenPage If should show the forbidden page, or continue the processing as not authorized request
 	 */
-	protected abstract void authorizeUser(String actionName, NonAuthorizedConsequence consequence, String redirect);
+	protected abstract void authorizeUser(String actionName, String currentUser, boolean showForbiddenPage);
 }
