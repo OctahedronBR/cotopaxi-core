@@ -17,12 +17,8 @@
 package br.octahedron.cotopaxi.inject;
 
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 
 import org.junit.Test;
-
-import br.octahedron.cotopaxi.datastore.DatastoreFacade;
-import br.octahedron.cotopaxi.inject.Injector;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
@@ -38,7 +34,5 @@ public class InjectorTest {
 		assertNotNull(service);
 		UserDAO userDAO = service.getUserDAO();
 		assertNotNull(userDAO);
-		DatastoreFacade ds = userDAO.getDatastoreFacade();
-		assertTrue(ds instanceof DatastoreFacade);
 	}
 }

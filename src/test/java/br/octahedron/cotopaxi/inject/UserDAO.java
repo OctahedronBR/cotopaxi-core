@@ -17,23 +17,11 @@
 
 package br.octahedron.cotopaxi.inject;
 
-import br.octahedron.cotopaxi.datastore.DatastoreFacade;
-import br.octahedron.cotopaxi.inject.Inject;
 
 /**
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class UserDAO {
 
-	@Inject
-	private DatastoreFacade datastoreFacade;
 
-
-	public DatastoreFacade getDatastoreFacade() {
-		return this.datastoreFacade;
-	}
-
-	public void setDatastoreFacade(DatastoreFacade datastoreFacade) {
-		this.datastoreFacade = datastoreFacade;
-	}
 }
