@@ -50,6 +50,15 @@ public abstract class Controller extends BaseController {
 	}
 	
 	/**
+	 * Renders {@link Controller#out(String, Object)} objects with BAD REQUEST (400) code
+	 * 
+	 * The same as call asJSON(400)
+	 */
+	protected final void jsonInvalid() {
+		this.asJSON(400);
+	}
+	
+	/**
 	 * Render the given template with SUCCESS (200) code
 	 * 
 	 * The same as call render(template, 200)
