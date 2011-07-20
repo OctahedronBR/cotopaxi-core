@@ -16,7 +16,10 @@
  */
 package br.octahedron.cotopaxi;
 
-import static br.octahedron.cotopaxi.CotopaxiProperty.*;
+import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_PROPERTY;
+import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_TEMPLATE;
+import static br.octahedron.cotopaxi.CotopaxiProperty.NOT_FOUND_TEMPLATE;
+import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,7 +41,7 @@ import br.octahedron.cotopaxi.controller.ControllerResponse;
 import br.octahedron.cotopaxi.interceptor.InterceptorManager;
 import br.octahedron.cotopaxi.route.NotFoundExeption;
 import br.octahedron.cotopaxi.route.Router;
-import br.octahedron.cotopaxi.view.ResponseDispatcher;
+import br.octahedron.cotopaxi.view.response.InterceptableResponse;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
 import br.octahedron.util.Log;
 
@@ -55,7 +58,6 @@ public class CotopaxiServlet extends HttpServlet {
 	private InterceptorManager interceptor = new InterceptorManager();
 	private Router router = new Router();
 	private ControllerExecutor executor;
-	private ResponseDispatcher dispatcher;
 	
 	/* (non-Javadoc)
 	 * @see javax.servlet.GenericServlet#init()
@@ -68,7 +70,6 @@ public class CotopaxiServlet extends HttpServlet {
 			ConfigurationLoader loader = new ConfigurationLoader(this.router, this.interceptor, booter);
 			loader.loadConfiguration();
 			this.executor = new ControllerExecutor(this.interceptor);
-			this.dispatcher = new ResponseDispatcher(this.interceptor);
 			log.info("Cotopaxi is ready to serve...");
 			booter.boot();
 		} catch (FileNotFoundException ex) {
@@ -114,7 +115,10 @@ public class CotopaxiServlet extends HttpServlet {
 		}  
 		
 		if (controllerResponse != null) {
-			this.dispatcher.dispatch(controllerResponse, response);
+			if (controllerResponse instanceof InterceptableResponse) {
+				((InterceptableResponse)controllerResponse).setInterceptorManager(this.interceptor);
+			}
+			controllerResponse.dispatch(response);
 	 	} else {
 	 		log.error("Servlet cannot determine neither a controller, nor a error handler, for url %s", request.getRequestURI());
 	 		throw new ServletException("Server cannot determine an response for request.");

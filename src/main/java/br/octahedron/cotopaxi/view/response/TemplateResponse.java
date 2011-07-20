@@ -16,28 +16,32 @@
  */
 package br.octahedron.cotopaxi.view.response;
 
-import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
 
+import br.octahedron.cotopaxi.controller.ControllerContext;
+import br.octahedron.cotopaxi.view.render.TemplateRender;
 import br.octahedron.cotopaxi.view.render.VelocityTemplateRender;
 
 /**
- * A {@link WriteableResponse} that render and write a velocity template.
+ * A {@link InterceptableResponse} that render and write a velocity template.
  *  
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class TemplateResponse extends WriteableResponse {
+public class TemplateResponse extends InterceptableResponse {
 	
-	private static final VelocityTemplateRender templateRender = new VelocityTemplateRender();
-
+	private TemplateRender templateRender = new VelocityTemplateRender();
 	private String template;
 
 	public TemplateResponse(String template, int code, Map<String, Object> output, Map<String, String> cookies, Map<String, String> headers, Locale locale) {
-		super(code, output, cookies, headers, locale);
+		super(TemplateResponse.class, code, output, cookies, headers, locale);
 		this.template = template;
 	}
 
+	public TemplateResponse(String template, int code, ControllerContext context) {
+		this(template, code, context.getOutput(), context.getCookies(), context.getHeaders(), context.getLocale());
+	}
+	
 	/* (non-Javadoc)
 	 * @see br.octahedron.cotopaxi.controller.response.WriteableResponse#getContentType()
 	 */
@@ -46,11 +50,8 @@ public class TemplateResponse extends WriteableResponse {
 		return "text/html";
 	}
 
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.controller.response.WriteableResponse#writeResponse(java.io.Writer, java.util.Map)
-	 */
 	@Override
-	public void writeResponse(Writer writer) {
-		templateRender.render(this.template, this.output, writer);
+	protected void render() {
+		this.templateRender.render(this.template, this.output, this.writer);
 	}
 }

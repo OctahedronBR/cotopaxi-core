@@ -14,27 +14,17 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.controller;
+package br.octahedron.cotopaxi.view.render;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
+import java.io.Writer;
+import java.util.Map;
 
 /**
- * Indicates an {@link Controller}'s response
- * 
- * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
+ * @author Name - email@octahedron.com.br
+ *
  */
-public interface ControllerResponse {
+public interface TemplateRender {
 
-	/**
-	 * Dispatches this {@link ControllerResponse} through a {@link HttpServletResponse}.
-	 * 
-	 * @param servletResponse
-	 *            The {@link HttpServletResponse} to be used to dispatch this response.
-	 * @throws IOException
-	 *             If some error occurs while dispatching
-	 */
-	public abstract void dispatch(HttpServletResponse servletResponse) throws IOException;
+	public abstract void render(String templatePath, Map<String, Object> output, Writer writer);
 
 }

@@ -29,14 +29,6 @@ import javax.servlet.http.HttpSession;
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-/**
- * @author Name - email@octahedron.com.br
- *
- */
-/**
- * @author Name - email@octahedron.com.br
- * 
- */
 public abstract class BaseController {
 
 	private static final String USERNAME_KEY = "{CURRENT_USER_NAME}";
@@ -45,28 +37,28 @@ public abstract class BaseController {
 	/**
 	 * Gets the {@link HttpServletRequest}
 	 */
-	private final HttpServletRequest request() {
+	protected final HttpServletRequest request() {
 		return getContext().getRequest();
 	}
 
 	/**
 	 * Gets the output objects map
 	 */
-	private final Map<String, Object> output() {
+	protected final Map<String, Object> output() {
 		return getContext().getOutput();
 	}
 
 	/**
 	 * Gets the output cookies map
 	 */
-	private final Map<String, String> cookies() {
+	protected final Map<String, String> cookies() {
 		return getContext().getCookies();
 	}
 
 	/**
 	 * Gets the output headers map
 	 */
-	private final Map<String, String> headers() {
+	protected final Map<String, String> headers() {
 		return getContext().getHeaders();
 	}
 

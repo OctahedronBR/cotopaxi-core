@@ -16,30 +16,23 @@
  */
 package br.octahedron.cotopaxi.view.response;
 
-import java.io.Writer;
-import java.util.Locale;
-import java.util.Map;
-
+import br.octahedron.cotopaxi.controller.ControllerContext;
 import br.octahedron.cotopaxi.view.render.JSONRender;
 
 /**
- * A {@link WriteableResponse} that render and write objects in JSON format.
+ * A {@link InterceptableResponse} that render and write objects in JSON format.
  * 
  * @author Vítor Avelino - vitoravelino@octahedron.com.br
  */
-public class JSONResponse extends WriteableResponse {
+public class JSONResponse extends InterceptableResponse {
 
 	private static final JSONRender jsonRender = new JSONRender();
-	
+
 	/**
-	 * @param code
-	 * @param output
-	 * @param cookies
-	 * @param headers
-	 * @param locale
+	 * 
 	 */
-	public JSONResponse(int code, Map<String, Object> output, Map<String, String> cookies, Map<String, String> headers, Locale locale) {
-		super(code, output, cookies, headers, locale);
+	public JSONResponse(int code, ControllerContext context) {
+		super(JSONResponse.class, code, context.getOutput(), context.getCookies(), context.getHeaders(), context.getLocale());
 	}
 
 	/* (non-Javadoc)
@@ -51,11 +44,11 @@ public class JSONResponse extends WriteableResponse {
 	}
 
 	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.view.response.WriteableResponse#writeResponse(java.io.Writer)
+	 * @see br.octahedron.cotopaxi.view.response.InterceptableResponse#render()
 	 */
 	@Override
-	public void writeResponse(Writer writer) {
-		jsonRender.render(this.output, writer);
+	protected void render() {
+		jsonRender.render(this.output, this.writer);
 	}
 
 }

@@ -22,6 +22,9 @@ import static br.octahedron.cotopaxi.CotopaxiProperty.INVALID_TEMPLATE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.NOT_FOUND_TEMPLATE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
 import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
+import br.octahedron.cotopaxi.view.response.JSONResponse;
+import br.octahedron.cotopaxi.view.response.RedirectResponse;
+import br.octahedron.cotopaxi.view.response.TemplateResponse;
 
 /**
  * The base class for Controllers and Middleware controller.
@@ -41,23 +44,14 @@ import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
 public abstract class Controller extends BaseController {
 
 	/**
-	 * Renders {@link Controller#out(String, Object)} objects with SUCCESS (200) code
-	 * 
-	 * The same as call asJSON(200)
+	 * Sets the {@link ControllerResponse} for the current request. This method should be used only
+	 * by {@link Controller} extensions, avoid use this method directly when implementing a
+	 * controller. 
 	 */
-	protected final void jsonSuccess() {
-		this.asJSON(200);
+	protected final void setControllerResponse(ControllerResponse response) {
+		getContext().setControllerResponse(response);
 	}
-	
-	/**
-	 * Renders {@link Controller#out(String, Object)} objects with BAD REQUEST (400) code
-	 * 
-	 * The same as call asJSON(400)
-	 */
-	protected final void jsonInvalid() {
-		this.asJSON(400);
-	}
-	
+
 	/**
 	 * Render the given template with SUCCESS (200) code
 	 * 
@@ -146,7 +140,43 @@ public abstract class Controller extends BaseController {
 	 */
 	protected final void render(String template, int code) {
 		if (!this.isAnswered()) {
-			getContext().render(template, code);
+			this.setControllerResponse(new TemplateResponse(template, code, getContext()));
+		} else {
+			throw new IllegalStateException("Response already defined");
+		}
+	}
+
+	/**
+	 * Renders {@link Controller#out(String, Object)} objects with SUCCESS (200) code
+	 * 
+	 * The same as call asJSON(200)
+	 */
+	protected final void jsonSuccess() {
+		this.asJSON(200);
+	}
+
+	/**
+	 * Renders {@link Controller#out(String, Object)} objects with BAD REQUEST (400) code
+	 * 
+	 * The same as call asJSON(400)
+	 */
+	protected final void jsonInvalid() {
+		this.asJSON(400);
+	}
+
+	/**
+	 * Renders the objects set using the {@link Controller#out(String, Object)} as JSON format.
+	 * After render, the code continues to execute, and the code will be written to client only
+	 * after the {@link Controller} execution flow ends.
+	 * 
+	 * @param code
+	 *            the http code
+	 * 
+	 * @throws IllegalStateException
+	 */
+	protected final void asJSON(int code) {
+		if (!this.isAnswered()) {
+			this.setControllerResponse(new JSONResponse(code, getContext()));
 		} else {
 			throw new IllegalStateException("Response already defined");
 		}
@@ -160,26 +190,7 @@ public abstract class Controller extends BaseController {
 	 */
 	protected final void redirect(String dest) {
 		if (!this.isAnswered()) {
-			getContext().redirect(dest);
-		} else {
-			throw new IllegalStateException("Response already defined");
-		}
-	}
-
-	/**
-	 * Renders the objects set using the {@link Controller#out(String, Object)} 
-	 * as JSON format. After render, the code continues to execute, and the code 
-	 * will be written to client only after the {@link Controller} execution 
-	 * flow ends.
-	 * 
-	 * @param code
-	 *            the http code
-	 * 
-	 * @throws IllegalStateException
-	 */
-	protected final void asJSON(int code) {
-		if (!this.isAnswered()) {
-			getContext().asJson(code);
+			getContext().setControllerResponse(new RedirectResponse(dest));
 		} else {
 			throw new IllegalStateException("Response already defined");
 		}

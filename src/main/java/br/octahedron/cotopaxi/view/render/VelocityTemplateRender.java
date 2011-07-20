@@ -35,7 +35,7 @@ import br.octahedron.util.Log;
  * @author Vítor Avelino - vitoravelino@octahedron.com.br
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class VelocityTemplateRender {
+public class VelocityTemplateRender implements TemplateRender {
 
 	private static final Log log = new Log(VelocityTemplateRender.class);
 
@@ -50,6 +50,9 @@ public class VelocityTemplateRender {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.view.render.TemplateRender#render(java.lang.String, java.util.Map, java.io.Writer)
+	 */
 	public void render(String templatePath, Map<String,Object> output, Writer writer) {
 		log.info("Rendering template %s", templatePath);
 		VelocityContext context = new VelocityContext(output);

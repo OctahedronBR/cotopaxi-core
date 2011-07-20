@@ -16,22 +16,31 @@
  */
 package br.octahedron.cotopaxi.view.response;
 
-import br.octahedron.cotopaxi.controller.ControllerResponse;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
+import br.octahedron.util.Log;
+
 
 /**
  * A redirect Response
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class RedirectResponse implements ControllerResponse {
+public class RedirectResponse extends ServletGenericResponse {
 	
+	private static final Log log = new Log(RedirectResponse.class);
 	private String url;
 
 	public RedirectResponse(String url) {
 		this.url = url;
 	}
 	
-	public String getUrl() {
-		return this.url;
+
+	@Override
+	public void dispatch(HttpServletResponse servletResponse) throws IOException {
+		log.debug("Sending redirect to %s", this.url);
+		servletResponse.sendRedirect(this.url);
 	}
 }

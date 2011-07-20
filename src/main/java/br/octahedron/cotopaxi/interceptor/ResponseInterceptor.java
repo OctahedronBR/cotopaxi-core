@@ -16,38 +16,29 @@
  */
 package br.octahedron.cotopaxi.interceptor;
 
-import java.io.Writer;
-
-import javax.servlet.http.HttpServletResponse;
-
-import br.octahedron.cotopaxi.view.ResponseDispatcher;
-import br.octahedron.cotopaxi.view.response.WriteableResponse;
+import br.octahedron.cotopaxi.controller.ControllerResponse;
+import br.octahedron.cotopaxi.view.response.InterceptableResponse;
 
 /**
- * An interceptor that intercepts the {@link ResponseDispatcher} processing. It intercepts the
+ * An interceptor that intercepts the {@link InterceptableResponse} processing. It intercepts the
  * processing in two different moments: just before the render, making possible decorate the writer
  * to be used to render the response; and after render the response, making possible keep control of
  * any needed resource, such as database connections, and others.
  * 
- * This interceptors are globally and are executed for every {@link WriteableResponse}. 
+ * This interceptors are globally and are executed for every {@link InterceptableResponse}.
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public abstract class ResponseDispatcherInterceptor {
+public abstract class ResponseInterceptor {
 
 	/**
-	 * Gets an {@link Writer} to be used by the {@link ResponseDispatcher} to write response to
-	 * user.
+	 * Executes this interceptor, for the given {@link InterceptableResponse}, before the response
+	 * be render. It permits this interceptor to add attributes to {@link ControllerResponse} output
+	 * and/or decorates the writer to be used to render response.
 	 * 
-	 * It makes possible to decorate the given {@link Writer}.
-	 * 
-	 * @param writer
-	 *            The {@link HttpServletResponse} writer.
-	 * @return the new writer to be used to write the response (a decorator) or the given writer
-	 *         itself.
 	 */
-	public Writer getWriter(Writer writer) {
-		return writer;
+	
+	public void preRender(InterceptableResponse response) {
 	}
 
 	/**

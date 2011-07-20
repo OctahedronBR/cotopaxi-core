@@ -22,10 +22,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import br.octahedron.cotopaxi.view.response.JSONResponse;
-import br.octahedron.cotopaxi.view.response.RedirectResponse;
-import br.octahedron.cotopaxi.view.response.TemplateResponse;
-
 /**
  * Holds the current context for a {@link Controller}. It means that this class holds all necessary
  * information for a {@link Controller} flow, including the current request and response, the output
@@ -33,7 +29,7 @@ import br.octahedron.cotopaxi.view.response.TemplateResponse;
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-final class ControllerContext {
+public final class ControllerContext {
 
 	// static stuff
 
@@ -66,54 +62,52 @@ final class ControllerContext {
 		this.controllerName = controllerName;
 	}
 
-	// internal private methods
+	// internal methods
 
 	protected HttpServletRequest getRequest() {
 		return this.request;
 	}
 	
+	protected void setControllerResponse(ControllerResponse response) {
+		this.controllerResp = response;
+	}
+
 	public String getControllerName() {
 		return controllerName;
 	}
 
-	protected Map<String, String> getHeaders() {
+	public Map<String, String> getHeaders() {
 		if (this.headers == null) {
 			this.headers = new HashMap<String, String>();
 		}
 		return this.headers;
 	}
 
-	protected Map<String, String> getCookies() {
+	public Map<String, String> getCookies() {
 		if (this.cookies == null) {
 			this.cookies = new HashMap<String, String>();
 		}
 		return this.cookies;
 	}
 
-	protected Map<String, Object> getOutput() {
+	public Map<String, Object> getOutput() {
 		if (this.output == null) {
 			this.output = new HashMap<String, Object>();
 		}
 		return this.output;
 	}
 
-	protected boolean isAnswered() {
+	public boolean isAnswered() {
 		return this.controllerResp != null;
-	}
-
-	protected void render(String template, int code) {
-		this.controllerResp = new TemplateResponse(template, code, this.output, this.cookies, this.headers, this.locale);
-	}
-	
-	protected void asJson(int code) {
-		this.controllerResp = new JSONResponse(code, this.output, this.cookies, this.headers, this.locale);
-	}
-
-	public void redirect(String dest) {
-		this.controllerResp = new RedirectResponse(dest);
 	}
 	
 	public ControllerResponse getControllerResponse() {
 		return this.controllerResp;
 	}
+	
+	public Locale getLocale() {
+		return locale;
+	}
+	
+	
 }

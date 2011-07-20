@@ -14,27 +14,29 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.controller;
+package br.octahedron.cotopaxi.view.response;
 
 import java.io.IOException;
 
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import br.octahedron.cotopaxi.controller.ControllerResponse;
+
 /**
- * Indicates an {@link Controller}'s response
+ * A very Generic Response type, that receives a context and a {@link ServletResponse} to render
+ * response;
  * 
- * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public interface ControllerResponse {
+public abstract class ServletGenericResponse implements ControllerResponse {
 
-	/**
-	 * Dispatches this {@link ControllerResponse} through a {@link HttpServletResponse}.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param servletResponse
-	 *            The {@link HttpServletResponse} to be used to dispatch this response.
-	 * @throws IOException
-	 *             If some error occurs while dispatching
+	 * @seebr.octahedron.cotopaxi.controller.ControllerResponse#dispatch(javax.servlet.http.
+	 * HttpServletResponse)
 	 */
+	@Override
 	public abstract void dispatch(HttpServletResponse servletResponse) throws IOException;
-
 }

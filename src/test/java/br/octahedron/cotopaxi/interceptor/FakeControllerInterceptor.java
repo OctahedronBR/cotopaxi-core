@@ -14,27 +14,30 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.controller;
+package br.octahedron.cotopaxi.interceptor;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
+import java.lang.annotation.Annotation;
 
 /**
- * Indicates an {@link Controller}'s response
- * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public interface ControllerResponse {
+public class FakeControllerInterceptor extends ControllerInterceptor {
 
-	/**
-	 * Dispatches this {@link ControllerResponse} through a {@link HttpServletResponse}.
-	 * 
-	 * @param servletResponse
-	 *            The {@link HttpServletResponse} to be used to dispatch this response.
-	 * @throws IOException
-	 *             If some error occurs while dispatching
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.interceptor.ControllerInterceptor#execute(java.lang.annotation.Annotation)
 	 */
-	public abstract void dispatch(HttpServletResponse servletResponse) throws IOException;
+	@Override
+	public void execute(Annotation ann) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.interceptor.ControllerInterceptor#getInterceptorAnnotation()
+	 */
+	@Override
+	public Class<? extends Annotation> getInterceptorAnnotation() {
+		return TestingOne.class;
+	}
 
 }

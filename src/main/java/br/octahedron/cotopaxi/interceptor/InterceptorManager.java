@@ -18,7 +18,6 @@ package br.octahedron.cotopaxi.interceptor;
 
 import static br.octahedron.cotopaxi.inject.Injector.getInstance;
 
-import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
@@ -27,6 +26,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import br.octahedron.cotopaxi.controller.Controller;
+import br.octahedron.cotopaxi.view.response.InterceptableResponse;
 import br.octahedron.util.Log;
 import br.octahedron.util.ReflectionUtil;
 
@@ -39,7 +39,7 @@ public class InterceptorManager {
 
 	private static final Log log = new Log(InterceptorManager.class);
 	private Map<Class<? extends Annotation>, ControllerInterceptor> controllerInterceptors = new LinkedHashMap<Class<? extends Annotation>, ControllerInterceptor>();
-	private Collection<ResponseDispatcherInterceptor> responseInterceptors = new LinkedList<ResponseDispatcherInterceptor>();
+	private Collection<ResponseInterceptor> responseInterceptors = new LinkedList<ResponseInterceptor>();
 
 	/**
 	 * Adds a new interceptor to the application
@@ -49,8 +49,8 @@ public class InterceptorManager {
 		if (ControllerInterceptor.class.isAssignableFrom(klass)) {
 			ControllerInterceptor interceptor = (ControllerInterceptor) getInstance(klass);
 			this.addControllerInterceptor(interceptor);
-		} else if (ResponseDispatcherInterceptor.class.isAssignableFrom(klass)) {
-			ResponseDispatcherInterceptor interceptor = (ResponseDispatcherInterceptor) getInstance(klass);
+		} else if (ResponseInterceptor.class.isAssignableFrom(klass)) {
+			ResponseInterceptor interceptor = (ResponseInterceptor) getInstance(klass);
 			this.responseInterceptors.add(interceptor);
 		} else {
 			log.error("The %s isn't an interceptor class", interceptorClass);
@@ -78,25 +78,25 @@ public class InterceptorManager {
 			}
 		}
 	}
-
+	
 	/**
-	 * Executes the {@link ResponseDispatcherInterceptor} get writer.
+	 * Executes the {@link ResponseInterceptor} get writer.
 	 */
-	public Writer getWriter(Writer writer) {
-		for (ResponseDispatcherInterceptor interceptor : this.responseInterceptors) {
-			log.debug("Executing ResponseDispatcherInterceptor get writer %s", interceptor.getClass());
-			writer = interceptor.getWriter(writer);
+	public void preRender(InterceptableResponse interceptableResponse) {
+		for (ResponseInterceptor interceptor : this.responseInterceptors) {
+			log.debug("Executing ResponseDispatcherInterceptor preRender(%s): %s", interceptableResponse.getClass(), interceptor.getClass());
+			interceptor.preRender(interceptableResponse);
 		}
-		return writer;
 	}
-
 	/**
-	 * Executes the {@link ResponseDispatcherInterceptor} finish.
+	 * Executes the {@link ResponseInterceptor} finish.
 	 */
 	public void finish() {
-		for (ResponseDispatcherInterceptor interceptor : this.responseInterceptors) {
+		for (ResponseInterceptor interceptor : this.responseInterceptors) {
 			log.debug("Executing ResponseDispatcherInterceptor finish %s", interceptor.getClass());
 			interceptor.finish();
 		}
 	}
+
+
 }
