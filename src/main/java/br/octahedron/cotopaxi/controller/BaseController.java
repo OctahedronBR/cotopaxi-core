@@ -20,6 +20,7 @@ import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -27,7 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * A base class that provides access to input and output attributes for a controller, but can't render/redirect a response
+ * A base class that provides access to input and output attributes for a controller, but can't
+ * render/redirect a response
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
@@ -127,7 +129,7 @@ public abstract class BaseController {
 	protected final String in(String name) {
 		return this.in(name, true);
 	}
-	
+
 	/**
 	 * Get an input parameter with the given key.
 	 * 
@@ -151,8 +153,19 @@ public abstract class BaseController {
 		return (result != null && shouldTrim) ? result.trim() : result;
 	}
 
+	/**
+	 * Get all the values for a input parameter with the given key. It's useful for checkbox input,
+	 * for example.
+	 * 
+	 * If there's no value for the given input parameter, returns an empty collection.
+	 * 
+	 * @param name The parameter's name
+	 * @return A {@link Collection} with all values for the given parameter.
+	 */
+	@SuppressWarnings("unchecked")
 	protected final Collection<String> values(String name) {
-		return Arrays.asList(this.request().getParameterValues(name));
+		String[] values = this.request().getParameterValues(name);
+		return (Collection<String>) ((values != null) ? Arrays.asList(values) : Collections.emptyList());
 	}
 
 	/**
