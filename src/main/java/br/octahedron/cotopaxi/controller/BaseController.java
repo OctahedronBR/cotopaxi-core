@@ -18,6 +18,8 @@ package br.octahedron.cotopaxi.controller;
 
 import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -125,7 +127,7 @@ public abstract class BaseController {
 	protected final String in(String name) {
 		return this.in(name, true);
 	}
-
+	
 	/**
 	 * Get an input parameter with the given key.
 	 * 
@@ -147,6 +149,10 @@ public abstract class BaseController {
 			result = (String) request.getAttribute(name);
 		}
 		return (result != null && shouldTrim) ? result.trim() : result;
+	}
+
+	protected final Collection<String> values(String name) {
+		return Arrays.asList(this.request().getParameterValues(name));
 	}
 
 	/**
