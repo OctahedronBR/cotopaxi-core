@@ -21,6 +21,7 @@ import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -272,6 +273,29 @@ public abstract class BaseController {
 	 */
 	protected final void cookie(String name, String value) {
 		this.cookies().put(name, value);
+	}
+
+	/**
+	 * It echos the input parameters to output, using the same names and values.
+	 * 
+	 * If the parameter has multiple values it echos the values as a String Array. If the parameter
+	 * has no value, it echos a blank ("") String.
+	 */
+	@SuppressWarnings("unchecked")
+	protected final void echo() {
+		Map parameters = this.request().getParameterMap();
+		Iterator keys = parameters.keySet().iterator();
+		while (keys.hasNext()) {
+			String key = (String) keys.next();
+			String[] values = (String[]) parameters.get(key);
+			if (values.length == 1) {
+				this.out(key, values[0]);
+			} else if (values.length > 1) {
+				this.out(key, values);
+			} else {
+				this.out(key, "");
+			}
+		}
 	}
 
 	/**
