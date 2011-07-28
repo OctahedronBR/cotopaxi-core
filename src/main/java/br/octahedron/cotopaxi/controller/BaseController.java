@@ -159,7 +159,8 @@ public abstract class BaseController {
 	 * 
 	 * If there's no value for the given input parameter, returns an empty collection.
 	 * 
-	 * @param name The parameter's name
+	 * @param name
+	 *            The parameter's name
 	 * @return A {@link Collection} with all values for the given parameter.
 	 */
 	@SuppressWarnings("unchecked")
