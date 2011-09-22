@@ -16,13 +16,19 @@
  */
 package br.octahedron.cotopaxi.validation.rule;
 
+import br.octahedron.cotopaxi.validation.Rule;
+
 
 /**
  * A validation rule that check if a field has a value.
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class RequiredRule implements ValidationRule {
+public class RequiredRule extends Rule {
+	
+	public RequiredRule(String message) {
+		super(message);
+	}
 
 	@Override
 	public boolean isValid(String input) {

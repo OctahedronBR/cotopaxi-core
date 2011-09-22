@@ -25,7 +25,6 @@ import java.util.Map;
 
 import br.octahedron.cotopaxi.CotopaxiProperty;
 import br.octahedron.cotopaxi.controller.BaseController;
-import br.octahedron.cotopaxi.validation.rule.ValidationRule;
 import br.octahedron.util.Log;
 
 /**
@@ -33,42 +32,61 @@ import br.octahedron.util.Log;
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public final class Validator extends BaseController {
+public final class Validator {
 
 	private static final Log log = new Log(Validator.class);
-	private List<RuleEntry> rules = new LinkedList<RuleEntry>();
+	private List<RuleEntry> entries = new LinkedList<RuleEntry>();
+	private Output out = new Output();
 
 	/**
-	 * Adds an validation rule to given attribute
+	 * Adds a new attribute to be validated using the given rule.
 	 * 
-	 * @param rule
-	 *            The rule to be added
-	 * @param message
-	 *            The message to be shown if attribute invalid
 	 * @param attribute
-	 *            The attribute to be validated using the given rule
+	 *            The attribute to be validated
+	 * @param rule
+	 *            The {@link Rule} to be used to validate the attribute
 	 */
-	public void add(ValidationRule rule, String message, String attribute) {
-		RuleEntry entry = new RuleEntry(rule, message, attribute);
-		this.rules.add(entry);
+	public void add(String attribute, Rule rule) {
+		this.entries.add(new RuleEntry(rule, new Input.AttributeInput(attribute)));
 	}
 
 	/**
-	 * Adds an validation rule to given attributes.
+	 * Adds a new attribute to be validated using the given rule.
 	 * 
-	 * It's the same as call {@link Validator#add(ValidationRule, String, String)} multiples times.
-	 * 
-	 * 
+	 * @param input
+	 *            The input to be validated
 	 * @param rule
-	 *            The rule to be added
-	 * @param message
-	 *            The message to be shown if attribute invalid
-	 * @param attribute
-	 *            The attributes to be validated using the given rule
+	 *            The {@link Rule} to be used to validate the attribute
 	 */
-	public void add(ValidationRule rule, String message, String... attributes) {
-		for (String attribute : attributes) {
-			this.add(rule, message, attribute);
+	public void add(Input input, Rule rule) {
+		this.entries.add(new RuleEntry(rule, input));
+	}
+
+	/**
+	 * Adds a new attribute to be validated using the given rules.
+	 * 
+	 * @param attribute
+	 *            The attribute to be validated
+	 * @param rules
+	 *            The {@link Rule} to be used to validate the attribute
+	 */
+	public void add(String attribute, Rule... rules) {
+		for (Rule rule : rules) {
+			this.add(attribute, rule);
+		}
+	}
+
+	/**
+	 * Adds a new attribute to be validated using the given rules.
+	 * 
+	 * @param input
+	 *            The input to be validated
+	 * @param rules
+	 *            The {@link Rule} to be used to validate the attribute
+	 */
+	public void add(Input input, Rule... rules) {
+		for (Rule rule : rules) {
+			this.add(input, rule);
 		}
 	}
 
@@ -81,56 +99,62 @@ public final class Validator extends BaseController {
 	public boolean isValid() {
 		Map<String, String> invalidMessages = new HashMap<String, String>();
 		boolean valid = true;
-		for (RuleEntry entry : this.rules) {
-			String att = entry.getAttribute();
-			boolean validRule = entry.getRule().isValid(this.in(att));
+		for (RuleEntry entry : this.entries) {
+			Rule rule = entry.getRule();
+			Input input = entry.getIput();
+
+			boolean validRule = rule.isValid(input.getValue());
+
 			if (!validRule) {
 				valid = false;
-				if (!invalidMessages.containsKey(att)) {
-					invalidMessages.put(att, entry.getMessage());
+				String key = input.toString();
+				if (!invalidMessages.containsKey(key)) {
+					invalidMessages.put(key, rule.getMessage());
 				}
 			}
 		}
 		log.debug("Validation result: %b. Invalid attributes: count %d; list %s", valid, invalidMessages.size(), invalidMessages.keySet().toString());
-		this.out(getProperty(CotopaxiProperty.INVALID_PROPERTY), invalidMessages);
+		this.out.add(getProperty(CotopaxiProperty.INVALID_PROPERTY), invalidMessages);
 		return valid;
 	}
 
-	
-	
+	// Useful internal classes
+
 	/**
-	 * Stores all data related to a rule validation registry
+	 * Encapsulate all rule data
 	 */
 	private class RuleEntry {
-		private String attribute;
-		private String message;
-		private ValidationRule rule;
+		private Input attribute;
+		private Rule rule;
 
-		public RuleEntry(ValidationRule rule, String message, String attribute) {
+		public RuleEntry(Rule rule, Input attribute) {
 			this.rule = rule;
-			this.message = message;
 			this.attribute = attribute;
 		}
 
 		/**
 		 * @return the attribute
 		 */
-		public String getAttribute() {
+		public Input getIput() {
 			return attribute;
-		}
-
-		/**
-		 * @return the message
-		 */
-		public String getMessage() {
-			return message;
 		}
 
 		/**
 		 * @return the rule
 		 */
-		public ValidationRule getRule() {
+		public Rule getRule() {
 			return rule;
+		}
+	}
+
+	/**
+	 * Provides access to {@link BaseController#out} method.
+	 * 
+	 * TODO review this
+	 */
+	private class Output extends BaseController {
+		public void add(String key, Object value) {
+			this.out(key, value);
 		}
 	}
 }

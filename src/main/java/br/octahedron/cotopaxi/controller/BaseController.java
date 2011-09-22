@@ -153,6 +153,29 @@ public abstract class BaseController {
 		}
 		return (result != null && shouldTrim) ? result.trim() : result;
 	}
+	
+	/**
+	 * Get an input parameter with the given key, and convert it using the given converter.
+	 * 
+	 * Input parameter can be parameters passed using both POST and GET method, or parameters passed
+	 * at the url address, with leading and trailing white spaces removed;
+	 * 
+	 * @param name
+	 *            The parameter's name
+	 * @param converter The converter to be used to convert input value
+	 * @return The parameter's value if exists, or <code>null</code> if there's no input parameter
+	 *         with the given name.
+	 * @throws ConvertionException If the convert can't convert the input
+	 * 
+	 * @see Converter
+	 */
+	protected final <T> T in(String name, Converter<T> converter) throws ConvertionException {
+		return converter.convert(this.in(name, true));
+	}
+	
+//	protected final <T> T in(Class<T> wrapperClass) {
+//		return null;
+//	}
 
 	/**
 	 * Get all the values for a input parameter with the given key. It's useful for checkbox input,

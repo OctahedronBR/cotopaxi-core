@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi.validation.rule;
 
+import br.octahedron.cotopaxi.validation.Rule;
+
 
 /**
  * A rule to verify the maximum input length.
@@ -26,12 +28,13 @@ package br.octahedron.cotopaxi.validation.rule;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-public class LengthRule implements ValidationRule {
+public class LengthRule extends Rule {
 
 	private int maxLength;
 	private int minLength;
 
-	public LengthRule(int minLength, int maxLength) {
+	public LengthRule(String message, int minLength, int maxLength) {
+		super(message);
 		this.minLength = minLength;
 		this.maxLength = maxLength;
 	}

@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi.validation.rule;
 
+import br.octahedron.cotopaxi.validation.Rule;
+
 
 /**
  * A rule to verify the minimum input length.
@@ -25,11 +27,12 @@ package br.octahedron.cotopaxi.validation.rule;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-public class MinimumLengthRule implements ValidationRule {
+public class MinimumLengthRule extends Rule {
 
 	private int minLength;
 
-	public MinimumLengthRule(int minLength) {
+	public MinimumLengthRule(String message, int minLength) {
+		super(message);
 		this.minLength = minLength;
 	}
 

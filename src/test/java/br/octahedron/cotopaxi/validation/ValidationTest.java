@@ -22,7 +22,6 @@ import org.junit.Test;
 
 import br.octahedron.cotopaxi.validation.rule.RegexRule;
 import br.octahedron.cotopaxi.validation.rule.RequiredRule;
-import br.octahedron.cotopaxi.validation.rule.ValidationRule;
 
 /**
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
@@ -31,24 +30,24 @@ public class ValidationTest {
 	
 	@Test
 	public void regexRuleTest() {
-		ValidationRule regex = new RegexRule("^(([0-9]{2}|\\([0-9]{2}\\))[ ])?[0-9]{4}[-. ]?[0-9]{4}$");
+		Rule regex = new RegexRule(null, "^(([0-9]{2}|\\([0-9]{2}\\))[ ])?[0-9]{4}[-. ]?[0-9]{4}$");
 		assertTrue(regex.isValid("0000 0000"));
 		assertTrue(regex.isValid("00 0000 0000"));
 		assertTrue(regex.isValid("(00) 0000 0000"));
 		assertTrue(regex.isValid("00000000"));
 		assertTrue(regex.isValid("00 00000000"));
 		
-		regex = new RegexRule("([a-zA-ZáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûÃÕãõçÇ] *){2,}");
+		regex = new RegexRule(null, "([a-zA-ZáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûÃÕãõçÇ] *){2,}");
 		assertTrue(regex.isValid("Danilo Queiroz"));
 		assertTrue(regex.isValid("Da"));
-		regex = new RegexRule(".*");
+		regex = new RegexRule(null, ".*");
 		assertTrue(regex.isValid(""));
 		assertTrue(regex.isValid(null));
 	}
 
 	@Test
 	public void requiredRuleTest() {
-		ValidationRule required = new RequiredRule();
+		Rule required = new RequiredRule(null);
 		assertTrue(required.isValid("a"));
 		assertFalse(required.isValid(""));
 		assertFalse(required.isValid(null));
