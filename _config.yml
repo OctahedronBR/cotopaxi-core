@@ -1,3 +1,2 @@
 auto: true
-exclude:
-	README.md
+permalink: /:title/

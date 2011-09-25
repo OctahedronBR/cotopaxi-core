@@ -1,0 +1,1 @@
+addEventListener('load', function (event) { prettyPrint() }, false); 
