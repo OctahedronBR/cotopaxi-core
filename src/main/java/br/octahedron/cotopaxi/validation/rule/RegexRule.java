@@ -18,14 +18,13 @@ package br.octahedron.cotopaxi.validation.rule;
 
 import java.util.regex.Pattern;
 
-import br.octahedron.cotopaxi.validation.Rule;
 
 /**
  * A validation rule that checks if the input matches the given pattern
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class RegexRule extends Rule {
+public class RegexRule extends AbstractRule {
 
 	/**
 	 * Useful common patterns

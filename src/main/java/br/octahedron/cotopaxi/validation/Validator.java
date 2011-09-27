@@ -25,6 +25,7 @@ import java.util.Map;
 
 import br.octahedron.cotopaxi.CotopaxiProperty;
 import br.octahedron.cotopaxi.controller.BaseController;
+import br.octahedron.cotopaxi.validation.rule.AbstractRule;
 import br.octahedron.util.Log;
 
 /**
@@ -44,7 +45,7 @@ public final class Validator {
 	 * @param attribute
 	 *            The attribute to be validated
 	 * @param rule
-	 *            The {@link Rule} to be used to validate the attribute
+	 *            The {@link AbstractRule} to be used to validate the attribute
 	 */
 	public void add(String attribute, Rule rule) {
 		this.entries.add(new RuleEntry(rule, new Input.AttributeInput(attribute)));
@@ -56,7 +57,7 @@ public final class Validator {
 	 * @param input
 	 *            The input to be validated
 	 * @param rule
-	 *            The {@link Rule} to be used to validate the attribute
+	 *            The {@link AbstractRule} to be used to validate the attribute
 	 */
 	public void add(Input input, Rule rule) {
 		this.entries.add(new RuleEntry(rule, input));
@@ -68,7 +69,7 @@ public final class Validator {
 	 * @param attribute
 	 *            The attribute to be validated
 	 * @param rules
-	 *            The {@link Rule} to be used to validate the attribute
+	 *            The {@link AbstractRule} to be used to validate the attribute
 	 */
 	public void add(String attribute, Rule... rules) {
 		for (Rule rule : rules) {
@@ -82,7 +83,7 @@ public final class Validator {
 	 * @param input
 	 *            The input to be validated
 	 * @param rules
-	 *            The {@link Rule} to be used to validate the attribute
+	 *            The {@link AbstractRule} to be used to validate the attribute
 	 */
 	public void add(Input input, Rule... rules) {
 		for (Rule rule : rules) {

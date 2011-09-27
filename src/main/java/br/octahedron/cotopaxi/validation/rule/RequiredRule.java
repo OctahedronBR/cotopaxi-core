@@ -16,7 +16,6 @@
  */
 package br.octahedron.cotopaxi.validation.rule;
 
-import br.octahedron.cotopaxi.validation.Rule;
 
 
 /**
@@ -24,7 +23,7 @@ import br.octahedron.cotopaxi.validation.Rule;
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class RequiredRule extends Rule {
+public class RequiredRule extends AbstractRule {
 	
 	public RequiredRule(String message) {
 		super(message);

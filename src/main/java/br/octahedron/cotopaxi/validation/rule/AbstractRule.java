@@ -16,32 +16,26 @@
  */
 package br.octahedron.cotopaxi.validation.rule;
 
-
+import br.octahedron.cotopaxi.validation.Rule;
 
 /**
- * A rule to verify the minimum input length.
- * 
- * It's exclusive, it means that input length should be equals or greater than configured length.
+ * Defines the base for validation rules. Validation Rules are responsible by check if a given
+ * input is valid.
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
- * 
  */
-public class MinimumLengthRule extends AbstractRule {
+public abstract class AbstractRule implements Rule {
+	
+	protected String message;
 
-	private int minLength;
-
-	public MinimumLengthRule(String message, int minLength) {
-		super(message);
-		this.minLength = minLength;
+	public AbstractRule(String message) {
+		this.message = message;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.octahedron.cotopaxi.validation.ValidationRule#isValid(java.lang.String)
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.validation.Rule#getMessage()
 	 */
-	@Override
-	public boolean isValid(String input) {
-		return this.minLength <= input.length();
+	public String getMessage() {
+		return this.message;
 	}
 }

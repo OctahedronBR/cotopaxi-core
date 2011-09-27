@@ -16,7 +16,6 @@
  */
 package br.octahedron.cotopaxi.validation.rule;
 
-import br.octahedron.cotopaxi.validation.Rule;
 
 
 /**
@@ -27,7 +26,7 @@ import br.octahedron.cotopaxi.validation.Rule;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-public class MaximumLengthRule extends Rule {
+public class MaximumLengthRule extends AbstractRule {
 
 	private int maxLength;
 

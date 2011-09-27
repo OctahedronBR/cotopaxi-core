@@ -26,27 +26,18 @@ import br.octahedron.cotopaxi.validation.rule.RequiredRule;
 import br.octahedron.cotopaxi.validation.rule.RegexRule.CommonPattern;
 
 /**
- * Defines the base for validation rules. Validation Rules are responsible by check if a given
- * input is valid.
- * 
+ * The interface for validation Rules.
+ *   
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public abstract class Rule {
-	
-	protected String message;
-
-	public Rule(String message) {
-		this.message = message;
-	}
+public interface Rule {
 
 	/**
 	 * Gets the message for validation fail
 	 * 
 	 * @return The message to validation fail
 	 */
-	public String getMessage() {
-		return this.message;
-	}
+	public abstract String getMessage();
 
 	/**
 	 * Checks if the given input is valid.
@@ -56,7 +47,8 @@ public abstract class Rule {
 	 * @return <code>true</code> if the input is valid, <code>false</code> if it's not valid.
 	 */
 	public abstract boolean isValid(String input);
-
+	
+	
 	/**
 	 * A builder for basic validation rules and input
 	 */
@@ -149,4 +141,5 @@ public abstract class Rule {
 		 */
 
 	}
+
 }
