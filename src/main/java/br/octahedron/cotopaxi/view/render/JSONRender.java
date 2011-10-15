@@ -37,7 +37,7 @@ public class JSONRender {
 
 	public void render(Object object, Writer writer) {
 		try {
-			writer.write(new JSONSerializer().prettyPrint(true).serialize(object));
+			writer.write(new JSONSerializer().prettyPrint(true).deepSerialize(object));
 			log.debug("Written json in response writer");
 		} catch (IOException ex) {
 			log.terror("Impossible to parse objects into json format to be used on writer", ex);
