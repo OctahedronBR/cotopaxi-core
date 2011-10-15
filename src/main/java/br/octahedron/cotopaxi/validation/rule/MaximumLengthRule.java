@@ -42,6 +42,6 @@ public class MaximumLengthRule extends AbstractRule {
 	 */
 	@Override
 	public boolean isValid(String input) {
-		return input.length() <= this.maxLength;
+		return (input != null) && input.length() <= this.maxLength;
 	}
 }

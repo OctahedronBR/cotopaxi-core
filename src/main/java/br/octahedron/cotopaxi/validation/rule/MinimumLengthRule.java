@@ -16,8 +16,6 @@
  */
 package br.octahedron.cotopaxi.validation.rule;
 
-
-
 /**
  * A rule to verify the minimum input length.
  * 
@@ -42,6 +40,6 @@ public class MinimumLengthRule extends AbstractRule {
 	 */
 	@Override
 	public boolean isValid(String input) {
-		return this.minLength <= input.length();
+		return (input != null) && this.minLength <= input.length();
 	}
 }
