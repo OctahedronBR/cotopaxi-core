@@ -22,6 +22,12 @@ import static br.octahedron.cotopaxi.CotopaxiProperty.INVALID_TEMPLATE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.NOT_FOUND_TEMPLATE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
 import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
+
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import br.octahedron.cotopaxi.view.response.JSONResponse;
 import br.octahedron.cotopaxi.view.response.RedirectResponse;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
@@ -41,7 +47,104 @@ import br.octahedron.cotopaxi.view.response.TemplateResponse;
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public abstract class Controller extends BaseController {
+public abstract class Controller extends InputController {
+	
+	/**
+	 * Stores an object in the session. If already exists an object stored with the given key, it
+	 * will be overwritten
+	 * 
+	 * @param key
+	 *            the object's key
+	 * @param value
+	 *            the object
+	 */
+	protected final void session(String key, Object value) {
+		if (value != null) {
+			this.request().getSession(true).setAttribute(key, value);
+		} else {
+			HttpSession session = this.request().getSession(false);
+			if (session != null) {
+				session.removeAttribute(key);
+			}
+		}
+	}
+
+	/**
+	 * Adds an object to the output. This objects will be used to by the view to render output.
+	 * 
+	 * @param key
+	 *            the output's key
+	 * @param value
+	 *            the output's value
+	 */
+	protected final void out(String key, Object value) {
+		this.output().put(key, value);
+	}
+
+	/**
+	 * Sets a response's header.
+	 * 
+	 * @param name
+	 *            the header's name
+	 * @param value
+	 *            the header's value
+	 */
+	protected final void header(String name, String value) {
+		this.headers().put(name, value);
+	}
+
+	/**
+	 * Set's a response cookie
+	 * 
+	 * @param name
+	 *            the cookie's name
+	 * @param value
+	 *            the cookie's value
+	 */
+	protected final void cookie(String name, String value) {
+		this.cookies().put(name, value);
+	}
+
+	/**
+	 * It echos the input parameters to output, using the same names and values.
+	 * 
+	 * If the parameter has multiple values it echos the values as a String Array. If the parameter
+	 * has no value, it echos a blank ("") String.
+	 */
+	@SuppressWarnings("unchecked")
+	protected final void echo() {
+		Map parameters = this.request().getParameterMap();
+		Iterator keys = parameters.keySet().iterator();
+		while (keys.hasNext()) {
+			String key = (String) keys.next();
+			String[] values = (String[]) parameters.get(key);
+			if (values.length == 1) {
+				this.out(key, values[0]);
+			} else if (values.length > 1) {
+				this.out(key, values);
+			} else {
+				this.out(key, "");
+			}
+		}
+	}
+
+	/**
+	 * Sets the given user name as the current user.
+	 * 
+	 * This method is useful for authentication mechanisms
+	 */
+	protected final void currentUser(String username) {
+		this.session(USERNAME_KEY, username);
+	}
+
+	/**
+	 * Mark the request as authorized
+	 * 
+	 * This method is useful for authorization mechanisms
+	 */
+	protected final void authorized() {
+		this.request().setAttribute(USER_AUTHORIZED, "true");
+	}
 
 	/**
 	 * Sets the {@link ControllerResponse} for the current request. This method should be used only

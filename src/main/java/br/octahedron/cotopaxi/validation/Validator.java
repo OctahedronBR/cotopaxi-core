@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.octahedron.cotopaxi.CotopaxiProperty;
-import br.octahedron.cotopaxi.controller.BaseController;
+import br.octahedron.cotopaxi.controller.Controller;
 import br.octahedron.cotopaxi.validation.rule.AbstractRule;
 import br.octahedron.util.Log;
 
@@ -100,6 +100,7 @@ public final class Validator {
 	public boolean isValid() {
 		Map<String, String> invalidMessages = new HashMap<String, String>();
 		boolean valid = true;
+		// TODO we must evaluate till find first invalid rule for each att
 		for (RuleEntry entry : this.entries) {
 			Rule rule = entry.getRule();
 			Input input = entry.getIput();
@@ -149,11 +150,11 @@ public final class Validator {
 	}
 
 	/**
-	 * Provides access to {@link BaseController#out} method.
+	 * Provides access to {@link Controller#out} method.
 	 * 
-	 * TODO review this
+	 * TODO review this strategy
 	 */
-	private class Output extends BaseController {
+	private class Output extends Controller {
 		public void add(String key, Object value) {
 			this.out(key, value);
 		}

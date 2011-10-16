@@ -16,7 +16,7 @@
  */
 package br.octahedron.cotopaxi.validation;
 
-import br.octahedron.cotopaxi.controller.BaseController;
+import br.octahedron.cotopaxi.controller.InputController;
 
 /**
  * @author Name - email@octahedron.com.br
@@ -48,7 +48,7 @@ interface Input {
 		}
 	}
 	
-	static class AttributeInput extends BaseController implements Input {
+	static class AttributeInput extends InputController implements Input {
 		protected String attributeName;
 
 		AttributeInput(String attributeName) {

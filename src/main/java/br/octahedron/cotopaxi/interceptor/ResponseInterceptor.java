@@ -16,7 +16,7 @@
  */
 package br.octahedron.cotopaxi.interceptor;
 
-import br.octahedron.cotopaxi.controller.BaseController;
+import br.octahedron.cotopaxi.controller.InputController;
 import br.octahedron.cotopaxi.controller.ControllerResponse;
 import br.octahedron.cotopaxi.view.response.InterceptableResponse;
 
@@ -30,7 +30,7 @@ import br.octahedron.cotopaxi.view.response.InterceptableResponse;
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public abstract class ResponseInterceptor extends BaseController {
+public abstract class ResponseInterceptor extends InputController {
 
 	/**
 	 * Executes this interceptor, for the given {@link InterceptableResponse}, before the response
