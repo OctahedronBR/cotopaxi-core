@@ -28,7 +28,7 @@ public class NotFoundExeption extends Exception {
 	private String method;
 
 	public NotFoundExeption(String url, String method) {
-		super();
+		super(url + " - " + method);
 		this.url = url;
 		this.method = method;
 	}

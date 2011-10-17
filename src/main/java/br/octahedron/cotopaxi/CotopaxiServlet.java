@@ -16,15 +16,8 @@
  */
 package br.octahedron.cotopaxi;
 
-import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_PROPERTY;
-import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_TEMPLATE;
-import static br.octahedron.cotopaxi.CotopaxiProperty.NOT_FOUND_TEMPLATE;
-import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,14 +28,12 @@ import br.octahedron.cotopaxi.Bootloader.Booter;
 import br.octahedron.cotopaxi.config.ConfigurationLoader;
 import br.octahedron.cotopaxi.config.ConfigurationSyntaxException;
 import br.octahedron.cotopaxi.controller.ControllerDescriptor;
-import br.octahedron.cotopaxi.controller.ControllerException;
 import br.octahedron.cotopaxi.controller.ControllerExecutor;
 import br.octahedron.cotopaxi.controller.ControllerResponse;
 import br.octahedron.cotopaxi.interceptor.InterceptorManager;
 import br.octahedron.cotopaxi.route.NotFoundExeption;
 import br.octahedron.cotopaxi.route.Router;
 import br.octahedron.cotopaxi.view.response.InterceptableResponse;
-import br.octahedron.cotopaxi.view.response.TemplateResponse;
 import br.octahedron.util.Log;
 
 /**
@@ -53,13 +44,15 @@ import br.octahedron.util.Log;
 public class CotopaxiServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 8958499809792016589L;
-	
-	private static final Log log = new Log(CotopaxiServlet.class); 
+
+	private static final Log log = new Log(CotopaxiServlet.class);
 	private InterceptorManager interceptor = new InterceptorManager();
 	private Router router = new Router();
 	private ControllerExecutor executor;
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.servlet.GenericServlet#init()
 	 */
 	@Override
@@ -83,7 +76,7 @@ public class CotopaxiServlet extends HttpServlet {
 			throw new ServletException(ex);
 		}
 	}
-	
+
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		this.deliver(req, resp);
 	}
@@ -102,26 +95,17 @@ public class CotopaxiServlet extends HttpServlet {
 			ControllerDescriptor controllerDesc = this.router.route(request);
 			controllerResponse = this.executor.execute(controllerDesc, request);
 		} catch (NotFoundExeption ex) {
-			log.warning("Cannot found a controller for url %s - %s. Message: %s", request.getRequestURI(), request.getMethod(), ex.getMessage());
-			Map<String, Object> output = new HashMap<String, Object>();
-			output.put(getProperty(ERROR_PROPERTY), ex);
-			controllerResponse = new TemplateResponse(getProperty(NOT_FOUND_TEMPLATE), 404, output, null, null, request.getLocale());
-		} catch (ControllerException ex) {
-			log.warning("Unexpected error executing controller for %s. Message: %s", request.getRequestURI(), ex.getMessage());
-			log.twarning("ControllerException", ex);
-			Map<String, Object> output = new HashMap<String, Object>();
-			output.put(getProperty(ERROR_PROPERTY), ex);
-			controllerResponse = new TemplateResponse(getProperty(ERROR_TEMPLATE), 500, output, null, null, request.getLocale());
-		}  
-		
+			controllerResponse = this.executor.execute(request, ex);
+		}
+
 		if (controllerResponse != null) {
 			if (controllerResponse instanceof InterceptableResponse) {
-				((InterceptableResponse)controllerResponse).setInterceptorManager(this.interceptor);
+				((InterceptableResponse) controllerResponse).setInterceptorManager(this.interceptor);
 			}
 			controllerResponse.dispatch(response);
-	 	} else {
-	 		log.error("Servlet cannot determine neither a controller, nor a error handler, for url %s", request.getRequestURI());
-	 		throw new ServletException("Server cannot determine an response for request.");
-	 	}
+		} else {
+			log.error("Servlet cannot determine neither a controller, nor a error handler, for url %s", request.getRequestURI());
+			throw new ServletException("Server cannot determine an response for request.");
+		}
 	}
 }
