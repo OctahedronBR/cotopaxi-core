@@ -26,16 +26,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import br.octahedron.cotopaxi.controller.ControllerResponse;
-import br.octahedron.cotopaxi.interceptor.InterceptorManager;
 
 /**
  * A {@link ControllerResponse} that can be intercepted.
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public abstract class InterceptableResponse extends ServletGenericResponse {
+public abstract class RenderableResponse extends ServletGenericResponse {
 
-	private InterceptorManager interceptor;
 	protected Writer writer;
 	protected int code;
 	protected Map<String, String> cookies;
@@ -46,8 +44,7 @@ public abstract class InterceptableResponse extends ServletGenericResponse {
 	/**
 	 * @param subClass
 	 */
-	public InterceptableResponse(Class<? extends ServletGenericResponse> subClass, int code, Map<String, Object> output, Map<String, String> cookies,
-			Map<String, String> headers, Locale locale) {
+	public RenderableResponse(int code, Map<String, Object> output, Map<String, String> cookies, Map<String, String> headers, Locale locale) {
 		this.code = code;
 		this.output = output;
 		this.cookies = cookies;
@@ -55,19 +52,9 @@ public abstract class InterceptableResponse extends ServletGenericResponse {
 		this.locale = locale;
 	}
 
-	/**
-	 * @param interceptor
-	 *            the interceptor to set
-	 */
-	public void setInterceptorManager(InterceptorManager interceptor) {
-		this.interceptor = interceptor;
-	}
-
 	@Override
 	public final void dispatch(HttpServletResponse servletResponse) throws IOException {
 		this.writer = servletResponse.getWriter();
-		// call interceptor preRender
-		this.interceptor.preRender(this);
 
 		// adjust headers
 		if (this.headers != null) {
@@ -96,9 +83,6 @@ public abstract class InterceptableResponse extends ServletGenericResponse {
 			servletResponse.flushBuffer();
 		}
 		this.writer = null;
-
-		// call interceptor finish
-		this.interceptor.finish();
 	}
 
 	/**

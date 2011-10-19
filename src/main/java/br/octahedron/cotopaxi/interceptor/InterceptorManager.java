@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import br.octahedron.cotopaxi.controller.Controller;
-import br.octahedron.cotopaxi.view.response.InterceptableResponse;
+import br.octahedron.cotopaxi.view.response.TemplateResponse;
 import br.octahedron.util.Log;
 import br.octahedron.util.ReflectionUtil;
 
@@ -39,7 +39,8 @@ public class InterceptorManager {
 
 	private static final Log log = new Log(InterceptorManager.class);
 	private Map<Class<? extends Annotation>, ControllerInterceptor> controllerInterceptors = new LinkedHashMap<Class<? extends Annotation>, ControllerInterceptor>();
-	private Collection<ResponseInterceptor> responseInterceptors = new LinkedList<ResponseInterceptor>();
+	private Collection<TemplateInterceptor> templateInterceptors = new LinkedList<TemplateInterceptor>();
+	private Collection<FinalizerInterceptor> finalizerInterceptors = new LinkedList<FinalizerInterceptor>();
 
 	/**
 	 * Adds a new interceptor to the application
@@ -49,9 +50,12 @@ public class InterceptorManager {
 		if (ControllerInterceptor.class.isAssignableFrom(klass)) {
 			ControllerInterceptor interceptor = (ControllerInterceptor) getInstance(klass);
 			this.addControllerInterceptor(interceptor);
-		} else if (ResponseInterceptor.class.isAssignableFrom(klass)) {
-			ResponseInterceptor interceptor = (ResponseInterceptor) getInstance(klass);
-			this.responseInterceptors.add(interceptor);
+		} else if (TemplateInterceptor.class.isAssignableFrom(klass)) {
+			TemplateInterceptor interceptor = (TemplateInterceptor) getInstance(klass);
+			this.templateInterceptors.add(interceptor);
+		} else if (FinalizerInterceptor.class.isAssignableFrom(klass)) {
+			FinalizerInterceptor interceptor = (FinalizerInterceptor) getInstance(klass);
+			this.finalizerInterceptors.add(interceptor);
 		} else {
 			log.error("The %s isn't an interceptor class", interceptorClass);
 		}
@@ -78,25 +82,25 @@ public class InterceptorManager {
 			}
 		}
 	}
-	
+
 	/**
-	 * Executes the {@link ResponseInterceptor} get writer.
+	 * Executes the {@link TemplateInterceptor} get writer.
 	 */
-	public void preRender(InterceptableResponse interceptableResponse) {
-		for (ResponseInterceptor interceptor : this.responseInterceptors) {
-			log.debug("Executing ResponseDispatcherInterceptor preRender(%s): %s", interceptableResponse.getClass(), interceptor.getClass());
-			interceptor.preRender(interceptableResponse);
-		}
-	}
-	/**
-	 * Executes the {@link ResponseInterceptor} finish.
-	 */
-	public void finish() {
-		for (ResponseInterceptor interceptor : this.responseInterceptors) {
-			log.debug("Executing ResponseDispatcherInterceptor finish %s", interceptor.getClass());
-			interceptor.finish();
+	public void preRender(TemplateResponse templateResponse) {
+		for (TemplateInterceptor interceptor : this.templateInterceptors) {
+			log.debug("Executing ResponseDispatcherInterceptor preRender(%s): %s", templateResponse.getClass(), interceptor.getClass());
+			interceptor.preRender(templateResponse);
 		}
 	}
 
+	/**
+	 * Executes the {@link TemplateInterceptor} finish.
+	 */
+	public void finish() {
+		for (FinalizerInterceptor interceptor : this.finalizerInterceptors) {
+			log.debug("Executing FinalizerInterceptor finish %s", interceptor.getClass());
+			interceptor.finish();
+		}
+	}
 
 }

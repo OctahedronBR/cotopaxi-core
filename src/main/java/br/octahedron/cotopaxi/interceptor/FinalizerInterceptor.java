@@ -16,19 +16,23 @@
  */
 package br.octahedron.cotopaxi.interceptor;
 
-import br.octahedron.cotopaxi.view.response.RenderableResponse;
+import br.octahedron.cotopaxi.controller.ControllerResponse;
 
 /**
- * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
+ * {@link FinalizerInterceptor} runs after the {@link ControllerResponse} be dispatched. This kind
+ * of interceptors are useful to clean-housing stuff, such as close database connections, free
+ * resources and etc.
+ * 
+ * This interceptors are globally and are executed for every Request.
+ * 
+ * 
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class FakeResponseInterceptor extends TemplateInterceptor {
+public interface FinalizerInterceptor {
 
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.interceptor.ResponseInterceptor#preRender(br.octahedron.cotopaxi.view.response.InterceptableResponse)
+	/**
+	 * This method is called after the {@link ResponseDispatcher} renders the response to the
+	 * client. It should be used to clean the house.
 	 */
-	@Override
-	public void preRender(RenderableResponse response) {
-		
-	}
-
+	public abstract void finish();
 }

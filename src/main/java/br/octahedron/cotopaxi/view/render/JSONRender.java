@@ -32,7 +32,6 @@ import flexjson.JSONSerializer;
  */
 public class JSONRender {
 
-	private static final long serialVersionUID = -6755680559427788645L;
 	private static final Log log = new Log(JSONRender.class);
 
 	public void render(Object object, Writer writer) {

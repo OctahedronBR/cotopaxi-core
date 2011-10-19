@@ -33,7 +33,7 @@ import br.octahedron.cotopaxi.controller.ControllerResponse;
 import br.octahedron.cotopaxi.interceptor.InterceptorManager;
 import br.octahedron.cotopaxi.route.NotFoundExeption;
 import br.octahedron.cotopaxi.route.Router;
-import br.octahedron.cotopaxi.view.response.InterceptableResponse;
+import br.octahedron.cotopaxi.view.response.TemplateResponse;
 import br.octahedron.util.Log;
 
 /**
@@ -98,14 +98,19 @@ public class CotopaxiServlet extends HttpServlet {
 			controllerResponse = this.executor.execute(request, ex);
 		}
 
-		if (controllerResponse != null) {
-			if (controllerResponse instanceof InterceptableResponse) {
-				((InterceptableResponse) controllerResponse).setInterceptorManager(this.interceptor);
+		try {
+			if (controllerResponse != null) {
+				if (controllerResponse instanceof TemplateResponse) {
+					this.interceptor.preRender((TemplateResponse) controllerResponse);
+				}
+				controllerResponse.dispatch(response);
+			} else {
+				log.error("Servlet cannot determine neither a controller, nor a error handler, for url %s", request.getRequestURI());
+				throw new ServletException("Server cannot determine an response for request.");
 			}
-			controllerResponse.dispatch(response);
-		} else {
-			log.error("Servlet cannot determine neither a controller, nor a error handler, for url %s", request.getRequestURI());
-			throw new ServletException("Server cannot determine an response for request.");
+		} finally {
+			this.interceptor.finish();
 		}
+
 	}
 }

@@ -20,11 +20,11 @@ import br.octahedron.cotopaxi.controller.ControllerContext;
 import br.octahedron.cotopaxi.view.render.JSONRender;
 
 /**
- * A {@link InterceptableResponse} that render and write objects in JSON format.
+ * A {@link RenderableResponse} that render and write objects in JSON format.
  * 
  * @author Vítor Avelino - vitoravelino@octahedron.com.br
  */
-public class JSONResponse extends InterceptableResponse {
+public class JSONResponse extends RenderableResponse {
 
 	private static final JSONRender jsonRender = new JSONRender();
 
@@ -32,7 +32,7 @@ public class JSONResponse extends InterceptableResponse {
 	 * 
 	 */
 	public JSONResponse(int code, ControllerContext context) {
-		super(JSONResponse.class, code, context.getOutput(), context.getCookies(), context.getHeaders(), context.getLocale());
+		super(code, context.getOutput(), context.getCookies(), context.getHeaders(), context.getLocale());
 	}
 
 	/* (non-Javadoc)

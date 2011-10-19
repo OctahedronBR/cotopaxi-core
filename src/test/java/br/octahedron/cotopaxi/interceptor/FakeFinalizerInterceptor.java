@@ -16,19 +16,17 @@
  */
 package br.octahedron.cotopaxi.interceptor;
 
-import br.octahedron.cotopaxi.view.response.RenderableResponse;
-
 /**
- * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
+ * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class FakeResponseInterceptor extends TemplateInterceptor {
+public class FakeFinalizerInterceptor implements FinalizerInterceptor {
 
 	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.interceptor.ResponseInterceptor#preRender(br.octahedron.cotopaxi.view.response.InterceptableResponse)
+	 * @see br.octahedron.cotopaxi.interceptor.FinalizerInterceptor#finish()
 	 */
 	@Override
-	public void preRender(RenderableResponse response) {
-		
+	public void finish() {
+
 	}
 
 }

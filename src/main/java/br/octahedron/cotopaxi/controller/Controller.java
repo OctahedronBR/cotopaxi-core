@@ -111,7 +111,7 @@ public abstract class Controller extends InputController {
 	 * If the parameter has multiple values it echos the values as a String Array. If the parameter
 	 * has no value, it echos a blank ("") String.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	protected final void echo() {
 		Map parameters = this.request().getParameterMap();
 		Iterator keys = parameters.keySet().iterator();

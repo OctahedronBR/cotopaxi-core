@@ -24,17 +24,17 @@ import br.octahedron.cotopaxi.view.render.TemplateRender;
 import br.octahedron.cotopaxi.view.render.VelocityTemplateRender;
 
 /**
- * A {@link InterceptableResponse} that render and write a velocity template.
+ * A {@link RenderableResponse} that render and write a velocity template.
  *  
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class TemplateResponse extends InterceptableResponse {
+public class TemplateResponse extends RenderableResponse {
 	
 	private TemplateRender templateRender = new VelocityTemplateRender();
 	private String template;
 
 	public TemplateResponse(String template, int code, Map<String, Object> output, Map<String, String> cookies, Map<String, String> headers, Locale locale) {
-		super(TemplateResponse.class, code, output, cookies, headers, locale);
+		super(code, output, cookies, headers, locale);
 		this.template = template;
 	}
 

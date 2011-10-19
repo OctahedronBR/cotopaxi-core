@@ -25,8 +25,8 @@ import java.util.Map;
 import br.octahedron.cotopaxi.controller.converter.BooleanConverter;
 import br.octahedron.cotopaxi.controller.converter.DateConverter;
 import br.octahedron.cotopaxi.controller.converter.NumberConverter;
-import br.octahedron.cotopaxi.controller.converter.StringArrayConverter;
 import br.octahedron.cotopaxi.controller.converter.NumberConverter.NumberType;
+import br.octahedron.cotopaxi.controller.converter.StringArrayConverter;
 
 /**
  * Default interface for type converters. Converters are used to convert input data from
@@ -57,7 +57,7 @@ public interface Converter<T> {
 	public static class Builder {
 
 		// Cache structures
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		private static Map<NumberType, NumberConverter> numberConverter = new HashMap<NumberType, NumberConverter>();
 		private static Map<String, StringArrayConverter> strArrayConverter = new HashMap<String, StringArrayConverter>();
 		private static Map<String, DateConverter> dateConverters = new HashMap<String, DateConverter>();
@@ -103,7 +103,7 @@ public interface Converter<T> {
 		 *            The number type.
 		 * @return A number converter for the given {@link NumberType}
 		 */
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public static synchronized Converter<? extends Number> number(NumberType numberType) {
 			if (!numberConverter.containsKey(numberType)) {
 				numberConverter.put(numberType, new NumberConverter(numberType));
