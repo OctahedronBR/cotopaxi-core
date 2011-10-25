@@ -21,7 +21,7 @@ import br.octahedron.cotopaxi.view.response.RenderableResponse;
 /**
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class FakeResponseInterceptor extends TemplateInterceptor {
+public class FakeTemplateInterceptor extends TemplateInterceptor {
 
 	/* (non-Javadoc)
 	 * @see br.octahedron.cotopaxi.interceptor.ResponseInterceptor#preRender(br.octahedron.cotopaxi.view.response.InterceptableResponse)

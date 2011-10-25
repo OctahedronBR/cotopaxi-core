@@ -22,18 +22,19 @@ import java.lang.annotation.Annotation;
 
 import org.junit.Before;
 import org.junit.Test;
+
 /**
  * @author Danilo Queiroz - DaniloQueiroz@octahedron.com.br
- *
+ * 
  */
 public class InterceptorManagerTest {
-	
+
 	private int order;
 	private TestInterceptor interceptor1;
 	private TestInterceptor interceptor2;
 	private InterceptorManager manager;
 	private TestInterceptor interceptor3;
-	
+
 	@Before
 	public void setUp() {
 		order = 1;
@@ -41,16 +42,26 @@ public class InterceptorManagerTest {
 		interceptor1 = new TestInterceptor(TestingOne.class);
 		interceptor2 = new TestInterceptor(TestingTwo.class);
 		interceptor3 = new TestInterceptor(TestingThree.class);
-		
+
 	}
-	
+
+	@Test
+	public void testLoadInterceptors() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+		assertEquals(0, this.manager.templateInterceptors.size());
+		assertEquals(0, this.manager.finalizerInterceptors.size());
+		this.manager.addInterceptor("br.octahedron.cotopaxi.interceptor.FakeTemplateInterceptor");
+		this.manager.addInterceptor("br.octahedron.cotopaxi.interceptor.FakeFinalizerInterceptor");
+		assertEquals(1, this.manager.templateInterceptors.size());
+		assertEquals(1, this.manager.finalizerInterceptors.size());
+	}
+
 	@Test
 	public void testInterceptorManager1() {
 		this.manager.addControllerInterceptor(interceptor1);
 		this.manager.addControllerInterceptor(interceptor2);
 		this.manager.addControllerInterceptor(interceptor3);
 		this.manager.execute(AnnotatedClass.class);
-		
+
 		assertEquals(1, interceptor1.myOrder);
 		assertEquals(TestingOne.class, interceptor1.receivedAnn.annotationType());
 		assertEquals(2, interceptor2.myOrder);
@@ -58,14 +69,14 @@ public class InterceptorManagerTest {
 		assertEquals(3, interceptor3.myOrder);
 		assertEquals(TestingThree.class, interceptor3.receivedAnn.annotationType());
 	}
-	
+
 	@Test
 	public void testInterceptorManager2() {
 		this.manager.addControllerInterceptor(interceptor3);
 		this.manager.addControllerInterceptor(interceptor2);
 		this.manager.addControllerInterceptor(interceptor1);
 		this.manager.execute(AnnotatedClass.class);
-		
+
 		assertEquals(1, interceptor3.myOrder);
 		assertEquals(TestingThree.class, interceptor3.receivedAnn.annotationType());
 		assertEquals(2, interceptor2.myOrder);
@@ -73,9 +84,9 @@ public class InterceptorManagerTest {
 		assertEquals(3, interceptor1.myOrder);
 		assertEquals(TestingOne.class, interceptor1.receivedAnn.annotationType());
 	}
-	
+
 	class TestInterceptor extends ControllerInterceptor {
-		
+
 		private Class<? extends Annotation> ann;
 		private Annotation receivedAnn;
 		private int myOrder;
@@ -94,8 +105,7 @@ public class InterceptorManagerTest {
 		public Class<? extends Annotation> getInterceptorAnnotation() {
 			return ann;
 		}
-		
+
 	}
 
 }
-

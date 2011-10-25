@@ -39,8 +39,9 @@ public class InterceptorManager {
 
 	private static final Log log = new Log(InterceptorManager.class);
 	private Map<Class<? extends Annotation>, ControllerInterceptor> controllerInterceptors = new LinkedHashMap<Class<? extends Annotation>, ControllerInterceptor>();
-	private Collection<TemplateInterceptor> templateInterceptors = new LinkedList<TemplateInterceptor>();
-	private Collection<FinalizerInterceptor> finalizerInterceptors = new LinkedList<FinalizerInterceptor>();
+	//;fields are protected for tests
+	protected Collection<TemplateInterceptor> templateInterceptors = new LinkedList<TemplateInterceptor>();
+	protected Collection<FinalizerInterceptor> finalizerInterceptors = new LinkedList<FinalizerInterceptor>();
 
 	/**
 	 * Adds a new interceptor to the application
@@ -61,6 +62,9 @@ public class InterceptorManager {
 		}
 	}
 
+	/**
+	 * Used by tests
+	 */
 	protected void addControllerInterceptor(ControllerInterceptor interceptor) {
 		Class<? extends Annotation> ann = interceptor.getInterceptorAnnotation();
 		this.controllerInterceptors.put(ann, interceptor);
@@ -88,7 +92,7 @@ public class InterceptorManager {
 	 */
 	public void preRender(TemplateResponse templateResponse) {
 		for (TemplateInterceptor interceptor : this.templateInterceptors) {
-			log.debug("Executing ResponseDispatcherInterceptor preRender(%s): %s", templateResponse.getClass(), interceptor.getClass());
+			log.debug("Executing TemplateResponse preRender(%s): %s", templateResponse.getClass(), interceptor.getClass());
 			interceptor.preRender(templateResponse);
 		}
 	}
