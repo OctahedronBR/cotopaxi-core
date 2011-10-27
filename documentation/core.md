@@ -72,6 +72,10 @@ Therefore, the request process becomes thread-safe and we take advantage of mult
 Being more objective, after configuration of URL routing, it’s necessary to start coding (yay!). Once you specified the controller class br.octahedron.ControllerOne, you have to create that class and extends the Controller class provided by the framework.
 
 <pre class="prettyprint">
+package br.octahedron;
+
+import br.octahdron.cotopaxi.controller.Controller;
+
 public class ControllerOne extends Controller {
     (...)
 }
@@ -92,6 +96,10 @@ controllers
 you need to have
 
 <pre class="prettyprint">
+package br.octahedron;
+
+import br.octahdron.cotopaxi.controller.Controller;
+
 public class ControllerOne extends Controller {
     public void getList() { }
     public void putCreate() { }
@@ -99,47 +107,49 @@ public class ControllerOne extends Controller {
 }
 </pre>
 
-Notice that we didn’t passed any arguments to any method. The signature is just a public void method without any arguments. If you want to get the request parameters, you need to see in method helper.
+Notice that we didn’t passed any arguments to any method. The signature is just a public void method without any arguments. If you want to get the request parameters, you should use the methods inherited from the cotopaxi’s Controller class.
 
 ### Helper methods
 
 Cotopaxi provides a lots of helper methods to increase the developer productivity while coding the controller’s actions. Let’s see them.
 
-**BaseController**
+**InputController**
 
 <pre class="prettyprint">
-request()
 in(key) - recover any request parameter value
+in(key, converter) - recover any request parameter value, and converts to a specific type
 values(key) - recover any request parameter multiple value
-out(key, value) - puts a value associated with a variable on output to be accesible on view
-echo()
 session(key) - recover any data from session
-session(key, value) - stores a value associated with a variable on session
-cookie(key)
-cookie(key, value)
-serverName()
-fullRequestedUrl()
-relativeRequestedUrl()
+header(key) - recover any request header parameter 
+cookie(key) - recover any request cookies parameter
+serverName() - gets the server name, Eg. www.octahedron.com.br
+fullRequestedUrl() - gets the full requested URL, Eg. www.octahedron.com.br/contact
+relativeRequestedUrl() - gets the relative requested URL, Eg. /contact
 </pre>
 
-Those are the common methods to manipulate the input/output parameters and attributes. You can see more at BaseController.java. That’s not all, folks. Where is the methods to render and redirect the responses? Here we go.
+Those are the common methods to manipulate the input parameters and attributes. That’s not all, folks. Where is the methods to set output values, render and redirect the responses? Here we go.
 
 **Controller**
 
 <pre class="prettyprint">
-render(template, code)
-success(template)
-error()
-invalid()
-forbidden()
-notFound()
-asJSON(code)
-jsonSuccess()
-jsonInvalid()
-redirect(url)
+out(key, value) - puts a value associated with a variable on output to be accesible on view
+echo() - echos all input parameters to out put, with same names; useful to handle form errors
+session(key, value) - stores a value associated with a variable on session
+cookie(key, value) - stores the given key/value pair using cookies
+header(key, value) - adds the given key/value pair to response header
+render(template, code) - renders given template with the given response code
+success(template) - shortcut to render(template, 200)
+error(template) - shortcut to render(template, 500)
+invalid(template) - shortcut to render(template, 400)
+forbidden(template) - shortcut to render(template, 403)
+notFound(template) - shortcut to render(template, 404)
+asJSON(code) - renders all output objects as json (Thanks [flexjson](http://flexjson.sourceforge.net/) for that!)
+jsonSuccess() - shortcut to asJson(200)
+jsonInvalid() - shortcut to asJson(400)
+redirect(url) - send a redirect to the given redirect 
 </pre>
 
-As BaseController, you can check out the javadoc of Controller.
+As the Controller class extends the InputController, you can access both input and output/render/redirect related methods. For more, just  check out the Controller’s javadoc.
 
 ### Simple example
 
@@ -148,8 +158,8 @@ Check it out an example of how to use some of those methods:
 <pre class="prettyprint">
 public class IndexController extends Controller {
    public void postHello() {
-       if (in("name").equals("ENSOL")) {
-           redirect("http://ensol.org.br");
+       if (in("name").equals("octahedron")) {
+           redirect("http://www.octahedron.com.br");
        } else {
            out("person", in("name"));
            success("hello.vm");
@@ -160,15 +170,15 @@ public class IndexController extends Controller {
 
 ## View
 
-For simplicity, the framework has two option to render the view. One is Velocity template engine and the other is JSON. But the tool was built to render whatever you want (see Interceptors). It’s easy to implement another way of rendering a view.
+For simplicity, the framework has two option to render the view. One is Velocity template engine and the other is JSON. But the tool was built to render whatever you want (see _view_ package). It’s easy to implement another way of rendering a view.
 
 You saw on the previous section how to use render methods.
 
-** TODO: implementation of a custom view (e.g: velocity) **
+** TODO: implementation of a custom view (e.g: freemarker) **
 
 ## Dependency Injection
 
-Internally to the framework it’s used some dependency injection. We decided to open this possibility to developers too. It’s somehow inspired by Guice and you can see below how to use it.
+Cotopaxi also comes with a simple dependency injection mechanism. This was created to internally usage, but we decided to open this possibility to developers too. It’s somehow inspired by Guice and you can see below how to use it.
 
 <pre class="prettyprint">
 public class ControllerOne extends Controller {
@@ -181,7 +191,7 @@ public class ControllerOne extends Controller {
 }
 </pre>
 
-Simple, uh? Well, this works on controllers and the dependencies of the class that are being injected on controller. For example, if UserManager has some dependency injection it will be solved cause UserManager injection was done on a controller. But if you have an isolated class using the annotation and the public method, this wont work.
+Pretty simple, uh? Well, this works on controllers and the dependencies of the class that are being injected on controller. For example, if UserManager has some dependency injection it will be solved cause UserManager injection was done on a controller. But if you have an isolated class using the annotation and the public method, this won’t work.
 
 ### Injection on isolated classes
 
@@ -210,7 +220,7 @@ dependencies
     br.octahedron.cotopaxi.eventbus.EventPublisher (..) AppEngineEventPublisher
 </pre>
 
-Now you are going to use the App Engine event publisher without knowing the real implementation. If you want to chose to Amazon EC2 plataform, you just need to change to the specific implementation and restart the app. Fucking awesome, uh?
+Now you are going to use the App Engine event publisher without knowing the real implementation. If you want to chose to Amazon EC2 platform, you just need to change to the specific implementation and restart the app. Fucking awesome, uh?
 
 ## Boot loaders
 
@@ -235,7 +245,7 @@ This is useful when you want to maybe check if the database is created or anythi
 
 ## Interceptors
 
-If you are already a Django developer you might know middlewares. The interceptors behave kind of middlewares, but we decided to separate then in two groups: controllerinterceptor and responseinterceptors. More details below.
+If you are already a Django developer you might know middlewares. The interceptors behave kind of middlewares, but we decided to separate then in three groups: ControllerInterceptor, TemplateInterceptors and FinalizerInterceptor. More details below.
 
 All you need to do is specify the interceptors on application.config file:
 
@@ -247,7 +257,7 @@ interceptors
 
 What will differ your interceptors is who you are extending from. The order you specified in the config file, it will be the same as execution.
 
-### Controller's interceptors
+### Controller’s interceptors
 
 The controller interceptors are executed before the controller process the request. So, if you need to authenticate or authorize an user, using a controller interceptor sounds interesting. Another thing you need to know is that controller interceptors are used on your controller code with annotations.
 
@@ -298,15 +308,21 @@ public class ControlerOne extends Controller {
 
 Both getIndex() and listUsers() calls have interceptor being executed.
 
-### Response interceptors
+### Template interceptors
 
-Response interceptors are executed after the controller process the request and it’s useful when you want to render a specific view, add repetitive attributes on output, or anything you think that would be good to do after the request has been processed by the controller.
+Template interceptors are executed after the controller process the request and before template render. It’s useful when you want to render a specific view, add repetitive attributes on output.
 
-A particularity from response interceptors is that they are called every single request that comes to the framework.
+A particularity from template interceptors is that they are called every single response being rendered using a template (as you should guess, it isn’t execute when rendering a JSONResponse).
+
+### Finalizer interceptors 
+
+This kind of interceptors are executed after the Response be dispatched. You should use it if you want to do some house cleanning task after a request processing, as release database connection, for example.
+
+Finalizers interceptor are always executed, even on errors.
 
 ## Logging
 
-In Cotopaxi was developed a class for logging. It’s a simple Logger wrapper with a few fancy methods. We were tired of doing
+In Cotopaxi was developed a class for logging. It’s a simple java.util.Logger wrapper with a few fancy methods. We were tired of doing
 
 <pre class="prettyprint">
 log.info("User " + user.getName() + " was not found");
@@ -317,7 +333,9 @@ We think this is better:
 
 <pre class="prettyprint">
 log.info("User %s was not found", user.getName());
-// TODO another example with two parameters
+log.info("User %s entered the password %s", user.getName(), user.getPassword());
+// Please folks, don’t try it at home :-)
+log.terror("Some error occurrs", exception);
 </pre>
 
 But before that, you need to instantiate the Log class:
@@ -326,4 +344,4 @@ But before that, you need to instantiate the Log class:
 Log log = new Log(SomeClass.class);
 </pre>
 
-You can check it out more on the documentation [link]. It’s just something available on framework that you can use or not.
+The avaliable log levels are _debug_, _info_, _warning_, _error_. You can check it out more on the documentation [link]. It’s just something available on framework that you can use or not.
