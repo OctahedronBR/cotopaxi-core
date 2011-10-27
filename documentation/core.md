@@ -143,7 +143,7 @@ error(template) - shortcut to render(template, 500)
 invalid(template) - shortcut to render(template, 400)
 forbidden(template) - shortcut to render(template, 403)
 notFound(template) - shortcut to render(template, 404)
-asJSON(code) - renders all output objects as json (Thanks [flexjson](http://flexjson.sourceforge.net/) for that!)
+asJSON(code) - renders all output objects as json 
 jsonSuccess() - shortcut to asJson(200)
 jsonInvalid() - shortcut to asJson(400)
 redirect(url) - send a redirect to the given redirect 
@@ -170,7 +170,7 @@ public class IndexController extends Controller {
 
 ## View
 
-For simplicity, the framework has two option to render the view. One is Velocity template engine and the other is JSON. But the tool was built to render whatever you want (see _view_ package). It’s easy to implement another way of rendering a view.
+For simplicity, the framework has two option to render the view. One is Velocity template engine and the other is JSON (thanks [flexjson](http://flexjson.sourceforge.net/) for that!). But the tool was built to render whatever you want (see _view_ package). It’s easy to implement another way of rendering a view. 
 
 You saw on the previous section how to use render methods.
 
