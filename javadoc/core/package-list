@@ -1,0 +1,12 @@
+br.octahedron.cotopaxi
+br.octahedron.cotopaxi.config
+br.octahedron.cotopaxi.controller
+br.octahedron.cotopaxi.controller.converter
+br.octahedron.cotopaxi.inject
+br.octahedron.cotopaxi.interceptor
+br.octahedron.cotopaxi.route
+br.octahedron.cotopaxi.validation
+br.octahedron.cotopaxi.validation.rule
+br.octahedron.cotopaxi.view.render
+br.octahedron.cotopaxi.view.response
+br.octahedron.util

@@ -1,0 +1,6 @@
+br.octahedron.cotopaxi.auth
+br.octahedron.cotopaxi.blobstore
+br.octahedron.cotopaxi.datastore.jdo
+br.octahedron.cotopaxi.datastore.namespace
+br.octahedron.cotopaxi.eventbus
+br.octahedron.util
