@@ -74,7 +74,7 @@ td { vertical-align: top; }
    Author:
    ========================================================================== */
 
-#main {
+#wrapper {
   width: 960px;
   margin: 0 auto;
   overflow: hidden;
@@ -91,17 +91,34 @@ td { vertical-align: top; }
   position: fixed;
 }
 
+#resume {
+  width: 630px;
+  padding: 0 15px;
+}
 
+#refs {
+  width: 270px;
+  padding: 15px;
+}
 
+header h1 {
+  margin-bottom: 15px;
+  font-size: 48px;
+  text-align: center;
+}
 
+header h2 {
+  margin-bottom: 30px;
+  font-size: 16px;
+  text-align: center;
+}
 
+p {
+  line-height: 19.5px;
+}
 
-
-
-
-
-
-
+.left {float: left;}
+.right {float: right;}
 
 
 /* ==|== non-semantic helper classes ========================================
