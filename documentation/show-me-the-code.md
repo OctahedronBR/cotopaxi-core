@@ -199,6 +199,6 @@ If you want to see more about Velocity, see its [user guide](http://velocity.apa
 
 ![Todo list screenshost](/img/screenshot.jpg)
 
-You can check it out live [here](cotopaxi-todolist.appspot.com) and the source code [here](http://github.com/octahedron/cotopaxi-todolist/). Have fun!
+You can check it out live [here](http://cotopaxi-todolist.appspot.com) and the source code [here](http://github.com/octahedron/todolist/). Have fun!
 
 If any doubts, do not hesitate in contact us!
