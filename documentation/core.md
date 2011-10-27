@@ -174,7 +174,7 @@ For simplicity, the framework has two option to render the view. One is Velocity
 
 You saw on the previous section how to use render methods.
 
-** TODO: implementation of a custom view (e.g: freemarker) **
+**TODO: implementation of a custom view (e.g: freemarker, jsp)**
 
 ## Dependency Injection
 
@@ -344,4 +344,4 @@ But before that, you need to instantiate the Log class:
 Log log = new Log(SomeClass.class);
 </pre>
 
-The avaliable log levels are _debug_, _info_, _warning_, _error_. You can check it out more on the documentation [link]. It’s just something available on framework that you can use or not.
+The avaliable log levels are _debug_, _info_, _warning_, _error_. You can check it out more on the documentation [link](tbd). It’s just something available on framework that you can use or not.
