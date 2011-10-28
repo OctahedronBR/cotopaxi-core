@@ -64,14 +64,14 @@ public class TodoController extends Controller {
     }
     
     public void postUpdate() throws ConvertionException {
-        Todo todo = todoDAO.get(in("id", Builder.number(NumberType.LONG)));
-        todo.setCompleted(in("completed", Builder.bool()));
+        Todo todo = todoDAO.get(in("id", number(NumberType.LONG)));
+        todo.setCompleted(in("completed", bool()));
         todoDAO.save(todo);
         jsonSuccess();
     }
     
     public void postDelete() throws ConvertionException {
-        todoDAO.delete(in("id", Builder.number(NumberType.LONG)));
+        todoDAO.delete(in("id", number(NumberType.LONG)));
         jsonSuccess();
     }
 }

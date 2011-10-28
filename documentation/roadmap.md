@@ -6,5 +6,8 @@ layout: roadmap
 - GZip support
 - i18n support
 - New session handlers
-- Modules management
-- Some AWS features
+- Extensions modules management
+- Heroku and AWS features :-)
+- Support differents template engines
+- More examples
+- Portuguese documentation
