@@ -113,41 +113,37 @@ Notice that we didn’t passed any arguments to any method. The signature is jus
 
 Cotopaxi provides a lots of helper methods to increase the developer productivity while coding the controller’s actions. Let’s see them.
 
-**InputController**
+#### InputController
 
-<pre class="prettyprint">
-in(key) - recover any request parameter value
-in(key, converter) - recover any request parameter value, and converts to a specific type
-values(key) - recover any request parameter multiple value
-session(key) - recover any data from session
-header(key) - recover any request header parameter 
-cookie(key) - recover any request cookies parameter
-serverName() - gets the server name, Eg. www.octahedron.com.br
-fullRequestedUrl() - gets the full requested URL, Eg. www.octahedron.com.br/contact
-relativeRequestedUrl() - gets the relative requested URL, Eg. /contact
-</pre>
+* *in(key)* - recover any request parameter value
+* *in(key, converter)* - recover any request parameter value, and converts to a specific type
+* *values(key)* - recover any request parameter multiple value
+* *session(key)* - recover any data from session
+* *header(key)* - recover any request header parameter 
+* *cookie(key)* - recover any request cookies parameter
+* *serverName()* - gets the server name, Eg. www.octahedron.com.br
+* *fullRequestedUrl()* - gets the full requested URL, Eg. www.octahedron.com.br/contact
+* *relativeRequestedUrl()* - gets the relative requested URL, Eg. /contact
 
 Those are the common methods to manipulate the input parameters and attributes. That’s not all, folks. Where is the methods to set output values, render and redirect the responses? Here we go.
 
-**Controller**
+#### Controller
 
-<pre class="prettyprint">
-out(key, value) - puts a value associated with a variable on output to be accesible on view
-echo() - echos all input parameters to out put, with same names; useful to handle form errors
-session(key, value) - stores a value associated with a variable on session
-cookie(key, value) - stores the given key/value pair using cookies
-header(key, value) - adds the given key/value pair to response header
-render(template, code) - renders given template with the given response code
-success(template) - shortcut to render(template, 200)
-error(template) - shortcut to render(template, 500)
-invalid(template) - shortcut to render(template, 400)
-forbidden(template) - shortcut to render(template, 403)
-notFound(template) - shortcut to render(template, 404)
-asJSON(code) - renders all output objects as json 
-jsonSuccess() - shortcut to asJson(200)
-jsonInvalid() - shortcut to asJson(400)
-redirect(url) - send a redirect to the given redirect 
-</pre>
+* *out(key, value)* - puts a value associated with a variable on output to be accesible on view
+* *echo()* - echos all input parameters to out put, with same names; useful to handle form errors
+* *session(key, value)* - stores a value associated with a variable on session
+* *cookie(key, value)* - stores the given key/value pair using cookies
+* *header(key, value)* - adds the given key/value pair to response header
+* *render(template, code)* - renders given template with the given response code
+* *success(template)* - shortcut to render(template, 200)
+* *error(template)* - shortcut to render(template, 500)
+* *invalid(template)* - shortcut to render(template, 400)
+* *forbidden(template)* - shortcut to render(template, 403)
+* *notFound(template)* - shortcut to render(template, 404)
+* *asJSON(code)* - renders all output objects as json 
+* *jsonSuccess()* - shortcut to asJson(200)
+* *jsonInvalid()* - shortcut to asJson(400)
+* *redirect(url)* - send a redirect to the given redirect 
 
 As the Controller class extends the InputController, you can access both input and output/render/redirect related methods. For more, just  check out the Controller’s javadoc.
 
