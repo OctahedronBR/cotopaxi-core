@@ -8,7 +8,7 @@ There are many ways you can help us improving Cotopaxi. Just pick some and start
 
  *   Using it and telling us! :-)
  *   Requesting new features
- *   [Reporting bugs](https://github.com/octahedron/cotopaxi-core/issues/)
+ *   Reporting bugs
  *   Fixing bugs or adding new features
  
 
