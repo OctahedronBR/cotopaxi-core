@@ -3,6 +3,7 @@ layout: roadmap
 ---
 # Roadmap
 
+- Extensions documentation
 - GZip support
 - i18n support
 - New session handlers
