@@ -164,6 +164,14 @@ public class IndexController extends Controller {
 }
 </pre>
 
+### Input Validation
+
+**TBD**
+
+### Converters
+
+**TBD**
+
 ## View
 
 For simplicity, the framework has two option to render the view. One is Velocity template engine and the other is JSON (thanks [flexjson](http://flexjson.sourceforge.net/) for that!). But the tool was built to render whatever you want (see _view_ package). It’s easy to implement another way of rendering a view. 
