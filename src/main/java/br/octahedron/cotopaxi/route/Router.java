@@ -201,7 +201,7 @@ public class Router {
 	 * @return a regex for the given URL.
 	 */
 	private String generateRegex(String url) {
-		return variablePattern.matcher(url).replaceAll(Matcher.quoteReplacement("[a-zA-Z_0-9]+"));
+		return variablePattern.matcher(url).replaceAll(Matcher.quoteReplacement("[a-zA-Z_0-9@.]+"));
 	}
 
 	/**

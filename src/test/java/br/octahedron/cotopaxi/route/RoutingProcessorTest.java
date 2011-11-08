@@ -42,13 +42,13 @@ public class RoutingProcessorTest {
 	
 	@Before
 	public void setUp() {
-
 		router.addRoute(new ControllerDescriptor("/test", "get", "Test1", "java.lang.String"));
 		router.addRoute(new ControllerDescriptor("/test", "post", "Test2", "java.lang.String"));
 		router.addRoute(new ControllerDescriptor("/{username}", "get", "ShowUser", "java.lang.String"));
 		router.addRoute(new ControllerDescriptor("/{username}/edit","post", "EditUser", "java.lang.String"));
 		router.addRoute(new ControllerDescriptor("/{username}/{id}", "get", "UserPost1", "java.lang.String"));
 		router.addRoute(new ControllerDescriptor("/{username}/edit/{id}","post","UserPost2", "java.lang.String"));
+		router.addRoute(new ControllerDescriptor("/{username}/email/{email}","post","UserPost3", "java.lang.String"));
 	}
 	
 	@Test(expected = NotFoundExeption.class)
@@ -156,6 +156,23 @@ public class RoutingProcessorTest {
 		try {
 			ControllerDescriptor desc = router.route(request); 
 			assertEquals("UserPost2", desc.getControllerName());
+		} finally {
+			verify(request);
+		}
+	}
+	
+	@Test
+	public void testDynamic5() throws NotFoundExeption  {
+		// setup mock
+		expect(request.getRequestURI()).andReturn("/trollface/email/test@example.com").anyTimes();
+		expect(request.getMethod()).andReturn("POST");
+		request.setAttribute("username", "trollface");
+		request.setAttribute("email", "test@example.com");
+		// test
+		replay(request);
+		try {
+			ControllerDescriptor desc = router.route(request); 
+			assertEquals("UserPost3", desc.getControllerName());
 		} finally {
 			verify(request);
 		}
