@@ -51,6 +51,13 @@ public abstract class InputController {
 	protected final Map<String, Object> output() {
 		return getContext().getOutput();
 	}
+	
+	/**
+	 * Gets the input objects map
+	 */
+	protected final Map<String, Object> input() {
+		return getContext().getInput();
+	}
 
 	/**
 	 * Gets the output cookies map

@@ -96,6 +96,11 @@ public final class ControllerContext {
 		}
 		return this.output;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getInput() {
+		return this.request.getParameterMap();
+	}
 
 	public boolean isAnswered() {
 		return this.controllerResp != null;
@@ -108,6 +113,5 @@ public final class ControllerContext {
 	public Locale getLocale() {
 		return locale;
 	}
-	
-	
+
 }
