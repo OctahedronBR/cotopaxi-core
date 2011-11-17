@@ -24,34 +24,19 @@ import br.octahedron.cotopaxi.controller.Converter;
 import br.octahedron.cotopaxi.controller.ConvertionException;
 
 /**
- * Converter for basic numeric types.
+ * Base class for {@link Converter}s for basic types.
  * 
  * It converts string to {@link BigDecimal}, {@link BigInteger}, {@link Byte}, {@link Double},
  * {@link Float}, {@link Integer}, {@link Long} and {@link Short}.
  * 
- * @see NumberConverter.NumberType
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-public class NumberConverter<T extends Number> implements Converter<Number> {
+@SuppressWarnings("rawtypes")
+public abstract class AbstractNumberConverter<T extends Number> implements Converter {
 
-	public enum NumberType {
-		BIG_DECIMAL(BigDecimal.class), BIG_INTEGER(BigInteger.class), BYTE(Byte.class), DOUBLE(Double.class), FLOAT(Float.class), INTEGER(
-				Integer.class), LONG(Long.class), SHORT(Short.class);
-
-		private Class<? extends Number> klass;
-
-		NumberType(Class<? extends Number> klass) {
-			this.klass = klass;
-		}
-
-		protected Class<? extends Number> getNumberClass() {
-			return this.klass;
-		}
-	}
-
-	private NumberType numberType;
+	private Class<T> klass;
 
 	/**
 	 * Creates a number converter for the given {@link NumberType}.
@@ -60,8 +45,8 @@ public class NumberConverter<T extends Number> implements Converter<Number> {
 	 * @param numberType
 	 *            The {@link NumberType}.
 	 */
-	public NumberConverter(NumberType numberType) {
-		this.numberType = numberType;
+	public AbstractNumberConverter(Class<T> klass) {
+		this.klass = klass;
 	}
 
 	/*
@@ -73,7 +58,7 @@ public class NumberConverter<T extends Number> implements Converter<Number> {
 	@Override
 	public T convert(String input) throws ConvertionException {
 		try {
-			Constructor<? extends Number> constructor = this.numberType.getNumberClass().getConstructor(String.class);
+			Constructor<? extends Number> constructor = this.klass.getConstructor(String.class);
 			return (T) constructor.newInstance(input);
 		} catch (Exception ex) {
 			throw new ConvertionException(ex);

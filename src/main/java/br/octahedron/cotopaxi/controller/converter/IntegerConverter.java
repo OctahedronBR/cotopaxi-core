@@ -14,27 +14,17 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.view.render;
-
-import java.io.Writer;
-import java.util.Map;
-
-import br.octahedron.cotopaxi.CotopaxiProperty;
+package br.octahedron.cotopaxi.controller.converter;
 
 /**
- * The default interface for TemplateRenders
+ * NumberConverter for {@link Integer}
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public interface TemplateRender {
+public class IntegerConverter extends AbstractNumberConverter<Integer> {
 
-	/**
-	 * Renders the given template, using the given output {@link Map}, writing to to given {@link Writer}
-	 *  
-	 * @param templatePath The template to be used, relative to the {@link CotopaxiProperty#TEMPLATE_FOLDER}.
-	 * @param output The output objects {@link Map}
-	 * @param writer The writer to be used to write the rendered template. It isn't necessary to close/flush the writer.
-	 */
-	public abstract void render(String templatePath, Map<String, Object> output, Writer writer);
+	public IntegerConverter() {
+		super(Integer.class);
+	}
 
 }

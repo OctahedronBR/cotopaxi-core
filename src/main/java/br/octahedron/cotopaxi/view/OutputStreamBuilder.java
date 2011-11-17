@@ -14,21 +14,17 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.interceptor;
+package br.octahedron.cotopaxi.view;
 
-import br.octahedron.cotopaxi.view.response.TemplateResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
+ * TODO comment
+ * @author Name - email@octahedron.com.br
+ *
  */
-public class FakeTemplateInterceptor extends TemplateInterceptor {
+public interface OutputStreamBuilder {
 
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.interceptor.ResponseInterceptor#preRender(br.octahedron.cotopaxi.view.response.InterceptableResponse)
-	 */
-	@Override
-	public void preRender(TemplateResponse response) {
-		
-	}
-
+	public OutputStream createOutputStream(OutputStream servletOutput) throws IOException;
 }

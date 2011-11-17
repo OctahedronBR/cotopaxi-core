@@ -16,16 +16,26 @@
  */
 package br.octahedron.cotopaxi.controller;
 
+import static br.octahedron.cotopaxi.inject.Injector.getInstance;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.octahedron.cotopaxi.controller.converter.BigDecimalConverter;
+import br.octahedron.cotopaxi.controller.converter.BigIntegerConverter;
 import br.octahedron.cotopaxi.controller.converter.BooleanConverter;
+import br.octahedron.cotopaxi.controller.converter.ByteConverter;
 import br.octahedron.cotopaxi.controller.converter.DateConverter;
-import br.octahedron.cotopaxi.controller.converter.NumberConverter;
-import br.octahedron.cotopaxi.controller.converter.NumberConverter.NumberType;
+import br.octahedron.cotopaxi.controller.converter.DoubleConverter;
+import br.octahedron.cotopaxi.controller.converter.FloatConverter;
+import br.octahedron.cotopaxi.controller.converter.IntegerConverter;
+import br.octahedron.cotopaxi.controller.converter.LongConverter;
+import br.octahedron.cotopaxi.controller.converter.ShortConverter;
 import br.octahedron.cotopaxi.controller.converter.StringArrayConverter;
 
 /**
@@ -57,11 +67,8 @@ public interface Converter<T> {
 	public static class Builder {
 
 		// Cache structures
-		@SuppressWarnings("rawtypes")
-		private static Map<NumberType, NumberConverter> numberConverter = new HashMap<NumberType, NumberConverter>();
 		private static Map<String, StringArrayConverter> strArrayConverter = new HashMap<String, StringArrayConverter>();
 		private static Map<String, DateConverter> dateConverters = new HashMap<String, DateConverter>();
-		private static BooleanConverter bool = new BooleanConverter();
 
 		/**
 		 * Gets a {@link DateConverter} for the given {@link DateFormat}
@@ -81,7 +88,11 @@ public interface Converter<T> {
 		}
 
 		public static Converter<Boolean> bool() {
-			return bool;
+			try {
+				return getInstance(BooleanConverter.class);
+			} catch (InstantiationException ex) {
+				throw new RuntimeException(ex);
+			}
 		}
 
 		/**
@@ -95,22 +106,118 @@ public interface Converter<T> {
 			}
 			return strArrayConverter.get(separator);
 		}
-
+		
 		/**
-		 * Gets a number Converter
+		 * Gets a ByteConverter
 		 * 
-		 * @param numberType
-		 *            The number type.
-		 * @return A number converter for the given {@link NumberType}
+		 * @return A byte converter
 		 */
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		public static synchronized Converter<? extends Number> number(NumberType numberType) {
-			if (!numberConverter.containsKey(numberType)) {
-				numberConverter.put(numberType, new NumberConverter(numberType));
+		@SuppressWarnings("unchecked")
+		public static Converter<Byte> byteNumber() {
+			try {
+				return getInstance(ByteConverter.class);
+			} catch (InstantiationException ex) {
+				throw new RuntimeException(ex);
 			}
-			return numberConverter.get(numberType);
 		}
-
+		
+		/**
+		 * Gets a ShortConverter
+		 * 
+		 * @return A short converter
+		 */
+		@SuppressWarnings("unchecked")
+		public static Converter<Short> shortNumber() {
+			try {
+				return getInstance(ShortConverter.class);
+			} catch (InstantiationException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+		
+		/**
+		 * Gets a IntegerConverter
+		 * 
+		 * @return A int converter
+		 */
+		@SuppressWarnings("unchecked")
+		public static Converter<Integer> intNumber() {
+			try {
+				return getInstance(IntegerConverter.class);
+			} catch (InstantiationException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+		
+		/**
+		 * Gets a LongConverter
+		 * 
+		 * @return A long converter
+		 */
+		@SuppressWarnings("unchecked")
+		public static Converter<Long> longNumber() {
+			try {
+				return getInstance(LongConverter.class);
+			} catch (InstantiationException ex) {
+				throw new RuntimeException(ex);
+			}
+		}		
+		
+		/**
+		 * Gets a FloatConverter
+		 * 
+		 * @return A float converter
+		 */
+		@SuppressWarnings("unchecked")
+		public static Converter<Float> floatNumber() {
+			try {
+				return getInstance(FloatConverter.class);
+			} catch (InstantiationException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+		
+		/**
+		 * Gets a DoubleConverter
+		 * 
+		 * @return A double converter
+		 */
+		@SuppressWarnings("unchecked")
+		public static Converter<Double> doubleNumber() {
+			try {
+				return getInstance(DoubleConverter.class);
+			} catch (InstantiationException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+		
+		/**
+		 * Gets a BigIntegerConverter
+		 * 
+		 * @return A BigInteger converter
+		 */
+		@SuppressWarnings("unchecked")
+		public static Converter<BigInteger> bigIntNumber() {
+			try {
+				return getInstance(BigIntegerConverter.class);
+			} catch (InstantiationException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+		
+		/**
+		 * Gets a BigDecimalConverter
+		 * 
+		 * @return A BigDecimal converter
+		 */
+		@SuppressWarnings("unchecked")
+		public static Converter<BigDecimal> bigDecimalNumber() {
+			try {
+				return getInstance(BigDecimalConverter.class);
+			} catch (InstantiationException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
 	}
 
 }

@@ -98,7 +98,7 @@ public class InterceptorManager {
 	}
 
 	/**
-	 * Executes the {@link TemplateInterceptor} finish.
+	 * Executes the {@link FinalizerInterceptor} finish.
 	 */
 	public void finish() {
 		for (FinalizerInterceptor interceptor : this.finalizerInterceptors) {

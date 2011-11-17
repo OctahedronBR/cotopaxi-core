@@ -22,6 +22,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 import br.octahedron.cotopaxi.controller.ControllerResponse;
+import br.octahedron.cotopaxi.inject.SelfInjectable;
 
 /**
  * A very Generic Response type, that receives a context and a {@link ServletResponse} to render
@@ -29,13 +30,10 @@ import br.octahedron.cotopaxi.controller.ControllerResponse;
  * 
  * @author Danilo Penna Queiroz - daniloqueiroz@octahedron.com.br
  */
-public abstract class ServletGenericResponse implements ControllerResponse {
+public abstract class ServletGenericResponse extends SelfInjectable implements ControllerResponse {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @seebr.octahedron.cotopaxi.controller.ControllerResponse#dispatch(javax.servlet.http.
-	 * HttpServletResponse)
 	 */
 	@Override
 	public abstract void dispatch(HttpServletResponse servletResponse) throws IOException;

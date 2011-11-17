@@ -19,6 +19,7 @@ package br.octahedron.cotopaxi.interceptor;
 import br.octahedron.cotopaxi.controller.InputController;
 import br.octahedron.cotopaxi.controller.ControllerResponse;
 import br.octahedron.cotopaxi.view.response.RenderableResponse;
+import br.octahedron.cotopaxi.view.response.TemplateResponse;
 
 /**
  * An interceptor that intercepts the {@link RenderableResponse} processing. It intercepts the
@@ -36,6 +37,6 @@ public abstract class TemplateInterceptor extends InputController {
 	 * and/or decorates the writer to be used to render response.
 	 * 
 	 */
-	public abstract void preRender(RenderableResponse response);
+	public abstract void preRender(TemplateResponse response);
 
 }

@@ -31,23 +31,31 @@ package br.octahedron.cotopaxi;
 public enum CotopaxiProperty {
 
 	/**
-	 * Velocity templates' folder. Default: templates/
+	 * The TemplateRender to be used to render templates. Default:
+	 * br.octahedron.cotopaxi.view.render.VelocityTemplateRender
+	 * 
+	 * @see br.octahedron.cotopaxi.view.render.TemplateRender
+	 * 
+	 */
+	TEMPLATE_RENDER("br.octahedron.cotopaxi.view.render.VelocityTemplateRender"),
+	/**
+	 * Templates' folder. Default: templates/
 	 */
 	TEMPLATE_FOLDER("templates/"),
 	/**
-	 * Server Error (500) template. Default: error.vm 
+	 * Server Error (500) template. Default: error.vm
 	 */
 	ERROR_TEMPLATE("error.vm"),
 	/**
-	 * Forbidden Error (403) template. Default: forbidden.vm 
+	 * Forbidden Error (403) template. Default: forbidden.vm
 	 */
 	FORBIDDEN_TEMPLATE("notauthorized.vm"),
 	/**
-	 * Bad Request Error (400) template. Default: invalid.vm 
+	 * Bad Request Error (400) template. Default: invalid.vm
 	 */
 	INVALID_TEMPLATE("invalid.vm"),
 	/**
-	 * Not Found Error (404) template. Default: notFound.vm 
+	 * Not Found Error (404) template. Default: notFound.vm
 	 */
 	NOT_FOUND_TEMPLATE("notfound.vm"),
 	/**
@@ -76,7 +84,7 @@ public enum CotopaxiProperty {
 	public static String getProperty(CotopaxiProperty property) {
 		return System.getProperty(property.name(), property.defaultValue());
 	}
-	
+
 	public static String getProperty(String property) {
 		return System.getProperty(property);
 	}

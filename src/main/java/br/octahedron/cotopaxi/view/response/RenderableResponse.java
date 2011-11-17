@@ -17,11 +17,14 @@
 package br.octahedron.cotopaxi.view.response;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,9 +44,6 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 	protected Locale locale;
 	protected Map<String, Object> output;
 
-	/**
-	 * @param subClass
-	 */
 	public RenderableResponse(int code, Map<String, Object> output, Map<String, String> cookies, Map<String, String> headers, Locale locale) {
 		this.code = code;
 		this.output = output;
@@ -52,9 +52,26 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 		this.locale = locale;
 	}
 
+	/**
+	 * Gets the {@link OutputStream} to be used to write output.
+	 * 
+	 * @param servletResponse
+	 *            The {@link ServletResponse} to be used to create the {@link OutputStream}
+	 * @return The {@link OutputStream} to be used to write response.
+	 * 
+	 * @throws IOException
+	 *             If some error occurs loading the {@link OutputStream}
+	 */
+	protected OutputStream getOutputStream(HttpServletResponse servletResponse) throws IOException {
+		return servletResponse.getOutputStream();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 */
 	@Override
 	public final void dispatch(HttpServletResponse servletResponse) throws IOException {
-		this.writer = servletResponse.getWriter();
+		this.writer = new OutputStreamWriter(this.getOutputStream(servletResponse));
 
 		// adjust headers
 		if (this.headers != null) {
@@ -82,49 +99,8 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 		if (servletResponse.isCommitted()) {
 			servletResponse.flushBuffer();
 		}
+		this.writer.close();
 		this.writer = null;
-	}
-
-	/**
-	 * Gets this Response's Writer to be used to render. If this method is called out of the
-	 * dispatch execution scope, it throws an IllegalStateException.
-	 * 
-	 * This method should be called only be ResponseInterceptors
-	 * 
-	 * @return The writer to be used to render.
-	 */
-	public Writer getWriter() {
-		if (this.writer != null) {
-			return this.writer;
-		} else {
-			throw new IllegalStateException("Not executing dispatch method");
-		}
-	}
-
-	/**
-	 * Sets the writer to be used to render this response
-	 * 
-	 * @param writer
-	 *            the writer to be used to render this response
-	 */
-	public void setWriter(Writer writer) {
-		this.writer = writer;
-	}
-
-	/**
-	 * Adds a new object to output. If there's already exists an object for the given key, the
-	 * original one is kept.
-	 * 
-	 * @param key
-	 *            The object's key
-	 * 
-	 * @param value
-	 *            The object's value
-	 */
-	public void addOutput(String key, Object value) {
-		if (!this.output.containsKey(key)) {
-			this.output.put(key, value);
-		}
 	}
 
 	/**

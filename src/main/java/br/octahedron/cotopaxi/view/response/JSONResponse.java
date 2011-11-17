@@ -35,16 +35,16 @@ public class JSONResponse extends RenderableResponse {
 		super(code, context.getOutput(), context.getCookies(), context.getHeaders(), context.getLocale());
 	}
 
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.view.response.WriteableResponse#getContentType()
+	/*
+	 * (non-Javadoc)
 	 */
 	@Override
 	public String getContentType() {
 		return "application/json";
 	}
 
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.view.response.InterceptableResponse#render()
+	/*
+	 * (non-Javadoc)
 	 */
 	@Override
 	protected void render() {

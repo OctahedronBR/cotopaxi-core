@@ -16,6 +16,10 @@
  */
 package br.octahedron.cotopaxi;
 
+import static br.octahedron.cotopaxi.CotopaxiProperty.TEMPLATE_RENDER;
+import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
+import static br.octahedron.cotopaxi.inject.DependencyManager.registerDependency;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -33,6 +37,7 @@ import br.octahedron.cotopaxi.controller.ControllerResponse;
 import br.octahedron.cotopaxi.interceptor.InterceptorManager;
 import br.octahedron.cotopaxi.route.NotFoundExeption;
 import br.octahedron.cotopaxi.route.Router;
+import br.octahedron.cotopaxi.view.render.TemplateRender;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
 import br.octahedron.util.Log;
 
@@ -65,6 +70,7 @@ public class CotopaxiServlet extends HttpServlet {
 			this.executor = new ControllerExecutor(this.interceptor);
 			log.info("Cotopaxi is ready to serve...");
 			booter.boot();
+			registerDependency(TemplateRender.class.getName(), getProperty(TEMPLATE_RENDER));
 		} catch (FileNotFoundException ex) {
 			log.error("Configuration file not found. Make sure the %s file exists", ConfigurationLoader.CONFIGURATION_FILENAME);
 			throw new ServletException(ex);

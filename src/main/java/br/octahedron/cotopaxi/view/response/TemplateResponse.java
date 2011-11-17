@@ -16,24 +16,36 @@
  */
 package br.octahedron.cotopaxi.view.response;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
+
 import br.octahedron.cotopaxi.controller.ControllerContext;
+import br.octahedron.cotopaxi.inject.Inject;
+import br.octahedron.cotopaxi.view.OutputStreamBuilder;
 import br.octahedron.cotopaxi.view.render.TemplateRender;
-import br.octahedron.cotopaxi.view.render.VelocityTemplateRender;
 
 /**
- * A {@link RenderableResponse} that render and write a velocity template.
- *  
+ * A {@link RenderableResponse} that render and write templates.
+ * 
+ * @see {@link TemplateRender}
+ * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class TemplateResponse extends RenderableResponse {
-	
-	private TemplateRender templateRender = new VelocityTemplateRender();
+
+	@Inject
+	private TemplateRender templateRender;
+
+	private OutputStreamBuilder builder = null;
 	private String template;
 
-	public TemplateResponse(String template, int code, Map<String, Object> output, Map<String, String> cookies, Map<String, String> headers, Locale locale) {
+	public TemplateResponse(String template, int code, Map<String, Object> output, Map<String, String> cookies, Map<String, String> headers,
+			Locale locale) {
 		super(code, output, cookies, headers, locale);
 		this.template = template;
 	}
@@ -41,15 +53,102 @@ public class TemplateResponse extends RenderableResponse {
 	public TemplateResponse(String template, int code, ControllerContext context) {
 		this(template, code, context.getOutput(), context.getCookies(), context.getHeaders(), context.getLocale());
 	}
-	
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.controller.response.WriteableResponse#getContentType()
+
+	/**
+	 * @param templateRender
+	 *            the templateRender to set
+	 */
+	public void setTemplateRender(TemplateRender templateRender) {
+		this.templateRender = templateRender;
+	}
+
+	/**
+	 * Gets the {@link OutputStream} to be used to write output.
+	 * 
+	 * @param servletResponse
+	 *            The {@link ServletResponse} to be used to create the {@link OutputStream}
+	 * @return The {@link OutputStream} to be used to write response.
+	 * 
+	 * @throws IOException
+	 *             If some error occurs loading the {@link OutputStream}
+	 */
+	protected OutputStream getOutputStream(HttpServletResponse servletResponse) throws IOException {
+		OutputStream outStream = servletResponse.getOutputStream();
+		if (this.builder != null) {
+			outStream = this.builder.createOutputStream(outStream);
+		}
+
+		return outStream;
+	}
+
+	/**
+	 * Sets the {@link OutputStreamBuilder} to be used to create the Ou
+	 * 
+	 * @param gzipBuilder
+	 */
+	public void setOutputStreamBuilder(OutputStreamBuilder gzipBuilder) {
+		this.builder = gzipBuilder;
+	}
+
+	/**
+	 * Adds a new object to output. If there's already exists an object for the given key, the
+	 * original one is kept.
+	 * 
+	 * @param key
+	 *            The object's key
+	 * 
+	 * @param value
+	 *            The object's value
+	 */
+	public void addOutput(String key, Object value) {
+		if (!this.output.containsKey(key)) {
+			this.output.put(key, value);
+		}
+	}
+
+	/**
+	 * Adds a new object to output. If there's already exists an object for the given key, the
+	 * original one is kept.
+	 * 
+	 * @param key
+	 *            The object's key
+	 * 
+	 * @param value
+	 *            The object's value
+	 */
+	public void addHeader(String key, String value) {
+		if (!this.headers.containsKey(key)) {
+			this.headers.put(key, value);
+		}
+	}
+
+	/**
+	 * Adds a new object to output. If there's already exists an object for the given key, the
+	 * original one is kept.
+	 * 
+	 * @param key
+	 *            The object's key
+	 * 
+	 * @param value
+	 *            The object's value
+	 */
+	public void addCookies(String key, String value) {
+		if (!this.cookies.containsKey(key)) {
+			this.cookies.put(key, value);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
 	 */
 	@Override
 	public String getContentType() {
 		return "text/html";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 */
 	@Override
 	protected void render() {
 		this.templateRender.render(this.template, this.output, this.writer);

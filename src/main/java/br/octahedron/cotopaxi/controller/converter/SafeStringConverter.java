@@ -16,37 +16,24 @@
  */
 package br.octahedron.cotopaxi.controller.converter;
 
-import static junit.framework.Assert.assertEquals;
-
-import java.math.BigDecimal;
-
-import org.junit.Test;
-
 import br.octahedron.cotopaxi.controller.Converter;
 import br.octahedron.cotopaxi.controller.ConvertionException;
 
 /**
+ * A simple String converter that stripes HTML code.
+ * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
+ *
  */
-public class ConvertersTest {
+public class SafeStringConverter implements Converter<String> {
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testNumberConverter() throws ConvertionException {
-		Converter<Integer> integer = new IntegerConverter();
-		Integer i = integer.convert("0001");
-		assertEquals(new Integer(1), i);
-		
-		Converter<BigDecimal> bigDecimal = new BigDecimalConverter();
-		BigDecimal dec = bigDecimal.convert("0.0001");
-		assertEquals(new BigDecimal("0.0001"), dec);
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Test(expected=ConvertionException.class)
-	public void testNumberConverterFail() throws ConvertionException {
-		Converter<Integer> integer = new IntegerConverter();
-		integer.convert("a");
+	/* (non-Javadoc)
+	 * @see br.octahedron.cotopaxi.controller.Converter#convert(java.lang.String)
+	 */
+	@Override
+	public String convert(String input) throws ConvertionException {
+		// TODO poor implementation, improve it.
+		return input.replaceAll("\\<.*?\\>", "");
 	}
 
 }

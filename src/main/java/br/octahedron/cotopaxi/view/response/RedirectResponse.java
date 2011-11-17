@@ -22,22 +22,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.octahedron.util.Log;
 
-
 /**
  * A redirect Response
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class RedirectResponse extends ServletGenericResponse {
-	
+
 	private static final Log log = new Log(RedirectResponse.class);
 	private String url;
 
 	public RedirectResponse(String url) {
 		this.url = url;
 	}
-	
 
+	/*
+	 * (non-Javadoc)
+	 */
 	@Override
 	public void dispatch(HttpServletResponse servletResponse) throws IOException {
 		log.debug("Sending redirect to %s", this.url);
