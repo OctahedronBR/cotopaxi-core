@@ -13,8 +13,8 @@ import br.octahedron.cotopaxi.controller.ConvertionException;
 public class StringConverter implements Converter<String> {
 
 	@Override
-	public String convert(String arg0) throws ConvertionException {
-		return arg0;
+	public String convert(String input) throws ConvertionException {
+		return input;
 	}
 
 }

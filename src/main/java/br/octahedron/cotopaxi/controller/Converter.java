@@ -35,8 +35,10 @@ import br.octahedron.cotopaxi.controller.converter.DoubleConverter;
 import br.octahedron.cotopaxi.controller.converter.FloatConverter;
 import br.octahedron.cotopaxi.controller.converter.IntegerConverter;
 import br.octahedron.cotopaxi.controller.converter.LongConverter;
+import br.octahedron.cotopaxi.controller.converter.SafeStringConverter;
 import br.octahedron.cotopaxi.controller.converter.ShortConverter;
 import br.octahedron.cotopaxi.controller.converter.StringArrayConverter;
+import br.octahedron.cotopaxi.controller.converter.StringConverter;
 
 /**
  * Default interface for type converters. Converters are used to convert input data from
@@ -69,6 +71,8 @@ public interface Converter<T> {
 		// Cache structures
 		private static Map<String, StringArrayConverter> strArrayConverter = new HashMap<String, StringArrayConverter>();
 		private static Map<String, DateConverter> dateConverters = new HashMap<String, DateConverter>();
+		private static Converter<String> rawStringConverter;
+		private static Converter<String> safeStringConverter;
 
 		/**
 		 * Gets a {@link DateConverter} for the given {@link DateFormat}
@@ -87,6 +91,11 @@ public interface Converter<T> {
 			return dateConverters.get(dateFormat);
 		}
 
+		/**
+		 * Gets a {@link BooleanConverter}.
+		 * 
+		 * @return a {@link BooleanConverter}
+		 */
 		public static Converter<Boolean> bool() {
 			try {
 				return getInstance(BooleanConverter.class);
@@ -106,7 +115,32 @@ public interface Converter<T> {
 			}
 			return strArrayConverter.get(separator);
 		}
-		
+
+		/**
+		 * Gets a {@link StringConverter}
+		 * 
+		 * @return a {@link StringConverter}
+		 */
+		public static synchronized Converter<String> string() {
+			if (rawStringConverter == null) {
+				rawStringConverter = new StringConverter();
+			}
+			return rawStringConverter;
+		}
+
+		/**
+		 * Gets a {@link SafeStringConverter}. This kind of converters strips any html code from
+		 * input.
+		 * 
+		 * @return a {@link SafeStringConverter}
+		 */
+		public static synchronized Converter<String> safeString() {
+			if (safeStringConverter == null) {
+				safeStringConverter = new SafeStringConverter();
+			}
+			return safeStringConverter;
+		}
+
 		/**
 		 * Gets a ByteConverter
 		 * 
@@ -120,7 +154,7 @@ public interface Converter<T> {
 				throw new RuntimeException(ex);
 			}
 		}
-		
+
 		/**
 		 * Gets a ShortConverter
 		 * 
@@ -134,7 +168,7 @@ public interface Converter<T> {
 				throw new RuntimeException(ex);
 			}
 		}
-		
+
 		/**
 		 * Gets a IntegerConverter
 		 * 
@@ -148,7 +182,7 @@ public interface Converter<T> {
 				throw new RuntimeException(ex);
 			}
 		}
-		
+
 		/**
 		 * Gets a LongConverter
 		 * 
@@ -161,8 +195,8 @@ public interface Converter<T> {
 			} catch (InstantiationException ex) {
 				throw new RuntimeException(ex);
 			}
-		}		
-		
+		}
+
 		/**
 		 * Gets a FloatConverter
 		 * 
@@ -176,7 +210,7 @@ public interface Converter<T> {
 				throw new RuntimeException(ex);
 			}
 		}
-		
+
 		/**
 		 * Gets a DoubleConverter
 		 * 
@@ -190,7 +224,7 @@ public interface Converter<T> {
 				throw new RuntimeException(ex);
 			}
 		}
-		
+
 		/**
 		 * Gets a BigIntegerConverter
 		 * 
@@ -204,7 +238,7 @@ public interface Converter<T> {
 				throw new RuntimeException(ex);
 			}
 		}
-		
+
 		/**
 		 * Gets a BigDecimalConverter
 		 * 
