@@ -43,6 +43,7 @@ import br.octahedron.util.ReflectionUtil;
  * {@link ControllerResponse} for each request. It also is responsible by handles all the
  * ControllerContext lifecycle.
  * 
+ * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class ControllerExecutor {
@@ -65,7 +66,7 @@ public class ControllerExecutor {
 	 */
 	public ControllerResponse execute(HttpServletRequest request, NotFoundExeption nfex) {
 		log.warning("Cannot found a controller for url %s - %s.", request.getRequestURI(), request.getMethod());
-		setContext(request, "NotFound");
+		setContext(request, new ControllerDescriptor(nfex.getUrl(), request.getMethod(), "error", "NotFound"));
 		Map<String, Object> output = new HashMap<String, Object>();
 		output.put(getProperty(ERROR_PROPERTY), nfex);
 		return new TemplateResponse(getProperty(NOT_FOUND_TEMPLATE), 404, output, null, null, request.getLocale());
@@ -86,7 +87,7 @@ public class ControllerExecutor {
 			clearContext();
 			// load controller and fix context
 			Controller controller = this.loadController(controllerDesc);
-			setContext(request, controllerDesc.getControllerName());
+			setContext(request, controllerDesc);
 			Method method = this.getMethod(controllerDesc, controller);
 			ControllerContext context = getContext();
 			this.interceptor.execute(method.getDeclaringClass());
@@ -112,7 +113,7 @@ public class ControllerExecutor {
 			 * 
 			 * Anyway, we will (re)load the context as an InternalServerError
 			 */
-			setContext(request, "InternalServerError");
+			setContext(request, controllerDesc);
 			log.error("Unable to load controller %s", controllerDesc);
 			log.terror("Unable to load controller", ex);
 			return this.execute(request, new NotFoundExeption(request.getRequestURI(), request.getMethod()));
@@ -128,9 +129,7 @@ public class ControllerExecutor {
 			log.debug("Method founded at cache table. Hash: %d", hash);
 			return this.methodsCache.get(hash);
 		} else {
-			String name = controllerDesc.getControllerName();
-			String method = controllerDesc.getHttpMethod();
-			method += (name.length() > 2) ? name.substring(0, 1).toUpperCase() + name.substring(1) : name.toUpperCase();
+			String method = controllerDesc.getFullControllerName();
 			Method result = ReflectionUtil.getMethod(controller.getClass(), method);
 			this.methodsCache.put(hash, result);
 			return result;

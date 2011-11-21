@@ -28,6 +28,7 @@ public class ControllerDescriptor {
 	private String controllerName;
 	private String httpMethod;
 	private String url;
+	private String fullname;
 
 	public ControllerDescriptor(String url, String method, String controllerName, String controllerClass) {
 		this.url = url.toLowerCase();
@@ -35,6 +36,7 @@ public class ControllerDescriptor {
 		this.controllerName = (controllerName.length() > 2) ? controllerName.substring(0, 1).toUpperCase() + controllerName.substring(1)
 				: controllerName.toUpperCase();
 		this.controllerClass = controllerClass;
+		this.fullname = this.httpMethod + ((this.controllerName.length() > 2) ? this.controllerName.substring(0, 1).toUpperCase() + this.controllerName.substring(1) : this.controllerName.toUpperCase());
 	}
 
 	/**
@@ -63,6 +65,13 @@ public class ControllerDescriptor {
 	 */
 	public String getUrl() {
 		return url;
+	}
+	
+	/**
+	 * @return The controller's full name, it means, httpMethod + controllerName
+	 */
+	public String getFullControllerName() {
+		return this.fullname;
 	}
 
 	/*

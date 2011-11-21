@@ -39,8 +39,8 @@ public final class ControllerContext {
 		return threadContexts.get();
 	}
 
-	protected static void setContext(HttpServletRequest request, String controllerName) {
-		threadContexts.set(new ControllerContext(request, controllerName));
+	protected static void setContext(HttpServletRequest request, ControllerDescriptor controllerDesc) {
+		threadContexts.set(new ControllerContext(request, controllerDesc));
 	}
 
 	protected static void clearContext() {
@@ -49,33 +49,44 @@ public final class ControllerContext {
 
 	// internal
 	private ControllerResponse controllerResp;
-	private Locale locale;
 	private Map<String, String> cookies;
 	private Map<String, String> headers;
 	private Map<String, Object> output;
 	private HttpServletRequest request;
-	private String controllerName;
+	private ControllerDescriptor controllerDesc;
+	private Locale locale;
 
-	private ControllerContext(HttpServletRequest request, String controllerName) {
+	private ControllerContext(HttpServletRequest request, ControllerDescriptor controllerDesc) {
 		this.request = request;
-		this.locale = request.getLocale();
-		this.controllerName = controllerName;
+		this.controllerDesc = controllerDesc;
 	}
 
 	// internal methods
 
+	/**
+	 * Gets the Servlet Context 
+	 */
 	protected HttpServletRequest getRequest() {
 		return this.request;
 	}
 	
+	/**
+	 * Sets the controller response for this context.
+	 */
 	protected void setControllerResponse(ControllerResponse response) {
 		this.controllerResp = response;
 	}
 
-	public String getControllerName() {
-		return controllerName;
+	/**
+	 * @return the controllerDescriptor
+	 */
+	public ControllerDescriptor getControllerDescriptor() {
+		return this.controllerDesc;
 	}
 
+	/**
+	 * @return the response's headers
+	 */
 	public Map<String, String> getHeaders() {
 		if (this.headers == null) {
 			this.headers = new HashMap<String, String>();
@@ -83,6 +94,9 @@ public final class ControllerContext {
 		return this.headers;
 	}
 
+	/**
+	 * @return response's cookies
+	 */
 	public Map<String, String> getCookies() {
 		if (this.cookies == null) {
 			this.cookies = new HashMap<String, String>();
@@ -90,6 +104,9 @@ public final class ControllerContext {
 		return this.cookies;
 	}
 
+	/**
+	 * @return response's output
+	 */
 	public Map<String, Object> getOutput() {
 		if (this.output == null) {
 			this.output = new HashMap<String, Object>();
@@ -97,21 +114,32 @@ public final class ControllerContext {
 		return this.output;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Map<String, Object> getInput() {
-		return this.request.getParameterMap();
-	}
-
+	/**
+	 * @return <code>true</code> if request is already answered, <code>false</code> if not.
+	 */
 	public boolean isAnswered() {
 		return this.controllerResp != null;
 	}
 	
+	/**
+	 * @return the {@link ControllerResponse}, or <code>null</code> if request not answered.
+	 */
 	public ControllerResponse getControllerResponse() {
 		return this.controllerResp;
 	}
 	
+	/**
+	 * @return the locale to be used to render response.
+	 */
 	public Locale getLocale() {
-		return locale;
+		return this.locale;
+	}
+
+	/**
+	 * @param locale the locale to be used to render response.
+	 */
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 
 }

@@ -17,11 +17,12 @@
 package br.octahedron.cotopaxi.controller;
 
 import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
+import static java.util.Collections.list;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
+import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -46,31 +47,11 @@ public abstract class InputController {
 	}
 
 	/**
-	 * Gets the output objects map
+	 * Gets all input names. Useful to iterate over all inputs and recover its values.
 	 */
-	protected final Map<String, Object> output() {
-		return getContext().getOutput();
-	}
-	
-	/**
-	 * Gets the input objects map
-	 */
-	protected final Map<String, Object> input() {
-		return getContext().getInput();
-	}
-
-	/**
-	 * Gets the output cookies map
-	 */
-	protected final Map<String, String> cookies() {
-		return getContext().getCookies();
-	}
-
-	/**
-	 * Gets the output headers map
-	 */
-	protected final Map<String, String> headers() {
-		return getContext().getHeaders();
+	@SuppressWarnings("unchecked")
+	protected final Collection<String> input() {
+		return list(request().getParameterNames());
 	}
 
 	/**
@@ -90,10 +71,18 @@ public abstract class InputController {
 	}
 
 	/**
-	 * Gets the controller name
+	 * Gets the {@link ControllerDescriptor} for the current context
 	 */
-	protected final String controllerName() {
-		return getContext().getControllerName();
+	protected final ControllerDescriptor controllerDescriptor() {
+		return getContext().getControllerDescriptor();
+	}
+
+	/**
+	 * Get a collection with all client's acceptable locales, sorted by preference order.
+	 */
+	@SuppressWarnings("unchecked")
+	protected final Collection<Locale> locales() {
+		return list(this.request().getLocales());
 	}
 
 	/**
@@ -159,7 +148,7 @@ public abstract class InputController {
 		}
 		return (result != null && shouldTrim) ? result.trim() : result;
 	}
-	
+
 	/**
 	 * Get an input parameter with the given key, and convert it using the given converter.
 	 * 
@@ -168,20 +157,22 @@ public abstract class InputController {
 	 * 
 	 * @param name
 	 *            The parameter's name
-	 * @param converter The converter to be used to convert input value
+	 * @param converter
+	 *            The converter to be used to convert input value
 	 * @return The parameter's value if exists, or <code>null</code> if there's no input parameter
 	 *         with the given name.
-	 * @throws ConvertionException If the convert can't convert the input
+	 * @throws ConvertionException
+	 *             If the convert can't convert the input
 	 * 
 	 * @see Converter
 	 */
 	protected final <T> T in(String name, Converter<T> converter) throws ConvertionException {
 		return converter.convert(this.in(name, true));
 	}
-	
-//	protected final <T> T in(Class<T> wrapperClass) {
-//		return null;
-//	}
+
+	// protected final <T> T in(Class<T> wrapperClass) {
+	// return null;
+	// }
 
 	/**
 	 * Get all the values for a input parameter with the given key. It's useful for checkbox input,

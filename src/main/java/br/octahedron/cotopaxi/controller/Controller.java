@@ -24,6 +24,7 @@ import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
 import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
 
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -48,6 +49,36 @@ import br.octahedron.cotopaxi.view.response.TemplateResponse;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 public abstract class Controller extends InputController {
+	
+	/**
+	 * Gets the output cookies map
+	 */
+	protected final Map<String, String> cookies() {
+		return getContext().getCookies();
+	}
+
+	/**
+	 * Gets the output headers map
+	 */
+	protected final Map<String, String> headers() {
+		return getContext().getHeaders();
+	}
+	
+
+	/**
+	 * Gets the output objects map
+	 */
+	protected final Map<String, Object> output() {
+		return getContext().getOutput();
+	}
+	
+	/**
+	 * Sets the response's locale
+	 * @param lc the response's locale
+	 */
+	protected final void locale(Locale lc) {
+		getContext().setLocale(lc);
+	}
 	
 	/**
 	 * Stores an object in the session. If already exists an object stored with the given key, it

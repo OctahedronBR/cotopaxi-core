@@ -137,6 +137,20 @@ public class TemplateResponse extends RenderableResponse {
 			this.cookies.put(key, value);
 		}
 	}
+	
+	/**
+	 * Gets the current locale to be used to render this template
+	 */
+	public Locale getLocale() {
+		return this.locale;
+	}
+	
+	/**
+	 * Set's the locale to be used to render this template.
+	 */
+	public void setLocale(Locale lc) {
+		this.locale = lc;
+	}
 
 	/*
 	 * (non-Javadoc)

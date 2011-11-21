@@ -51,7 +51,7 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 		this.headers = headers;
 		this.locale = locale;
 	}
-
+	
 	/**
 	 * Gets the {@link OutputStream} to be used to write output.
 	 * 
