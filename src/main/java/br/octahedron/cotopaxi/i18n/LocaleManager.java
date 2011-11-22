@@ -136,7 +136,7 @@ public class LocaleManager {
 	public LocaleMap getLocaleMap(ControllerDescriptor desc, Collection<Locale> locales) {
 		Locale lc = this.findLocale(locales);
 		LocaleMap map = new LocaleMap(lc);
-		String[] names = { desc.getControllerClass() + "." + desc.getFullControllerName(), desc.getControllerClass(), BASE_RESOURCE };
+		String[] names = { BASE_RESOURCE, desc.getControllerClass(),  desc.getControllerClass() + "." + desc.getFullControllerName()};
 		for (String name : names) {
 			try {
 				map.addResourceBundle(this.getResource(name, lc));
