@@ -31,6 +31,7 @@ import javax.servlet.http.HttpSession;
 
 import br.octahedron.cotopaxi.view.response.JSONResponse;
 import br.octahedron.cotopaxi.view.response.RedirectResponse;
+import br.octahedron.cotopaxi.view.response.SimpleTextResponse;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
 
 /**
@@ -193,6 +194,20 @@ public abstract class Controller extends InputController {
 	 */
 	protected final void success(String template) {
 		this.render(template, 200);
+	}
+	
+	/**
+	 * Render the default SUCCESS page (200) code
+	 * 
+	 * The same as call render(template, 200)
+	 */
+	protected final void success() {
+		// TODO review
+		if (!this.isAnswered()) {
+			this.setControllerResponse(new SimpleTextResponse(200, getContext()));
+		} else {
+			throw new IllegalStateException("Response already defined");
+		}
 	}
 
 	/**

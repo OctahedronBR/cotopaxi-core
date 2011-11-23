@@ -111,8 +111,8 @@ public class CotopaxiServlet extends HttpServlet {
 				}
 				controllerResponse.dispatch(response);
 			} else {
-				log.error("Servlet cannot determine neither a controller, nor a error handler, for url %s", request.getRequestURI());
-				throw new ServletException("Server cannot determine an response for request.");
+				log.error("Cannot determine a ControllerResponse for url %s.\nDid you call some \"render\" method?", request.getRequestURI());
+				throw new ServletException("Cannot determine a ControllerResponse for request. Did you call some \"render\" method?");
 			}
 		} finally {
 			this.interceptor.finish();
