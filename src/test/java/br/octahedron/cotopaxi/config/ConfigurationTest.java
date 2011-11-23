@@ -38,7 +38,6 @@ public class ConfigurationTest {
 	@Test(expected = NoSuchElementException.class)
 	public void testParser() {
 		StringBufferInputStream in = new StringBufferInputStream("java.String\n# line comment\nAPPLICATION_BASE_URL http://localhost");
-		;
 		ConfigurationParser parser = new ConfigurationParser(in);
 		Token tk = parser.nextToken();
 		assertEquals(TokenType.CLASS, tk.getTokenType());
