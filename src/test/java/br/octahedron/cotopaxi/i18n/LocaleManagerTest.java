@@ -55,6 +55,7 @@ public class LocaleManagerTest {
 		assertEquals(2, map.size());
 		assertEquals("verynice", map.get("NICE"));
 		assertEquals("World", map.get("WORLD"));
+		assertEquals("Serviço", map.get("SERVICE"));
 		assertNull(map.get("Hi"));
 	}
 

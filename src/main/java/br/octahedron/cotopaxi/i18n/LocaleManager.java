@@ -16,6 +16,7 @@
  */
 package br.octahedron.cotopaxi.i18n;
 
+import static br.octahedron.cotopaxi.CotopaxiProperty.CHARSET;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_BASE_FILE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_FOLDER;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_SUPPORTED_LOCALES;
@@ -25,14 +26,13 @@ import static java.util.Arrays.asList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import br.octahedron.cotopaxi.CotopaxiProperty;
 import br.octahedron.cotopaxi.controller.ControllerDescriptor;
 import br.octahedron.util.Log;
 
@@ -178,20 +178,15 @@ public class LocaleManager {
 	 * @return The loaded resource bundle, or null if it's not able to load.
 	 */
 	private ResourceBundle tryLoad(String resourcePath) throws IOException {
-		InputStream in = null;
+		InputStreamReader in = null;
 		try {
 			File f = new File(resourcePath);
 			if (f.exists()) {
-				in = new FileInputStream(f);
+				in = new InputStreamReader(new FileInputStream(f), getProperty(CHARSET));
 			} else {
-				in = this.loader.getResourceAsStream(resourcePath);
+				in = new InputStreamReader(this.loader.getResourceAsStream(resourcePath), getProperty(CHARSET));
 			}
-			// check if file was load
-			if (in != null) {
-				return new PropertyResourceBundle(in);
-			} else {
-				return null;
-			}
+			return new PropertyResourceBundle(in);
 		} finally {
 			if (in != null) {
 				in.close();
