@@ -103,11 +103,7 @@ public enum CotopaxiProperty {
 	/**
 	 * The property used to binds internationalization {@link NumberFormat}. Default: numberFormat
 	 */
-	I18N_NUMBER_FORMAT_PROPERTY("numberFormat"), 
-	/**
-	 * Application's charset. Default: UTF-8
-	 */
-	CHARSET("UTF-8");
+	I18N_NUMBER_FORMAT_PROPERTY("numberFormat");
 
 	private String defaultValue;
 

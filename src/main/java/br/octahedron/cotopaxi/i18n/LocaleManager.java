@@ -16,7 +16,6 @@
  */
 package br.octahedron.cotopaxi.i18n;
 
-import static br.octahedron.cotopaxi.CotopaxiProperty.CHARSET;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_BASE_FILE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_FOLDER;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_SUPPORTED_LOCALES;
@@ -185,11 +184,11 @@ public class LocaleManager {
 		try {
 			File f = new File(resourcePath);
 			if (f.exists()) {
-				in = new InputStreamReader(new FileInputStream(f), getProperty(CHARSET));
+				in = new InputStreamReader(new FileInputStream(f));
 			} else {
 				InputStream inStream = this.loader.getResourceAsStream(resourcePath);
 				if (inStream != null) {
-					in = new InputStreamReader(inStream, getProperty(CHARSET));
+					in = new InputStreamReader(inStream);
 				} else {
 					return null;
 				}
