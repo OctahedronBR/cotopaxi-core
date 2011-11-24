@@ -26,6 +26,7 @@ import static java.util.Arrays.asList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -33,6 +34,7 @@ import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import br.octahedron.cotopaxi.CotopaxiProperty;
 import br.octahedron.cotopaxi.controller.ControllerDescriptor;
 import br.octahedron.util.Log;
 
@@ -118,7 +120,7 @@ public class LocaleManager {
 			}
 		}
 	}
-	
+
 	/**
 	 * @param desc
 	 * @param locales
@@ -135,8 +137,9 @@ public class LocaleManager {
 	 */
 	public LocaleMap getLocaleMap(ControllerDescriptor desc, Collection<Locale> locales) {
 		Locale lc = this.findLocale(locales);
+		logger.debug("Loading i18n files for locale %s", lc);
 		LocaleMap map = new LocaleMap(lc);
-		String[] names = { BASE_RESOURCE, desc.getControllerClass(),  desc.getControllerClass() + "." + desc.getFullControllerName()};
+		String[] names = { BASE_RESOURCE, desc.getControllerClass(), desc.getControllerClass() + "." + desc.getFullControllerName() };
 		for (String name : names) {
 			try {
 				map.addResourceBundle(this.getResource(name, lc));
@@ -175,7 +178,7 @@ public class LocaleManager {
 	 * 
 	 * @param resourcePath
 	 *            The path for the resource
-	 * @return The loaded resource bundle, or null if it's not able to load.
+	 * @return The loaded resource bundle, or <code>null</code> if it's not able to load.
 	 */
 	private ResourceBundle tryLoad(String resourcePath) throws IOException {
 		InputStreamReader in = null;
@@ -184,7 +187,12 @@ public class LocaleManager {
 			if (f.exists()) {
 				in = new InputStreamReader(new FileInputStream(f), getProperty(CHARSET));
 			} else {
-				in = new InputStreamReader(this.loader.getResourceAsStream(resourcePath), getProperty(CHARSET));
+				InputStream inStream = this.loader.getResourceAsStream(resourcePath);
+				if (inStream != null) {
+					in = new InputStreamReader(inStream, getProperty(CHARSET));
+				} else {
+					return null;
+				}
 			}
 			return new PropertyResourceBundle(in);
 		} finally {
@@ -204,12 +212,14 @@ public class LocaleManager {
 	 * @return The prefered locale supported by both request and application to be used.
 	 */
 	private Locale findLocale(Collection<Locale> locales) {
-		for (Locale lc : locales) {
-			if (supportedLocales.contains(lc)) {
-				return lc;
+		if (supportedLocales.size() != 1) {
+			for (Locale lc : locales) {
+				if (supportedLocales.contains(lc)) {
+					return lc;
+				}
 			}
 		}
-		return new Locale(I18N_SUPPORTED_LOCALES.defaultValue());
+		return supportedLocales.iterator().next();
 	}
 
 	/**
