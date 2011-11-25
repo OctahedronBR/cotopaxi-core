@@ -52,7 +52,7 @@
 		</developer>
 	</developers>
 	<ciManagement>
-		<system>Jenkins</system>
+		<system>Jenkins@Cloudbees</system>
 		<url>https://cotopaxi.ci.cloudbees.com/</url>
 	</ciManagement>
 	<issueManagement>
@@ -69,14 +69,12 @@
 			<id>octahedron - snapshot</id>
 			<url>http://repository-cotopaxi.forge.cloudbees.com/snapshot/</url>
 		</repository>
+		<!-- 
 		<repository>
 			<id>octahedron - release</id>
 			<url>http://repository-cotopaxi.forge.cloudbees.com/release/</url>
 		</repository>
-		<repository>
-			<id>mvnsearch</id>
-			<url>http://www.mvnsearch.org/maven2</url>
-		</repository>
+		 -->
 	</repositories>
 	<!-- Build -->
 	<build>
