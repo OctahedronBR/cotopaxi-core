@@ -100,22 +100,22 @@ public final class Validator {
 	public boolean isValid() {
 		Map<String, String> invalidMessages = new HashMap<String, String>();
 		boolean valid = true;
-		// TODO we must evaluate till find first invalid rule for each att
 		for (RuleEntry entry : this.entries) {
 			Rule rule = entry.getRule();
 			Input input = entry.getIput();
+			String key = input.toString();
 
-			boolean validRule = rule.isValid(input.getValue());
-
-			if (!validRule) {
-				valid = false;
-				String key = input.toString();
-				if (!invalidMessages.containsKey(key)) {
+			if (!invalidMessages.containsKey(key)) {
+				log.debug("Validating '%s' using rule %s", key, rule);
+				boolean validRule = rule.isValid(input.getValue());
+				if (!validRule) {
+					log.debug("Input '%s' invalid by %s", key, rule);
+					valid = false;
 					invalidMessages.put(key, rule.getMessage());
 				}
 			}
 		}
-		log.debug("Validation result: %b. Invalid attributes: count %d; list %s", valid, invalidMessages.size(), invalidMessages.keySet().toString());
+		log.debug("Invalid attributes: count %d - list %s", invalidMessages.size(), invalidMessages.keySet().toString());
 		this.out.add(getProperty(CotopaxiProperty.INVALID_PROPERTY), invalidMessages);
 		return valid;
 	}

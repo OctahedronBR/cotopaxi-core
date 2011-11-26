@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import br.octahedron.cotopaxi.controller.Converter;
-import br.octahedron.cotopaxi.controller.ConvertionException;
 
 /**
  * Base class for {@link Converter}s for basic types.
@@ -56,12 +55,12 @@ public abstract class AbstractNumberConverter<T extends Number> implements Conve
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public T convert(String input) throws ConvertionException {
+	public T convert(String input) {
 		try {
 			Constructor<? extends Number> constructor = this.klass.getConstructor(String.class);
 			return (T) constructor.newInstance(input);
 		} catch (Exception ex) {
-			throw new ConvertionException(ex);
+			return null;
 		}
 	}
 }

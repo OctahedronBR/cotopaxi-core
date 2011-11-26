@@ -17,7 +17,6 @@
 package br.octahedron.cotopaxi.controller.converter;
 
 import br.octahedron.cotopaxi.controller.Converter;
-import br.octahedron.cotopaxi.controller.ConvertionException;
 
 /**
  * A simple String converter that stripes HTML code.
@@ -31,7 +30,7 @@ public class SafeStringConverter implements Converter<String> {
 	 * @see br.octahedron.cotopaxi.controller.Converter#convert(java.lang.String)
 	 */
 	@Override
-	public String convert(String input) throws ConvertionException {
+	public String convert(String input) {
 		// TODO poor implementation, improve it.
 		return input.replaceAll("\\<.*?\\>", "");
 	}

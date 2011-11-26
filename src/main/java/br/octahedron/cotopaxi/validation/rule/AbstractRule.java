@@ -19,23 +19,36 @@ package br.octahedron.cotopaxi.validation.rule;
 import br.octahedron.cotopaxi.validation.Rule;
 
 /**
- * Defines the base for validation rules. Validation Rules are responsible by check if a given
- * input is valid.
+ * Defines the base for validation rules. Validation Rules are responsible by check if a given input
+ * is valid.
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 public abstract class AbstractRule implements Rule {
-	
+
 	protected String message;
 
+	/**
+	 * @param message
+	 *            The message for validation fail
+	 */
 	public AbstractRule(String message) {
 		this.message = message;
 	}
 
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.validation.Rule#getMessage()
+	/*
+	 * (non-Javadoc)
 	 */
 	public String getMessage() {
 		return this.message;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 */
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
+
 }

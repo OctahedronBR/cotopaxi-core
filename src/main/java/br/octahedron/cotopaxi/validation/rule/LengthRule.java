@@ -16,8 +16,6 @@
  */
 package br.octahedron.cotopaxi.validation.rule;
 
-
-
 /**
  * A rule to verify the maximum input length.
  * 
@@ -40,8 +38,6 @@ public class LengthRule extends AbstractRule {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see br.octahedron.cotopaxi.validation.ValidationRule#isValid(java.lang.String)
 	 */
 	@Override
 	public boolean isValid(String input) {

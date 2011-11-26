@@ -19,7 +19,6 @@ package br.octahedron.cotopaxi.controller.converter;
 import java.util.regex.PatternSyntaxException;
 
 import br.octahedron.cotopaxi.controller.Converter;
-import br.octahedron.cotopaxi.controller.ConvertionException;
 
 /**
  * Converts a String input to String array, using a given separator  
@@ -48,11 +47,11 @@ public class StringArrayConverter implements Converter<String[]> {
 	}
 
 	@Override
-	public String[] convert(String input) throws ConvertionException {
+	public String[] convert(String input) {
 		try {
 			return input.split(this.separator);
 		} catch (PatternSyntaxException ex) {
-			throw new ConvertionException(ex);
+			return null;
 		}
 	}
 

@@ -17,13 +17,13 @@
 package br.octahedron.cotopaxi.controller.converter;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 import java.math.BigDecimal;
 
 import org.junit.Test;
 
 import br.octahedron.cotopaxi.controller.Converter;
-import br.octahedron.cotopaxi.controller.ConvertionException;
 
 /**
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
@@ -32,7 +32,7 @@ public class ConvertersTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testNumberConverter() throws ConvertionException {
+	public void testNumberConverter()  {
 		Converter<Integer> integer = new IntegerConverter();
 		Integer i = integer.convert("0001");
 		assertEquals(new Integer(1), i);
@@ -43,10 +43,10 @@ public class ConvertersTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Test(expected=ConvertionException.class)
-	public void testNumberConverterFail() throws ConvertionException {
+	@Test
+	public void testNumberConverterFail() {
 		Converter<Integer> integer = new IntegerConverter();
-		integer.convert("a");
+		assertNull(integer.convert("a"));
 	}
 
 }

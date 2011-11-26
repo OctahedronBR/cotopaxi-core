@@ -160,13 +160,11 @@ public abstract class InputController {
 	 * @param converter
 	 *            The converter to be used to convert input value
 	 * @return The parameter's value if exists, or <code>null</code> if there's no input parameter
-	 *         with the given name.
-	 * @throws ConvertionException
-	 *             If the convert can't convert the input
+	 *         with the given name, or if converter can not convert the input.
 	 * 
 	 * @see Converter
 	 */
-	protected final <T> T in(String name, Converter<T> converter) throws ConvertionException {
+	protected final <T> T in(String name, Converter<T> converter) {
 		return converter.convert(this.in(name, true));
 	}
 

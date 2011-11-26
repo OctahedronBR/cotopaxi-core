@@ -1,7 +1,6 @@
 package br.octahedron.cotopaxi.controller.converter;
 
 import br.octahedron.cotopaxi.controller.Converter;
-import br.octahedron.cotopaxi.controller.ConvertionException;
 
 /**
  * Convenience converter that simply returns the same String, useful for
@@ -13,7 +12,7 @@ import br.octahedron.cotopaxi.controller.ConvertionException;
 public class StringConverter implements Converter<String> {
 
 	@Override
-	public String convert(String input) throws ConvertionException {
+	public String convert(String input) {
 		return input;
 	}
 

@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import br.octahedron.cotopaxi.controller.Converter;
-import br.octahedron.cotopaxi.controller.ConvertionException;
 
 /**
  * A converter for {@link Date}
@@ -44,11 +43,11 @@ public class DateConverter implements Converter<Date> {
 	}
 
 	@Override
-	public Date convert(String input) throws ConvertionException {
+	public Date convert(String input) {
 		try {
 			return this.formatter.parse(input);
 		} catch (ParseException ex) {
-			throw new ConvertionException(ex);
+			return null;
 		}
 
 	}

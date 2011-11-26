@@ -21,7 +21,7 @@ package br.octahedron.cotopaxi.validation.rule;
 /**
  * A rule to verify the maximum input length.
  * 
- * It's exclusive, it means that input length should be equals or lesser than configured length.
+ * It's inclusive, it means that input length should be equals or lesser than configured length.
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  * 

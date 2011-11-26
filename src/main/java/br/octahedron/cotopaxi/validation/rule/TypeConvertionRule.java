@@ -14,28 +14,37 @@
  *  You should have received a copy of the Lesser GNU General Public License
  *  along with Cotopaxi. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.octahedron.cotopaxi.controller;
+package br.octahedron.cotopaxi.validation.rule;
+
+import br.octahedron.cotopaxi.controller.Converter;
 
 /**
- * Indicates that a convertion can't be done.
+ * This rule checks if a input is convertible using the given converter. If the converter returns
+ * null, it means, it's not able to convert input, it considers the input as invalid.
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-public class ConvertionException extends Exception {
+public class TypeConvertionRule extends AbstractRule {
 
-	private static final long serialVersionUID = 6036329694237466132L;
+	private Converter<?> converter;
 
-	public ConvertionException() {}
-
-	public ConvertionException(String message) {
+	/**
+	 * @param message
+	 *            The message to be shown if validation fails.
+	 * @param converter
+	 *            The converter to be used to check if the input is valid.
+	 */
+	public <T> TypeConvertionRule(String message, Converter<T> converter) {
 		super(message);
+		this.converter = converter;
 	}
 
-	public ConvertionException(Throwable cause) {
-		super(cause);
+	/*
+	 * (non-Javadoc)
+	 */
+	@Override
+	public boolean isValid(String input) {
+		return this.converter.convert(input) != null;
 	}
 
-	public ConvertionException(String message, Throwable cause) {
-		super(message, cause);
-	}
 }

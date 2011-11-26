@@ -19,35 +19,68 @@ package br.octahedron.cotopaxi.validation;
 import br.octahedron.cotopaxi.controller.InputController;
 
 /**
- * @author Name - email@octahedron.com.br
- *
+ * Specify input sources to be validated.
+ * 
+ * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
-interface Input {
-	
+public interface Input {
+
 	/**
 	 * Returns the Field's value
+	 * 
 	 * @return the Field's value
 	 */
 	public String getValue();
-	
-	static class LiteralInput implements Input {
-		private String value;
 
-		LiteralInput(String value) {
-			this.value = value;
+	/**
+	 * A builder for basic validation rules and input
+	 */
+	public static class Builder {
+
+		/**
+		 * An Attribute {@link Input}
+		 * 
+		 * @param attributeName
+		 *            The attribute's name
+		 */
+		public static Input attribute(String attributeName) {
+			return new AttributeInput(attributeName);
 		}
 
-		@Override
-		public String getValue() {
-			return this.value;
+		/**
+		 * A session {@link Input}
+		 * 
+		 * @param attributeName
+		 *            The session's attribute name
+		 */
+		public static Input session(String attributeName) {
+			return new SessionInput(attributeName);
 		}
-		
-		@Override
-		public String toString() {
-			return this.value;
+
+		/**
+		 * A header {@link Input}
+		 * 
+		 * @param headerName
+		 *            The header's name
+		 */
+		public static Input header(String headerName) {
+			return new HeaderInput(headerName);
+		}
+
+		/**
+		 * A cookie {@link Input}
+		 * 
+		 * @param cookieName
+		 *            The cookie's name
+		 */
+		public static Input cookie(String cookieName) {
+			return new CookieInput(cookieName);
 		}
 	}
-	
+
+	/**
+	 * Attribute {@link Input} implementation
+	 */
 	static class AttributeInput extends InputController implements Input {
 		protected String attributeName;
 
@@ -59,13 +92,16 @@ interface Input {
 		public String getValue() {
 			return this.in(this.attributeName);
 		}
-		
+
 		@Override
 		public String toString() {
 			return this.attributeName;
 		}
 	}
-	
+
+	/**
+	 * Session {@link Input} implementation
+	 */
 	static class SessionInput extends AttributeInput {
 		SessionInput(String attributeName) {
 			super(attributeName);
@@ -76,7 +112,10 @@ interface Input {
 			return (String) this.session(this.attributeName);
 		}
 	}
-	
+
+	/**
+	 * Header {@link Input} implementation
+	 */
 	static class HeaderInput extends AttributeInput {
 		HeaderInput(String headerName) {
 			super(headerName);
@@ -85,9 +124,12 @@ interface Input {
 		@Override
 		public String getValue() {
 			return (String) this.header(this.attributeName);
-		} 
+		}
 	}
-	
+
+	/**
+	 * Cookie {@link Input} implementation
+	 */
 	static class CookieInput extends AttributeInput {
 		CookieInput(String cookieName) {
 			super(cookieName);
@@ -96,6 +138,6 @@ interface Input {
 		@Override
 		public String getValue() {
 			return (String) this.cookie(this.attributeName);
-		} 
+		}
 	}
 }

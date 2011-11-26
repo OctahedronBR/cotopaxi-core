@@ -54,12 +54,9 @@ public interface Converter<T> {
 	 * @param input
 	 *            the input as {@link String}
 	 * 
-	 * @return the converted input value
-	 * 
-	 * @throws ConvertionException
-	 *             if input can't be converted
+	 * @return the converted input value or <code>null</code> if it cannot convert value.
 	 */
-	public abstract T convert(String input) throws ConvertionException;
+	public abstract T convert(String input);
 
 	/**
 	 * Provide builder methods for built-in converters

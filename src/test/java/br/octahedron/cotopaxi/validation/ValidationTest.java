@@ -16,10 +16,20 @@
  */
 package br.octahedron.cotopaxi.validation;
 
-import static junit.framework.Assert.*;
+import static br.octahedron.cotopaxi.controller.Converter.Builder.bigIntNumber;
+import static br.octahedron.cotopaxi.controller.Converter.Builder.intNumber;
+import static br.octahedron.cotopaxi.controller.Converter.Builder.string;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+
+import java.math.BigInteger;
 
 import org.junit.Test;
 
+import br.octahedron.cotopaxi.validation.rule.EqualsRule;
+import br.octahedron.cotopaxi.validation.rule.GreaterThanRule;
+import br.octahedron.cotopaxi.validation.rule.LessThanRule;
+import br.octahedron.cotopaxi.validation.rule.NotEqualsRule;
 import br.octahedron.cotopaxi.validation.rule.RegexRule;
 import br.octahedron.cotopaxi.validation.rule.RequiredRule;
 
@@ -51,5 +61,88 @@ public class ValidationTest {
 		assertTrue(required.isValid("a"));
 		assertFalse(required.isValid(""));
 		assertFalse(required.isValid(null));
+	}
+	
+	@Test
+	public void equalsComparatorRuleTest() {
+		Rule equals = new EqualsRule(string(), "test");
+		assertTrue(equals.isValid("test"));
+		assertFalse(equals.isValid("testt"));
+		
+		equals = new EqualsRule(new Input() {
+			@Override
+			public String getValue() {
+				return "10";
+			}
+		}, bigIntNumber());
+		assertTrue(equals.isValid("10"));
+		assertFalse(equals.isValid("11"));
+		assertFalse(equals.isValid("A"));
+		
+		equals = new EqualsRule(bigIntNumber(), new BigInteger("10"));
+		assertTrue(equals.isValid("10"));
+		assertFalse(equals.isValid("11"));
+		assertFalse(equals.isValid("A"));
+	}
+	
+	@Test
+	public void notEqualsComparatorRuleTest() {
+		Rule equals = new NotEqualsRule(string(), "test");
+		assertFalse(equals.isValid("test"));
+		assertTrue(equals.isValid("testt"));
+		
+		equals = new NotEqualsRule(new Input() {
+			@Override
+			public String getValue() {
+				return "10";
+			}
+		}, bigIntNumber());
+		assertFalse(equals.isValid("10"));
+		assertTrue(equals.isValid("11"));
+		assertFalse(equals.isValid("A"));
+		
+		equals = new NotEqualsRule(bigIntNumber(), new BigInteger("10"));
+		assertFalse(equals.isValid("10"));
+		assertTrue(equals.isValid("11"));
+	}
+	
+	@Test
+	public void lessThanRuleTest() {
+		Rule rule = new LessThanRule(new Input() {
+			@Override
+			public String getValue() {
+				return "10";
+			}
+		}, intNumber());
+		assertTrue(rule.isValid("1"));
+		assertFalse(rule.isValid("10"));
+		assertFalse(rule.isValid("11"));
+		assertFalse(rule.isValid("A"));
+		
+		rule = new LessThanRule(intNumber(), new Integer(10));
+		assertTrue(rule.isValid("1"));
+		assertFalse(rule.isValid("10"));
+		assertFalse(rule.isValid("11"));
+		assertFalse(rule.isValid("A"));
+	}
+	
+	@Test
+	public void greaterThanRuleTest() {
+		Rule rule = new GreaterThanRule(new Input() {
+			@Override
+			public String getValue() {
+				return "10";
+			}
+		}, intNumber());
+		assertFalse(rule.isValid("1"));
+		assertFalse(rule.isValid("10"));
+		assertTrue(rule.isValid("11"));
+		assertFalse(rule.isValid("A"));
+		
+		rule = new GreaterThanRule(intNumber(), new Integer(10));
+		assertFalse(rule.isValid("1"));
+		assertFalse(rule.isValid("10"));
+		assertTrue(rule.isValid("11"));
+		assertFalse(rule.isValid("A"));
 	}
 }

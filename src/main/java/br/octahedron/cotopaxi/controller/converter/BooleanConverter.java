@@ -17,7 +17,6 @@
 package br.octahedron.cotopaxi.controller.converter;
 
 import br.octahedron.cotopaxi.controller.Converter;
-import br.octahedron.cotopaxi.controller.ConvertionException;
 
 /**
  * Converter for boolean types.
@@ -29,7 +28,7 @@ import br.octahedron.cotopaxi.controller.ConvertionException;
 public class BooleanConverter implements Converter<Boolean> {
 	
 	@Override
-	public Boolean convert(String input) throws ConvertionException {
+	public Boolean convert(String input) {
 		return Boolean.parseBoolean(input);
 	}
 }
