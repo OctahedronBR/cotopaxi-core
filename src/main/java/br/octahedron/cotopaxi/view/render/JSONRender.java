@@ -39,7 +39,7 @@ public class JSONRender {
 			writer.write(new JSONSerializer().prettyPrint(true).deepSerialize(object));
 			log.debug("Written json in response writer");
 		} catch (IOException ex) {
-			log.terror("Impossible to parse objects into json format to be used on writer", ex);
+			log.error(ex, "Impossible to parse objects into json format to be used on writer");
 			throw new RuntimeException(ex);
 		}
 	}

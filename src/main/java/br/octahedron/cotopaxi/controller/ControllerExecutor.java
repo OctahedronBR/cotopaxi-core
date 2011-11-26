@@ -101,8 +101,7 @@ public class ControllerExecutor {
 			}
 			return context.getControllerResponse();
 		} catch (InvocationTargetException ex) {
-			log.warning("Unexpected error executing controller for %s. Message: %s", request.getRequestURI(), ex.getMessage());
-			log.twarning("ControllerException", ex);
+			log.warning(ex, "Unexpected error executing controller for %s. Message: %s", request.getRequestURI(), ex.getMessage());
 			Map<String, Object> output = new HashMap<String, Object>();
 			output.put(getProperty(ERROR_PROPERTY), ex);
 			return new TemplateResponse(getProperty(ERROR_TEMPLATE), 500, output, null, null, request.getLocale());
@@ -114,8 +113,7 @@ public class ControllerExecutor {
 			 * Anyway, we will (re)load the context as an InternalServerError
 			 */
 			setContext(request, controllerDesc);
-			log.error("Unable to load controller %s", controllerDesc);
-			log.terror("Unable to load controller", ex);
+			log.error(ex, "Unable to load controller %s", controllerDesc);
 			return this.execute(request, new NotFoundExeption(request.getRequestURI(), request.getMethod()));
 		}
 	}

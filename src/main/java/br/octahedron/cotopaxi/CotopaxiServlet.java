@@ -78,7 +78,7 @@ public class CotopaxiServlet extends HttpServlet {
 			log.error("Error parsing configuration file: Invalid Syntax. Check you configuration file and try again");
 			throw new ServletException(ex);
 		} catch (Exception ex) {
-			log.terror("Unexpected error loading cotopaxi!", ex);
+			log.error(ex, "Unexpected error loading cotopaxi: %s", ex.getMessage());
 			throw new ServletException(ex);
 		}
 	}

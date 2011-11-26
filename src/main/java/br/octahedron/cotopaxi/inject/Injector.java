@@ -92,8 +92,7 @@ public class Injector {
 				Method set = ReflectionUtil.getSetMethod(klass.getSimpleName(), instance.getClass(), klass);
 				set.invoke(instance, obj);
 			} catch (Exception ex) {
-				log.error("Unable to performe injection: %s", ex.getLocalizedMessage());
-				log.terror("Unable to performe injection", ex);
+				log.error(ex, "Unable to performe injection: %s", ex.getLocalizedMessage());
 			}
 		}
 	}

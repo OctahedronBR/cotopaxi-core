@@ -52,7 +52,7 @@ public class SimpleTextResponse extends RenderableResponse {
 		try {
 			this.writer.write(this.content);
 		} catch (IOException ex) {
-			logger.terror("Error writing response", ex);
+			logger.error(ex, "Error writing response: %s", ex.getLocalizedMessage());
 		}
 	}
 }

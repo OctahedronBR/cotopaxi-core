@@ -143,7 +143,7 @@ public class LocaleManager {
 			try {
 				map.addResourceBundle(this.getResource(name, lc));
 			} catch (Exception ex) {
-				logger.tdebug("Error loading resouce bundle", ex);
+				logger.debug(ex, "Error loading resouce bundle: %s", ex.getMessage());
 			}
 		}
 		return map;
