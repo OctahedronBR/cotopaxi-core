@@ -16,6 +16,11 @@
  */
 package br.octahedron.util;
 
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -28,122 +33,198 @@ import java.util.logging.Logger;
 public class Log {
 
 	private Logger logger;
-	private String sourceName;
+	private String name;
+
+	private final static String getCallerClassName() {
+		Thread t = Thread.currentThread();
+		StackTraceElement[] trace = t.getStackTrace();
+		StackTraceElement last = trace[3];
+		return last.getClassName();
+	}
+
+	public Log() {
+		this(getCallerClassName());
+	}
 
 	public Log(Class<?> klass) {
-		this.sourceName = klass.getName();
-		this.logger = Logger.getLogger(this.sourceName);
+		this(klass.getName());
+	}
+
+	public Log(String name) {
+		this.name = name;
+		this.logger = Logger.getLogger(this.name);
+	}
+
+	/**
+	 * @return This {@link Log} name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	protected void log(Level level, String message) {
+		this.log(level, null, message);
+	}
+
+	protected void log(Level level, String format, Object... params) {
+		this.log(level, null, String.format(format, params));
+	}
+
+	protected void log(Level level, Throwable t, String format, Object... params) {
+		this.log(level, t, String.format(format, params));
+	}
+
+	protected void log(Level level, Throwable t, String message) {
+		LogRecord record = new LogRecord(level, message);
+		record.setSourceClassName(this.name);
+		if (t != null) {
+			record.setThrown(t);
+		}
+		this.logger.log(record);
 	}
 
 	/**
 	 * debug level
 	 */
 	public void debug(String message) {
-		LogRecord record = new LogRecord(Level.FINEST, message);
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
+		this.log(FINEST, message);
 	}
-	
+
 	/**
 	 * debug level
 	 */
-	public void debug(String format, Object ... params) {
-		LogRecord record = new LogRecord(Level.FINEST, String.format(format, params));
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
+	public void debug(String format, Object... params) {
+		this.log(FINEST, format, params);
+	}
+
+	/**
+	 * debug level
+	 */
+	public void debug(Throwable t, String message) {
+		this.log(FINEST, t, message);
+	}
+
+	/**
+	 * debug level
+	 */
+	public void debug(Throwable t, String format, Object... params) {
+		this.log(FINEST, t, format, params);
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public void tdebug(String message, Throwable t) {
+		this.debug(t, message);
 	}
 
 	/**
 	 * info level
 	 */
 	public void info(String message) {
-		LogRecord record = new LogRecord(Level.INFO, message);
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
+		this.log(INFO, message);
 	}
 
 	/**
 	 * info level
 	 */
-	public void info(String format, Object ... params) {
-		LogRecord record = new LogRecord(Level.INFO, String.format(format, params));
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
+	public void info(String format, Object... params) {
+		this.log(INFO, format, params);
 	}
-	
+
+	/**
+	 * info level
+	 */
+	public void info(Throwable t, String message) {
+		this.log(INFO, t, message);
+	}
+
+	/**
+	 * info level
+	 */
+	public void info(Throwable t, String format, Object... params) {
+		this.log(INFO, t, format, params);
+	}
+
+	/**
+	 * info level
+	 * 
+	 * @deprecated
+	 */
+	public void tinfo(String message, Throwable t) {
+		this.info(t, message);
+	}
+
 	/**
 	 * warning level
 	 */
 	public void warning(String message) {
-		LogRecord record = new LogRecord(Level.WARNING, message);
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
+		this.log(WARNING, message);
 	}
 
 	/**
 	 * warning level
 	 */
-	public void warning(String format, Object ... params) {
-		LogRecord record = new LogRecord(Level.WARNING, String.format(format, params));
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
+	public void warning(String format, Object... params) {
+		this.log(WARNING, format, params);
 	}
-	
+
+	/**
+	 * warning level
+	 */
+	public void warning(Throwable t, String message) {
+		this.log(WARNING, t, message);
+	}
+
+	/**
+	 * warning level
+	 */
+	public void warning(Throwable t, String format, Object... params) {
+		this.log(WARNING, t, format, params);
+	}
+
+	/**
+	 * warning level
+	 * 
+	 * @deprecated
+	 */
+	public void twarning(String message, Throwable t) {
+		this.warning(t, message);
+	}
+
 	/**
 	 * error level
 	 */
 	public void error(String message) {
-		LogRecord record = new LogRecord(Level.SEVERE, message);
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
+		this.log(SEVERE, message);
 	}
 
 	/**
 	 * error level
 	 */
-	public void error(String format, Object ... params) {
-		LogRecord record = new LogRecord(Level.SEVERE, String.format(format, params));
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
-	}
-
-	/**
-	 * debug level
-	 */
-	public void tdebug(String message, Throwable t) {
-		LogRecord record = new LogRecord(Level.FINEST, message);
-		record.setThrown(t);
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
-	}
-
-	/**
-	 * info level
-	 */
-	public void tinfo(String message, Throwable t) {
-		LogRecord record = new LogRecord(Level.INFO, message);
-		record.setThrown(t);
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
-	}
-
-	/**
-	 * warning level
-	 */
-	public void twarning(String message, Throwable t) {
-		LogRecord record = new LogRecord(Level.WARNING, message);
-		record.setThrown(t);
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
+	public void error(String format, Object... params) {
+		this.log(SEVERE, format, params);
 	}
 
 	/**
 	 * error level
+	 */
+	public void error(Throwable t, String message) {
+		this.log(SEVERE, t, message);
+	}
+
+	/**
+	 * error level
+	 */
+	public void error(Throwable t, String format, Object... params) {
+		this.log(SEVERE, t, format, params);
+	}
+
+	/**
+	 * error level
+	 * @deprecated
 	 */
 	public void terror(String message, Throwable t) {
-		LogRecord record = new LogRecord(Level.SEVERE, message);
-		record.setThrown(t);
-		record.setSourceClassName(this.sourceName);
-		this.logger.log(record);
+		this.error(t, message);
 	}
 }
