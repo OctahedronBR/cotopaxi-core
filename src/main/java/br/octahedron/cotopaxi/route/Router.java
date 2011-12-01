@@ -62,6 +62,8 @@ public class Router {
 	private static final Pattern nonStaticPattern = Pattern.compile("^((/[a-zA-Z_0-9]+)*(/\\{[a-zA-Z_0-9]+\\})+(/[a-zA-Z_0-9]+)*)+/?$");
 	/* pattern for variables */
 	private static final Pattern variablePattern = Pattern.compile("\\{[a-zA-Z_0-9]+\\}");
+	private static final String acceptableVariableValues = "[a-zA-Z_0-9@.-]+";
+	
 
 	// Cached URLS vs ControllerDescriptor
 	private Map<String, ControllerDescriptor> cachedURLs = new HashMap<String, ControllerDescriptor>();
@@ -201,7 +203,7 @@ public class Router {
 	 * @return a regex for the given URL.
 	 */
 	private String generateRegex(String url) {
-		return variablePattern.matcher(url).replaceAll(Matcher.quoteReplacement("[a-zA-Z_0-9@.]+"));
+		return variablePattern.matcher(url).replaceAll(Matcher.quoteReplacement(acceptableVariableValues));
 	}
 
 	/**

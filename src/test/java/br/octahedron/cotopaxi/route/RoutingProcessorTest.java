@@ -179,4 +179,22 @@ public class RoutingProcessorTest {
 	}
 	
 	
+	@Test
+	public void testDynamic6() throws NotFoundExeption  {
+		// setup mock
+		expect(request.getRequestURI()).andReturn("/trollface/email/test-troll").anyTimes();
+		expect(request.getMethod()).andReturn("POST");
+		request.setAttribute("username", "trollface");
+		request.setAttribute("email", "test-troll");
+		// test
+		replay(request);
+		try {
+			ControllerDescriptor desc = router.route(request); 
+			assertEquals("UserPost3", desc.getControllerName());
+		} finally {
+			verify(request);
+		}
+	}
+	
+	
 }
