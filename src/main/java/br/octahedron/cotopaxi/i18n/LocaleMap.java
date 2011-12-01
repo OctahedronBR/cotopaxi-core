@@ -22,22 +22,23 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * TODO document
+ * This class provides access to i18n messages for a given locale. It loads a set of
+ * {@link ResourceBundle} to retrieve messages.
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
- * 
  */
 public class LocaleMap {
-	
+
 	private Collection<ResourceBundle> resources = new LinkedList<ResourceBundle>();
 	private Locale locale;
-	
+
 	public LocaleMap(Locale locale) {
 		this.locale = locale;
 	}
-	
+
 	/**
 	 * Gets this {@link LocaleMap} locale
+	 * 
 	 * @return the locale
 	 */
 	public Locale getLocale() {
@@ -45,13 +46,17 @@ public class LocaleMap {
 	}
 
 	/**
-	 * TODO
+	 * Gets the given i18n message translated. It lookup at different {@link ResourceBundle}, by the
+	 * inverted insertion order, and stops on the first occurrence.
 	 * 
 	 * @param key
-	 * @return
+	 *            The message to be retrieved.
+	 * 
+	 * @return The message, translated to given locale or <code>null</code> if there's no such
+	 *         message
 	 */
 	public String get(String key) {
-		for(ResourceBundle rsrc : this.resources) {
+		for (ResourceBundle rsrc : this.resources) {
 			if (rsrc.containsKey(key)) {
 				return rsrc.getString(key);
 			}
@@ -60,18 +65,22 @@ public class LocaleMap {
 	}
 
 	/**
-	 * @param resource
+	 * Checks if this {@link LocaleMap} has no {@link ResourceBundle} 
+	 * @return <code>true</code> if there no {@link ResourceBundle} to be used, <code>false</code> otherwise.
 	 */
-	public void addResourceBundle(ResourceBundle resource) {
-		if (resource!= null) { 
-			this.resources.add(resource);
-		}
-	}
-	
 	public boolean isEmpty() {
 		return this.resources.isEmpty();
 	}
-	
+
+	/**
+	 * @param resource
+	 */
+	protected void addResourceBundle(ResourceBundle resource) {
+		if (resource != null) {
+			this.resources.add(resource);
+		}
+	}
+
 	protected int size() {
 		return this.resources.size();
 	}

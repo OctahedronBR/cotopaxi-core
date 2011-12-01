@@ -28,12 +28,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import br.octahedron.cotopaxi.CotopaxiProperty;
+import br.octahedron.cotopaxi.controller.Controller;
 import br.octahedron.cotopaxi.controller.ControllerDescriptor;
 import br.octahedron.util.Log;
 
@@ -77,7 +80,7 @@ import br.octahedron.util.Log;
  * <ul>
  * <li>baseName_<em>language</em>_<em>country</em></li>
  * <li>baseName_<em>language</em></li>
- * <ul>
+ * </ul>
  * 
  * When try to recover a value from {@link LocaleMap} it will try to get value from the resources
  * files in the same order files was load.
@@ -93,6 +96,7 @@ public class LocaleManager {
 	private static final String BASE_FOLDER = getProperty(I18N_FOLDER);
 
 	private static Collection<Locale> supportedLocales = new LinkedHashSet<Locale>();
+	private Map<String, ResourceBundle> cache = new HashMap<String, ResourceBundle>();
 	private ClassLoader loader = this.getClass().getClassLoader();
 
 	static {
@@ -119,26 +123,128 @@ public class LocaleManager {
 			}
 		}
 	}
+	
+	/**
+	 * Gets a {@link LocaleMap} for the given {@link Controller} and locale. If there's no i18n
+	 * files for the given controller and/or locale, it will returns an empty {@link LocaleMap}.
+	 * 
+	 * It will try to load the following i18n files:
+	 * 
+	 * <ul>
+	 * <li>controllerClass_locale</li>
+	 * <li>master_locale</li>
+	 * </ul>
+	 * 
+	 * @param controller
+	 *            The controller class to be used as reference to load i18n files.
+	 * @param locale
+	 *            The locale
+	 * @return the {@link LocaleMap} for the given parameters
+	 */
+	public LocaleMap getLocaleMap(Controller controller, Locale locale) {
+		return this.getLocaleMap(controller, asList(locale));
+	}
 
 	/**
-	 * @param desc
+	 * Gets a {@link LocaleMap} for the given {@link Controller} and locale. If there's no i18n
+	 * files for the given controller and/or locales, it will returns an empty {@link LocaleMap}.
+	 * 
+	 * It will first determine which is the most appropriate locale to use, then it will try to load
+	 * the following i18n files:
+	 * 
+	 * <ul>
+	 * <li>controllerClass.controllerName_locale</li>
+	 * <li>controllerClass_locale</li>
+	 * <li>master_locale</li>
+	 * </ul>
+	 * 
+	 * @param controller
+	 *            The controller class to be used as reference to load i18n files.
 	 * @param locales
-	 * @return
+	 *            The possible locales list, order by priority
+	 * @return the {@link LocaleMap} for the given parameters
+	 */
+	public LocaleMap getLocaleMap(Controller controller, Collection<Locale> locales) {
+		String[] names = { BASE_RESOURCE, controller.getClass().getName() };
+		return this.getLocaleMap(names, locales);
+	}
+
+	/**
+	 * Gets a {@link LocaleMap} for the given {@link ControllerDescriptor} and locale. If there's no
+	 * i18n files for the given controller and/or locale, it will returns an empty {@link LocaleMap}
+	 * .
+	 * 
+	 * It will try to load the following i18n files:
+	 * 
+	 * <ul>
+	 * <li>controllerClass.controllerName_locale</li>
+	 * <li>controllerClass_locale</li>
+	 * <li>master_locale</li>
+	 * </ul>
+	 * 
+	 * @param desc
+	 *            The {@link ControllerDescriptor} to be used as reference to load i18n files.
+	 * @param locale
+	 *            The locale
+	 * 
+	 * @return the {@link LocaleMap} for the given parameters
 	 */
 	public LocaleMap getLocaleMap(ControllerDescriptor desc, Locale locale) {
 		return this.getLocaleMap(desc, asList(locale));
 	}
 
 	/**
+	 * Gets a {@link LocaleMap} for the given {@link ControllerDescriptor} and locale. If there's no
+	 * i18n files for the given controller and/or locales, it will returns an empty
+	 * {@link LocaleMap}.
+	 * 
+	 * It will first determine which is the most appropriate locale to use, then it will try to load
+	 * the following i18n files:
+	 * 
+	 * <ul>
+	 * <li>controllerClass.controllerName_locale</li>
+	 * <li>controllerClass_locale</li>
+	 * <li>master_locale</li>
+	 * </ul>
+	 * 
 	 * @param desc
+	 *            The {@link ControllerDescriptor} to be used as reference to load i18n files.
 	 * @param locales
-	 * @return
+	 *            The possible locales list, order by priority
+	 * 
+	 * @return the {@link LocaleMap} for the given parameters
 	 */
 	public LocaleMap getLocaleMap(ControllerDescriptor desc, Collection<Locale> locales) {
+		String[] names = { BASE_RESOURCE, desc.getControllerClass(), desc.getControllerClass() + "." + desc.getFullControllerName() };
+		return this.getLocaleMap(names, locales);
+
+	}
+
+	/**
+	 * Resolves which locale should be used to load the {@link LocaleMap}.
+	 * 
+	 * Given the request's locales, in preference order, it chooses the first supported one.
+	 * 
+	 * @param locales
+	 *            The request acceptable locales.
+	 * @return The prefered locale supported by both request and application to be used.
+	 */
+	protected Locale findLocale(Collection<Locale> locales) {
+		if (supportedLocales.size() != 1) {
+			for (Locale lc : locales) {
+				if (supportedLocales.contains(lc)) {
+					return lc;
+				}
+			}
+		}
+		return supportedLocales.iterator().next();
+	}
+
+	private LocaleMap getLocaleMap(String[] names, Collection<Locale> locales) {
 		Locale lc = this.findLocale(locales);
 		logger.debug("Loading i18n files for locale %s", lc);
+
 		LocaleMap map = new LocaleMap(lc);
-		String[] names = { BASE_RESOURCE, desc.getControllerClass(), desc.getControllerClass() + "." + desc.getFullControllerName() };
 		for (String name : names) {
 			try {
 				map.addResourceBundle(this.getResource(name, lc));
@@ -158,17 +264,37 @@ public class LocaleManager {
 	private ResourceBundle getResource(String name, Locale lc) throws IOException {
 		String lang = lc.getLanguage();
 		String country = lc.getCountry();
-		String langName = this.getBaseName(name) + "_" + lang;
+		String filename = this.getBaseName(name) + "_" + lang;
 
 		ResourceBundle result = null;
 		if (!country.isEmpty()) {
-			result = this.tryLoad(langName + "_" + country);
+			result = this.getResourceBundle(filename + "_" + country);
 		}
 		if (result == null) {
-			result = this.tryLoad(langName);
+			result = this.getResourceBundle(filename);
 		}
 
 		return result;
+	}
+
+	/**
+	 * Gets the given resource. It checks if it's already load (cache), if not it tries to load from
+	 * disk.
+	 * 
+	 * @param resourcePath
+	 *            The path for the resource
+	 * @return The loaded resource bundle, or <code>null</code> if it's not able to load.
+	 */
+	private synchronized ResourceBundle getResourceBundle(String resourcePath) throws IOException {
+		if (this.cache.containsKey(resourcePath)) {
+			return this.cache.get(resourcePath);
+		} else {
+			ResourceBundle result = tryLoad(resourcePath);
+			if (result != null) {
+				this.cache.put(resourcePath, result);
+			}
+			return result;
+		}
 	}
 
 	/**
@@ -199,26 +325,6 @@ public class LocaleManager {
 				in.close();
 			}
 		}
-	}
-
-	/**
-	 * Resolves which locale should be used to load the {@link LocaleMap}.
-	 * 
-	 * Given the request's locales, in preference order, it chooses the first supported one.
-	 * 
-	 * @param locales
-	 *            The request acceptable locales.
-	 * @return The prefered locale supported by both request and application to be used.
-	 */
-	private Locale findLocale(Collection<Locale> locales) {
-		if (supportedLocales.size() != 1) {
-			for (Locale lc : locales) {
-				if (supportedLocales.contains(lc)) {
-					return lc;
-				}
-			}
-		}
-		return supportedLocales.iterator().next();
 	}
 
 	/**
