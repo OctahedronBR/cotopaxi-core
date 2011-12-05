@@ -40,14 +40,14 @@ public class LocaleManagerTest {
 		assertEquals(2, map.size());
 		assertEquals("World", map.get("WORLD"));
 		assertEquals("verynice", map.get("NICE"));
-		assertNull(map.get("COOL"));
+		assertEquals("COOL", map.get("COOL"));
 		
 		desc = new ControllerDescriptor("", "post", "Test", "br.test");
 		map = lcManager.getLocaleMap(desc, Arrays.asList(Locale.ITALIAN, Locale.FRANCE));
 		assertEquals(1, map.size());
 		assertEquals("verynice", map.get("NICE"));
-		assertNull(map.get("WORLD"));
-		assertNull(map.get("COOL"));
+		assertEquals("WORLD", map.get("WORLD"));
+		assertEquals("COOL", map.get("COOL"));
 		
 		
 		desc = new ControllerDescriptor("", "get", "Test", "br.octahedron");
@@ -56,7 +56,7 @@ public class LocaleManagerTest {
 		assertEquals("verynice", map.get("NICE"));
 		assertEquals("World", map.get("WORLD"));
 		assertEquals("Serviço", map.get("SERVICE"));
-		assertNull(map.get("Hi"));
+		assertEquals("Hi", map.get("Hi"));
 	}
 
 }
