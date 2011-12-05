@@ -36,7 +36,7 @@ public interface Input {
 	 * A builder for basic validation rules and input
 	 */
 	public static class Builder {
-
+		
 		/**
 		 * An Attribute {@link Input}
 		 * 
@@ -55,6 +55,16 @@ public interface Input {
 		 */
 		public static Input session(String attributeName) {
 			return new SessionInput(attributeName);
+		}
+
+		/**
+		 * The {@link Input} for the current User
+		 * 
+		 * @see InputController#currentUser()
+		 * 
+		 */
+		public static Input currentUser() {
+			return new CurrentUserInput();
 		}
 
 		/**
@@ -112,6 +122,17 @@ public interface Input {
 			return (String) this.session(this.attributeName);
 		}
 	}
+	
+	/**
+	 * Session {@link Input} implementation
+	 */
+	static class CurrentUserInput  extends InputController implements Input {
+		@Override
+		public String getValue() {
+			return this.currentUser();
+		}
+	}
+
 
 	/**
 	 * Header {@link Input} implementation
