@@ -52,7 +52,7 @@ public class LocaleMap {
 	 * @param key
 	 *            The message to be retrieved.
 	 * 
-	 * @return The message, translated to given locale or <code>null</code> if there's no such
+	 * @return The message, translated to given locale or the <code>key</code> if there's no such
 	 *         message
 	 */
 	public String get(String key) {
@@ -61,7 +61,7 @@ public class LocaleMap {
 				return rsrc.getString(key);
 			}
 		}
-		return null;
+		return key;
 	}
 
 	/**
