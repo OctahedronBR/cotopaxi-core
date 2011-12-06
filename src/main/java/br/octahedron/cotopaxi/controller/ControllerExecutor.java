@@ -69,7 +69,7 @@ public class ControllerExecutor {
 		setContext(request, new ControllerDescriptor(nfex.getUrl(), request.getMethod(), "error", "NotFound"));
 		Map<String, Object> output = new HashMap<String, Object>();
 		output.put(getProperty(ERROR_PROPERTY), nfex);
-		return new TemplateResponse(getProperty(NOT_FOUND_TEMPLATE), 404, output, null, null, request.getLocale());
+		return new TemplateResponse(getProperty(NOT_FOUND_TEMPLATE), 404, output, request.getLocale());
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class ControllerExecutor {
 			log.warning(ex, "Unexpected error executing controller for %s. Message: %s", request.getRequestURI(), ex.getMessage());
 			Map<String, Object> output = new HashMap<String, Object>();
 			output.put(getProperty(ERROR_PROPERTY), ex);
-			return new TemplateResponse(getProperty(ERROR_TEMPLATE), 500, output, null, null, request.getLocale());
+			return new TemplateResponse(getProperty(ERROR_TEMPLATE), 500, output, request.getLocale());
 		} catch (Exception ex) {
 			/*
 			 * Here means an access error to controller. It can be cause if controller method

@@ -18,6 +18,7 @@ package br.octahedron.cotopaxi.view.response;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -43,6 +44,11 @@ public class TemplateResponse extends RenderableResponse {
 
 	private OutputStreamBuilder builder = null;
 	private String template;
+	
+	public TemplateResponse(String template, int code, Map<String, Object> output, Locale locale) {
+		super(code, output, new HashMap<String, String>(), new HashMap<String, String>(), locale);
+		this.template = template;
+	}
 
 	public TemplateResponse(String template, int code, Map<String, Object> output, Map<String, String> cookies, Map<String, String> headers,
 			Locale locale) {
