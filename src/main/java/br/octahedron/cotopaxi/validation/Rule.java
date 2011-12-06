@@ -244,8 +244,8 @@ public interface Rule {
 		 * @param converter
 		 *            The converter to be used to convert both inputs
 		 */
-		public static Rule equals(Input input, Converter<?> converter) {
-			return equals(input, converter, null);
+		public static Rule equalsTo(Input input, Converter<?> converter) {
+			return equalsTo(input, converter, null);
 		}
 
 		/**
@@ -258,7 +258,7 @@ public interface Rule {
 		 * @param message
 		 *            The message to be shown if validation fails
 		 */
-		public static Rule equals(Input input, Converter<?> converter, String message) {
+		public static Rule equalsTo(Input input, Converter<?> converter, String message) {
 			return new EqualsRule(message, input, converter);
 		}
 
@@ -271,8 +271,8 @@ public interface Rule {
 		 * @param base
 		 *            The base value to be used to validate input
 		 */
-		public static <T> Rule equals(Converter<T> converter, T base) {
-			return equals(converter, base, null);
+		public static <T> Rule equalsTo(Converter<T> converter, T base) {
+			return equalsTo(converter, base, null);
 		}
 
 		/**
@@ -286,7 +286,7 @@ public interface Rule {
 		 * @param message
 		 *            The message to be shown if validation fails
 		 */
-		public static <T> Rule equals(Converter<T> converter, T base, String message) {
+		public static <T> Rule equalsTo(Converter<T> converter, T base, String message) {
 			return new EqualsRule(message, converter, base);
 		}
 
