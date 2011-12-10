@@ -17,7 +17,6 @@
 package br.octahedron.cotopaxi.i18n;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
 
 import java.util.Arrays;
 import java.util.Locale;
