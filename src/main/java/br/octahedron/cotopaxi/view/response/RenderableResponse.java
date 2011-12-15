@@ -16,7 +16,6 @@
  */
 package br.octahedron.cotopaxi.view.response;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -30,7 +29,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import br.octahedron.cotopaxi.controller.ControllerResponse;
-import br.octahedron.util.Log;
 
 /**
  * A {@link ControllerResponse} that can be intercepted.
@@ -73,10 +71,8 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 	 */
 	@Override
 	public final void dispatch(HttpServletResponse servletResponse) throws IOException {
-		this.writer = new BufferedWriter(new OutputStreamWriter(this.getOutputStream(servletResponse)));
-		Log log = new Log(RenderableResponse.class);
-		log.error("@@@@@@@@@@@@@@@@@@@@@@@ >>>>>>>>>>>>>>>>>>> " + new OutputStreamWriter(this.getOutputStream(servletResponse)).getEncoding());
-		log.error("@@@@@@@@@@@@@@@@@@@@@@@ >>>>>>>>>>>>>>>>>>> " + new OutputStreamWriter(this.getOutputStream(servletResponse), "utf-8").getEncoding());
+		// FIXME add a variable in application.config or something
+		this.writer = new OutputStreamWriter(this.getOutputStream(servletResponse), "utf-8");
 
 		// adjust headers
 		if (this.headers != null) {
