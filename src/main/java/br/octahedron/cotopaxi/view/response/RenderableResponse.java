@@ -16,6 +16,7 @@
  */
 package br.octahedron.cotopaxi.view.response;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -72,7 +73,10 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 	 */
 	@Override
 	public final void dispatch(HttpServletResponse servletResponse) throws IOException {
-		this.writer = new OutputStreamWriter(this.getOutputStream(servletResponse));
+		this.writer = new BufferedWriter(new OutputStreamWriter(this.getOutputStream(servletResponse)));
+		Log log = new Log(RenderableResponse.class);
+		log.error("@@@@@@@@@@@@@@@@@@@@@@@ >>>>>>>>>>>>>>>>>>> " + new OutputStreamWriter(this.getOutputStream(servletResponse)).getEncoding());
+		log.error("@@@@@@@@@@@@@@@@@@@@@@@ >>>>>>>>>>>>>>>>>>> " + new OutputStreamWriter(this.getOutputStream(servletResponse), "utf-8").getEncoding());
 
 		// adjust headers
 		if (this.headers != null) {
@@ -92,9 +96,6 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 		servletResponse.setContentType(this.getContentType());
 		// set status code
 		servletResponse.setStatus(this.code);
-		Log log = new Log(RenderableResponse.class);
-		log.warning("@@@@@@@@@@@@@@@@ >>>>>>>>>>> " + servletResponse.getCharacterEncoding());
-		log.warning("@@@@@@@@@@@@@@@@ >>>>>>>>>>> " + servletResponse.getContentType());
 
 		// render output
 		this.render();
