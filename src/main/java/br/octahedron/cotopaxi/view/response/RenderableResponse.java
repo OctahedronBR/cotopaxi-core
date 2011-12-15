@@ -29,6 +29,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import br.octahedron.cotopaxi.controller.ControllerResponse;
+import br.octahedron.util.Log;
 
 /**
  * A {@link ControllerResponse} that can be intercepted.
@@ -91,6 +92,9 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 		servletResponse.setContentType(this.getContentType());
 		// set status code
 		servletResponse.setStatus(this.code);
+		Log log = new Log(RenderableResponse.class);
+		log.warning("@@@@@@@@@@@@@@@@ >>>>>>>>>>> " + servletResponse.getCharacterEncoding());
+		log.warning("@@@@@@@@@@@@@@@@ >>>>>>>>>>> " + servletResponse.getContentType());
 
 		// render output
 		this.render();
