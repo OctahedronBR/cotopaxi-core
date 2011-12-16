@@ -20,8 +20,12 @@ package br.octahedron.cotopaxi.interceptor;
  * @author Danilo Queiroz - DaniloQueiroz@octahedron.com.br
  */
 @TestingTwo
-@TestingOne
 @TestingThree
 public class AnnotatedClass {
+	
+	@TestingOne
+	public void test() {
+		
+	}
 
 }

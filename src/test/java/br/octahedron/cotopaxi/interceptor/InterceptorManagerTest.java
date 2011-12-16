@@ -56,11 +56,11 @@ public class InterceptorManagerTest {
 	}
 
 	@Test
-	public void testInterceptorManager1() {
+	public void testInterceptorManager1() throws SecurityException, NoSuchMethodException {
 		this.manager.addControllerInterceptor(interceptor1);
 		this.manager.addControllerInterceptor(interceptor2);
 		this.manager.addControllerInterceptor(interceptor3);
-		this.manager.execute(AnnotatedClass.class);
+		this.manager.execute(AnnotatedClass.class.getMethod("test", null));
 
 		assertEquals(1, interceptor1.myOrder);
 		assertEquals(TestingOne.class, interceptor1.receivedAnn.annotationType());
@@ -71,11 +71,11 @@ public class InterceptorManagerTest {
 	}
 
 	@Test
-	public void testInterceptorManager2() {
+	public void testInterceptorManager2() throws SecurityException, NoSuchMethodException {
 		this.manager.addControllerInterceptor(interceptor3);
 		this.manager.addControllerInterceptor(interceptor2);
 		this.manager.addControllerInterceptor(interceptor1);
-		this.manager.execute(AnnotatedClass.class);
+		this.manager.execute(AnnotatedClass.class.getMethod("test", null));
 
 		assertEquals(1, interceptor3.myOrder);
 		assertEquals(TestingThree.class, interceptor3.receivedAnn.annotationType());
