@@ -87,7 +87,7 @@ public class InterceptorManager {
 				log.debug("Executing ControllerInterceptor %s with annotation %s", interceptor.getClass(), entry.getKey());
 				interceptor.execute(ann);
 			}
-			if(context.isAnswered() || context.forwarded()) {
+			if(context != null && (context.isAnswered() || context.forwarded())) {
 				break;
 			}
 		}

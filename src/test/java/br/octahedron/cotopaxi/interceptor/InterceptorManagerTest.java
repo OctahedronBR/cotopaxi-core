@@ -23,6 +23,8 @@ import java.lang.annotation.Annotation;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.octahedron.cotopaxi.controller.ControllerContext;
+
 /**
  * @author Danilo Queiroz - DaniloQueiroz@octahedron.com.br
  * 
@@ -60,7 +62,7 @@ public class InterceptorManagerTest {
 		this.manager.addControllerInterceptor(interceptor1);
 		this.manager.addControllerInterceptor(interceptor2);
 		this.manager.addControllerInterceptor(interceptor3);
-		this.manager.execute(AnnotatedClass.class.getMethod("test", null));
+		this.manager.execute(AnnotatedClass.class.getMethod("test", null), null);
 
 		assertEquals(1, interceptor1.myOrder);
 		assertEquals(TestingOne.class, interceptor1.receivedAnn.annotationType());
@@ -75,7 +77,7 @@ public class InterceptorManagerTest {
 		this.manager.addControllerInterceptor(interceptor3);
 		this.manager.addControllerInterceptor(interceptor2);
 		this.manager.addControllerInterceptor(interceptor1);
-		this.manager.execute(AnnotatedClass.class.getMethod("test", null));
+		this.manager.execute(AnnotatedClass.class.getMethod("test", null), null);
 
 		assertEquals(1, interceptor3.myOrder);
 		assertEquals(TestingThree.class, interceptor3.receivedAnn.annotationType());
