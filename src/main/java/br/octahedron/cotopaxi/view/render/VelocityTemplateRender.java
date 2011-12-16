@@ -20,6 +20,7 @@ import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
 import static br.octahedron.cotopaxi.CotopaxiProperty.TEMPLATE_FOLDER;
 import java.io.Writer;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -38,16 +39,22 @@ import br.octahedron.util.Log;
 public class VelocityTemplateRender implements TemplateRender {
 
 	private static final Log log = new Log(VelocityTemplateRender.class);
-
+	private static final String VELOCIMACRO_LIBRARY = "macros.vm";  
+	
 	private final VelocityEngine engine = new VelocityEngine();
 	private String templateFolder;
 	
 	public VelocityTemplateRender() {
-		engine.init();
 		this.templateFolder = getProperty(TEMPLATE_FOLDER);
 		if (!this.templateFolder.endsWith("/")) {
 			this.templateFolder += '/';
 		}
+		Properties p = new Properties();
+		p.setProperty("velocimacro.library", this.templateFolder + VELOCIMACRO_LIBRARY);
+		// FIXME need refactoring. use the same solution as the OutputStreamWriter
+		p.setProperty("input.encoding", "utf-8");
+		p.setProperty("output.encoding", "utf-8");
+		engine.init(p);
 	}
 	
 	/* (non-Javadoc)
@@ -56,7 +63,7 @@ public class VelocityTemplateRender implements TemplateRender {
 	public void render(String templatePath, Map<String,Object> output, Writer writer) {
 		log.info("Rendering template %s", templatePath);
 		VelocityContext context = new VelocityContext(output);
-		Template template = engine.getTemplate(this.templateFolder + templatePath, "utf-8");
+		Template template = engine.getTemplate(this.templateFolder + templatePath);
 		template.merge(context, writer);
 	}
 }
