@@ -29,10 +29,10 @@ public class ControllerDescriptor {
 	private String httpMethod;
 	private String url;
 	private String fullname;
-
-	public ControllerDescriptor(String url, String method, String controllerName, String controllerClass) {
+	
+	public ControllerDescriptor(String url, String httpMethod, String controllerName, String controllerClass) {
 		this.url = url.toLowerCase();
-		this.httpMethod = method.toLowerCase();
+		this.httpMethod = httpMethod.toLowerCase();
 		this.controllerName = (controllerName.length() > 2) ? controllerName.substring(0, 1).toUpperCase() + controllerName.substring(1)
 				: controllerName.toUpperCase();
 		this.controllerClass = controllerClass;

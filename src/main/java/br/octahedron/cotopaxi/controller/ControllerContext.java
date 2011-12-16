@@ -34,7 +34,7 @@ public final class ControllerContext {
 	// static stuff
 
 	private static final ThreadLocal<ControllerContext> threadContexts = new ThreadLocal<ControllerContext>();
-	
+
 	protected static ControllerContext getContext() {
 		return threadContexts.get();
 	}
@@ -55,6 +55,7 @@ public final class ControllerContext {
 	private HttpServletRequest request;
 	private ControllerDescriptor controllerDesc;
 	private Locale locale;
+	private ControllerDescriptor forward = null;
 
 	private ControllerContext(HttpServletRequest request, ControllerDescriptor controllerDesc) {
 		this.request = request;
@@ -64,17 +65,21 @@ public final class ControllerContext {
 	// internal methods
 
 	/**
-	 * Gets the Servlet Context 
+	 * Gets the Servlet Context
 	 */
 	protected HttpServletRequest getRequest() {
 		return this.request;
 	}
-	
+
 	/**
 	 * Sets the controller response for this context.
 	 */
 	protected void setControllerResponse(ControllerResponse response) {
-		this.controllerResp = response;
+		if (!this.isAnswered() && !this.forwarded()) {
+			this.controllerResp = response;
+		} else {
+			throw new IllegalStateException("Already answered");
+		}
 	}
 
 	/**
@@ -113,21 +118,21 @@ public final class ControllerContext {
 		}
 		return this.output;
 	}
-	
+
 	/**
 	 * @return <code>true</code> if request is already answered, <code>false</code> if not.
 	 */
 	public boolean isAnswered() {
 		return this.controllerResp != null;
 	}
-	
+
 	/**
 	 * @return the {@link ControllerResponse}, or <code>null</code> if request not answered.
 	 */
 	public ControllerResponse getControllerResponse() {
 		return this.controllerResp;
 	}
-	
+
 	/**
 	 * @return the locale to be used to render response.
 	 */
@@ -136,10 +141,44 @@ public final class ControllerContext {
 	}
 
 	/**
-	 * @param locale the locale to be used to render response.
+	 * @param locale
+	 *            the locale to be used to render response.
 	 */
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
 
+	/**
+	 * Checks if this controller was forwarded
+	 * 
+	 * @return <code>true</code> if it was, <code>false</code> if not
+	 */
+	public boolean forwarded() {
+		return forward != null;
+	}
+
+	/**
+	 * Mark this controller/context to be forwarded to the given {@link ControllerDescriptor}
+	 * 
+	 * @param forwardDescriptor
+	 *            the {@link ControllerDescriptor} which this controller will be forwarded
+	 */
+	public void forward(ControllerDescriptor forwardDescriptor) {
+		if (!this.isAnswered() && !this.forwarded()) {
+			this.forward = forwardDescriptor;
+		} else {
+			throw new IllegalStateException("Already forwarded.");
+		}
+	}
+
+	/**
+	 * Gets the forward {@link ControllerDescriptor}
+	 * 
+	 * @return the {@link ControllerDescriptor} to forward to
+	 */
+	public ControllerDescriptor forward() {
+		this.controllerDesc = this.forward;
+		this.forward = null;
+		return this.controllerDesc;
+	}
 }

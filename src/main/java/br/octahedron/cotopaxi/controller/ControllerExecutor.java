@@ -82,23 +82,36 @@ public class ControllerExecutor {
 	 * @return The {@link ControllerResponse} for the given controller
 	 */
 	public ControllerResponse execute(ControllerDescriptor controllerDesc, HttpServletRequest request) {
+		// first of all, clear previous context
+		clearContext();
+		setContext(request, controllerDesc);
+		return process(controllerDesc, request);
+	}
+
+	public ControllerResponse process(ControllerDescriptor controllerDesc, HttpServletRequest request) {
 		try {
-			// first of all, clear previous context
-			clearContext();
-			// load controller and fix context
-			Controller controller = this.loadController(controllerDesc);
-			setContext(request, controllerDesc);
-			Method method = this.getMethod(controllerDesc, controller);
 			ControllerContext context = getContext();
-			this.interceptor.execute(method);
-			// execute controller
-			if (!context.isAnswered()) {
-				log.debug("Executing controller %s - %s", controller.getClass().getName(), method.getName());
-				ReflectionUtil.invoke(controller, method);
+			// controller isn't answered
+			if (context.isAnswered()) {
+				return context.getControllerResponse();
 			} else {
-				log.debug("Controller %s - %s already answered, controller NOT executed!", controller.getClass().getName(), method.getName());
+				// load controller and fix context
+				Controller controller = this.loadController(controllerDesc);
+				Method method = this.getMethod(controllerDesc, controller);
+				this.interceptor.execute(method);
+				// execute controller
+				if (!context.isAnswered() && !context.forwarded()) {
+					log.debug("Executing controller %s - %s", controller.getClass().getName(), method.getName());
+					ReflectionUtil.invoke(controller, method);
+				} else {
+					log.debug("Controller %s - %s already answered, controller NOT executed!", controller.getClass().getName(), method.getName());
+				}
+				if(context.forwarded()) {
+					return this.process(context.forward(),request); 
+				} else {
+					return context.getControllerResponse();
+				}
 			}
-			return context.getControllerResponse();
 		} catch (InvocationTargetException ex) {
 			log.warning(ex, "Unexpected error executing controller for %s. Message: %s", request.getRequestURI(), ex.getMessage());
 			Map<String, Object> output = new HashMap<String, Object>();

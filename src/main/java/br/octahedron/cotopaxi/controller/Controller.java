@@ -50,7 +50,7 @@ import br.octahedron.cotopaxi.view.response.TemplateResponse;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 public abstract class Controller extends InputController {
-	
+
 	/**
 	 * Gets the output cookies map
 	 */
@@ -64,7 +64,6 @@ public abstract class Controller extends InputController {
 	protected final Map<String, String> headers() {
 		return getContext().getHeaders();
 	}
-	
 
 	/**
 	 * Gets the output objects map
@@ -72,15 +71,17 @@ public abstract class Controller extends InputController {
 	protected final Map<String, Object> output() {
 		return getContext().getOutput();
 	}
-	
+
 	/**
 	 * Sets the response's locale
-	 * @param lc the response's locale
+	 * 
+	 * @param lc
+	 *            the response's locale
 	 */
 	protected final void locale(Locale lc) {
 		getContext().setLocale(lc);
 	}
-	
+
 	/**
 	 * Stores an object in the session. If already exists an object stored with the given key, it
 	 * will be overwritten
@@ -181,7 +182,7 @@ public abstract class Controller extends InputController {
 	/**
 	 * Sets the {@link ControllerResponse} for the current request. This method should be used only
 	 * by {@link Controller} extensions, avoid use this method directly when implementing a
-	 * controller. 
+	 * controller.
 	 */
 	protected final void setControllerResponse(ControllerResponse response) {
 		getContext().setControllerResponse(response);
@@ -195,7 +196,7 @@ public abstract class Controller extends InputController {
 	protected final void success(String template) {
 		this.render(template, 200);
 	}
-	
+
 	/**
 	 * Render the default SUCCESS page (200) code
 	 * 
@@ -343,5 +344,40 @@ public abstract class Controller extends InputController {
 		} else {
 			throw new IllegalStateException("Response already defined");
 		}
+	}
+
+	/**
+	 * Forward this controller to another action handler. This should be the <b>simple action
+	 * name</b>. It will try to find the given Action Handler considering the same http method. Thus
+	 * if you are at the <i>getIndex</i> controller and forwards to <i>Data</i> action, it will
+	 * lookup for the method <i>getData</i> in this {@link Controller}.
+	 * 
+	 * All the controller execution chain, including controller templates, will be executed again.
+	 * However, any data added to output/session/cookies/headers will continue valid.
+	 * 
+	 * @param actionName the simple action name
+	 */
+	protected final void forward(String actionName) {
+		ControllerDescriptor cont = this.controllerDescriptor();
+		ControllerDescriptor desc = new ControllerDescriptor(cont.getUrl(), cont.getHttpMethod(), actionName, cont.getControllerClass());
+		getContext().forward(desc);
+	}
+
+	/**
+	 * Forward this controller to another action handler. This should be the <b>simple action
+	 * name</b>. It will try to find the given Action Handler considering the same http method. Thus
+	 * if you are at the <i>getIndex</i> controller and forwards to <i>Data</i> action, it will
+	 * lookup for the method <i>getData</i> at the given {@link Controller} class.
+	 * 
+	 * All the controller execution chain, including controller templates, will be executed again.
+	 * However, any data added to output/session/cookies/headers will continue valid.
+	 * 
+	 * @param controller the controller class to lookup for the action handler
+	 * @param actionName the simple action name
+	 */
+	protected final void forward(Class<? extends Controller> controller, String actionName) {
+		ControllerDescriptor cont = this.controllerDescriptor();
+		ControllerDescriptor desc = new ControllerDescriptor(cont.getUrl(), this.controllerDescriptor().getHttpMethod(), actionName, controller.getName());
+		getContext().forward(desc);
 	}
 }
