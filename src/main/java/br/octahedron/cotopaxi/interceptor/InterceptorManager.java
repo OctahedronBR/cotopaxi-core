@@ -19,11 +19,12 @@ package br.octahedron.cotopaxi.interceptor;
 import static br.octahedron.cotopaxi.inject.Injector.getInstance;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import br.octahedron.cotopaxi.controller.Controller;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
@@ -39,9 +40,9 @@ public class InterceptorManager {
 
 	private static final Log log = new Log(InterceptorManager.class);
 	private Map<Class<? extends Annotation>, ControllerInterceptor> controllerInterceptors = new LinkedHashMap<Class<? extends Annotation>, ControllerInterceptor>();
-	//;fields are protected for tests
-	protected Collection<TemplateInterceptor> templateInterceptors = new LinkedList<TemplateInterceptor>();
-	protected Collection<FinalizerInterceptor> finalizerInterceptors = new LinkedList<FinalizerInterceptor>();
+	// ;fields are protected for tests
+	protected Collection<TemplateInterceptor> templateInterceptors = new ArrayList<TemplateInterceptor>();
+	protected Collection<FinalizerInterceptor> finalizerInterceptors = new ArrayList<FinalizerInterceptor>();
 
 	/**
 	 * Adds a new interceptor to the application
@@ -76,15 +77,32 @@ public class InterceptorManager {
 	 * @param annotations
 	 *            the {@link Controller} method {@link Annotation}
 	 */
-	public void execute(AnnotatedElement controllerAnnotatedElement) {
-		for (Class<? extends Annotation> annClass : this.controllerInterceptors.keySet()) {
-			Annotation ann = controllerAnnotatedElement.getAnnotation(annClass);
+	public void execute(Method controllerMethod) {
+		for (Entry<Class<? extends Annotation>, ControllerInterceptor> entry : this.controllerInterceptors.entrySet()) {
+			Annotation ann = getAnnotation(controllerMethod, entry.getKey());
 			if (ann != null) {
-				ControllerInterceptor interceptor = this.controllerInterceptors.get(annClass);
-				log.debug("Executing ControllerInterceptor %s with annotation %s", interceptor.getClass(), annClass);
+				ControllerInterceptor interceptor = entry.getValue();
+				log.debug("Executing ControllerInterceptor %s with annotation %s", interceptor.getClass(), entry.getKey());
 				interceptor.execute(ann);
 			}
 		}
+	}
+
+	/**
+	 * Try to gets an annotation from the given {@link Method}. First is looks for the
+	 * {@link Annotation} at the method's declaring class, if the declaring class has no such
+	 * annotation, it tries to get it from the method itself.
+	 * 
+	 * @param controllerMethod
+	 *            The method to look for an Annotation
+	 * @param annClass
+	 *            The looked {@link Annotation} {@link Class}
+	 * @return An {@link Annotation} of the given {@link Class} or <code>null</code> if there's no
+	 *         such {@link Annotation}
+	 */
+	private Annotation getAnnotation(Method controllerMethod, Class<? extends Annotation> annClass) {
+		Class<?> klass = controllerMethod.getDeclaringClass();
+		return (klass.isAnnotationPresent(annClass)) ? klass.getAnnotation(annClass) : controllerMethod.getAnnotation(annClass);
 	}
 
 	/**
