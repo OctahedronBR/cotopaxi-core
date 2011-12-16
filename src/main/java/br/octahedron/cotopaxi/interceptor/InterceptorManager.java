@@ -40,7 +40,7 @@ public class InterceptorManager {
 
 	private static final Log log = new Log(InterceptorManager.class);
 	private Map<Class<? extends Annotation>, ControllerInterceptor> controllerInterceptors = new LinkedHashMap<Class<? extends Annotation>, ControllerInterceptor>();
-	// ;fields are protected for tests
+	// fields are protected for tests
 	protected Collection<TemplateInterceptor> templateInterceptors = new ArrayList<TemplateInterceptor>();
 	protected Collection<FinalizerInterceptor> finalizerInterceptors = new ArrayList<FinalizerInterceptor>();
 
@@ -101,6 +101,7 @@ public class InterceptorManager {
 	 *         such {@link Annotation}
 	 */
 	private Annotation getAnnotation(Method controllerMethod, Class<? extends Annotation> annClass) {
+		log.debug("Looking for annotation %s at method %s", annClass.getSimpleName(), controllerMethod.getName());
 		Class<?> klass = controllerMethod.getDeclaringClass();
 		return (klass.isAnnotationPresent(annClass)) ? klass.getAnnotation(annClass) : controllerMethod.getAnnotation(annClass);
 	}
