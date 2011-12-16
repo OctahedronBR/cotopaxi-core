@@ -77,6 +77,8 @@ public final class ControllerContext {
 	protected void setControllerResponse(ControllerResponse response) {
 		if (!this.isAnswered() && !this.forwarded()) {
 			this.controllerResp = response;
+		} else {
+			throw new IllegalStateException("Response already defined");
 		}
 	}
 
@@ -164,6 +166,8 @@ public final class ControllerContext {
 	public void forward(ControllerDescriptor forwardDescriptor) {
 		if (!this.isAnswered() && !this.forwarded()) {
 			this.forward = forwardDescriptor;
+		} else {
+			throw new IllegalStateException("Response already defined");
 		}
 	}
 

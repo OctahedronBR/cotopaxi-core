@@ -339,11 +339,7 @@ public abstract class Controller extends InputController {
 	 *            The redirect destination
 	 */
 	protected final void redirect(String dest) {
-		if (!this.isAnswered()) {
-			getContext().setControllerResponse(new RedirectResponse(dest));
-		} else {
-			throw new IllegalStateException("Response already defined");
-		}
+		getContext().setControllerResponse(new RedirectResponse(dest));
 	}
 
 	/**
@@ -355,7 +351,8 @@ public abstract class Controller extends InputController {
 	 * All the controller execution chain, including controller templates, will be executed again.
 	 * However, any data added to output/session/cookies/headers will continue valid.
 	 * 
-	 * @param actionName the simple action name
+	 * @param actionName
+	 *            the simple action name
 	 */
 	protected final void forward(String actionName) {
 		ControllerDescriptor cont = this.controllerDescriptor();
@@ -372,12 +369,15 @@ public abstract class Controller extends InputController {
 	 * All the controller execution chain, including controller templates, will be executed again.
 	 * However, any data added to output/session/cookies/headers will continue valid.
 	 * 
-	 * @param controller the controller class to lookup for the action handler
-	 * @param actionName the simple action name
+	 * @param controller
+	 *            the controller class to lookup for the action handler
+	 * @param actionName
+	 *            the simple action name
 	 */
 	protected final void forward(Class<? extends Controller> controller, String actionName) {
 		ControllerDescriptor cont = this.controllerDescriptor();
-		ControllerDescriptor desc = new ControllerDescriptor(cont.getUrl(), this.controllerDescriptor().getHttpMethod(), actionName, controller.getName());
+		ControllerDescriptor desc = new ControllerDescriptor(cont.getUrl(), this.controllerDescriptor().getHttpMethod(), actionName,
+				controller.getName());
 		getContext().forward(desc);
 	}
 }

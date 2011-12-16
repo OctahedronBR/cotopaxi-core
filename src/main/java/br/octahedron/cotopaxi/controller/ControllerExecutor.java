@@ -98,7 +98,7 @@ public class ControllerExecutor {
 				// load controller and fix context
 				Controller controller = this.loadController(controllerDesc);
 				Method method = this.getMethod(controllerDesc, controller);
-				this.interceptor.execute(method);
+				this.interceptor.execute(method, context);
 				// execute controller
 				if (!context.isAnswered() && !context.forwarded()) {
 					log.debug("Executing controller %s - %s", controller.getClass().getName(), method.getName());

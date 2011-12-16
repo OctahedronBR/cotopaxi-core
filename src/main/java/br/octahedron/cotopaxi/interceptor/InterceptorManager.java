@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import br.octahedron.cotopaxi.controller.Controller;
+import br.octahedron.cotopaxi.controller.ControllerContext;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
 import br.octahedron.util.Log;
 import br.octahedron.util.ReflectionUtil;
@@ -73,17 +74,21 @@ public class InterceptorManager {
 
 	/**
 	 * Execute the {@link ControllerInterceptor} for the given annotations.
+	 * @param context 
 	 * 
 	 * @param annotations
 	 *            the {@link Controller} method {@link Annotation}
 	 */
-	public void execute(Method controllerMethod) {
+	public void execute(Method controllerMethod, ControllerContext context) {
 		for (Entry<Class<? extends Annotation>, ControllerInterceptor> entry : this.controllerInterceptors.entrySet()) {
 			Annotation ann = getAnnotation(controllerMethod, entry.getKey());
 			if (ann != null) {
 				ControllerInterceptor interceptor = entry.getValue();
 				log.debug("Executing ControllerInterceptor %s with annotation %s", interceptor.getClass(), entry.getKey());
 				interceptor.execute(ann);
+			}
+			if(context.isAnswered() || context.forwarded()) {
+				break;
 			}
 		}
 	}
