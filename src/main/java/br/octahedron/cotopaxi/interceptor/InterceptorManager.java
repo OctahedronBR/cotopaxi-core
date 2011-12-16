@@ -38,7 +38,6 @@ import br.octahedron.util.ReflectionUtil;
  */
 public class InterceptorManager {
 
-	private static int order = 0;
 	private static final Log log = new Log(InterceptorManager.class);
 	private Map<Class<? extends Annotation>, ControllerInterceptor> controllerInterceptors = new LinkedHashMap<Class<? extends Annotation>, ControllerInterceptor>();
 	// fields are protected for tests
@@ -102,7 +101,7 @@ public class InterceptorManager {
 	 *         such {@link Annotation}
 	 */
 	private Annotation getAnnotation(Method controllerMethod, Class<? extends Annotation> annClass) {
-		log.debug("%d - Looking for annotation %s at method %s", ++order, annClass.getSimpleName(), controllerMethod.getName());
+		log.debug("Looking for annotation %s at method %s", annClass.getSimpleName(), controllerMethod.getName());
 		Class<?> klass = controllerMethod.getDeclaringClass();
 		return (klass.isAnnotationPresent(annClass)) ? klass.getAnnotation(annClass) : controllerMethod.getAnnotation(annClass);
 	}
