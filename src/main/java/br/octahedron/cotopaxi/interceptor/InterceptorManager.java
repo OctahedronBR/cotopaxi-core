@@ -88,6 +88,7 @@ public class InterceptorManager {
 				interceptor.execute(ann);
 			}
 			if(context != null && (context.isAnswered() || context.forwarded())) {
+				log.debug("Controller already answered/forwarded - aborting interceptors execution!");
 				break;
 			}
 		}
