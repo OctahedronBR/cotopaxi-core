@@ -310,7 +310,8 @@ public class LocaleManager {
 		try {
 			File f = new File(resourcePath);
 			if (f.exists()) {
-				in = new InputStreamReader(new FileInputStream(f));
+				// FIXME need refactoring. use the same solution as the OutputStreamWriter and others
+				in = new InputStreamReader(new FileInputStream(f), "utf-8");
 			} else {
 				InputStream inStream = this.loader.getResourceAsStream(resourcePath);
 				if (inStream != null) {
