@@ -31,8 +31,11 @@ public class SafeStringConverter implements Converter<String> {
 	 */
 	@Override
 	public String convert(String input) {
-		// TODO poor implementation, improve it.
-		return input.replaceAll("\\<.*?\\>", "");
+		if (input != null) {
+			// TODO poor implementation, improve it.
+			return input.replaceAll("\\<.*?\\>", "");
+		}
+		return "";
 	}
 
 }

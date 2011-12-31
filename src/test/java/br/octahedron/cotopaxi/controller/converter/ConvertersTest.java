@@ -48,5 +48,11 @@ public class ConvertersTest {
 		Converter<Integer> integer = new IntegerConverter();
 		assertNull(integer.convert("a"));
 	}
+	
+	@Test
+	public void testSafeStringConverterNullInput() {
+		Converter<String> string = new SafeStringConverter();
+		assertEquals("", string.convert(null));
+	}
 
 }
