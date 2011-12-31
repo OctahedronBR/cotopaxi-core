@@ -16,6 +16,7 @@
  */
 package br.octahedron.cotopaxi.view.response;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -72,7 +73,7 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 	@Override
 	public final void dispatch(HttpServletResponse servletResponse) throws IOException {
 		// FIXME add a variable in application.config or something
-		this.writer = new OutputStreamWriter(this.getOutputStream(servletResponse), "utf-8");
+		this.writer = new BufferedWriter(new OutputStreamWriter(this.getOutputStream(servletResponse), "utf-8"));
 
 		// adjust headers
 		if (this.headers != null) {
