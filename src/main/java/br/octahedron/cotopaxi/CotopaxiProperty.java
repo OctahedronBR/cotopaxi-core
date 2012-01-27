@@ -112,21 +112,49 @@ public enum CotopaxiProperty {
 		this.defaultValue = defaultValue;
 	}
 
+	/**
+	 * Gets the default value
+	 */
 	public String defaultValue() {
 		return this.defaultValue;
 	}
 
+	/**
+	 * Gets the current value for the given property. If the property wasn't defined, it will return
+	 * the default value.
+	 * 
+	 * @param property
+	 *            The {@link CotopaxiProperty} to retrieve the value
+	 * @return The current value for the given property
+	 */
 	public static String getProperty(CotopaxiProperty property) {
 		return System.getProperty(property.name(), property.defaultValue());
 	}
 
+	/**
+	 * Gets the current value for the given property. If the property wasn't defined, it will return
+	 * the default value, if the property is one of the {@link CotopaxiProperty} or
+	 * <code>null</code> for other properties.
+	 * 
+	 * @param property
+	 *            The property name to retrieve the value
+	 * @return The current value for the given property
+	 */
 	public static String getProperty(String property) {
 		return System.getProperty(property);
 	}
-	
+
+	/**
+	 * Gets the charset to be used by application. It tries to retrieve the charset from the
+	 * <b>file.encoding</b> property, that can be defined either at JVM initialization or through
+	 * the configuration file. It the property <b>file.encoding</b> isn't defined, it recovers the
+	 * JVM's default charset using the {@link Charset#defaultCharset()} method.
+	 * 
+	 * @return The application charset to be used.
+	 */
 	public static Charset getCharset() {
 		String charset = System.getProperty("file.encoding");
-		if (charset!= null) {
+		if (charset != null) {
 			return Charset.forName(charset);
 		} else {
 			return Charset.defaultCharset();
