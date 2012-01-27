@@ -16,8 +16,7 @@
  */
 package br.octahedron.cotopaxi.view.response;
 
-import static java.nio.charset.Charset.defaultCharset;
-
+import static br.octahedron.cotopaxi.CotopaxiProperty.getCharset;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -73,8 +72,7 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 	 */
 	@Override
 	public final void dispatch(HttpServletResponse servletResponse) throws IOException {
-		// FIXME add a variable in application.config or something
-		this.writer = new OutputStreamWriter(this.getOutputStream(servletResponse), defaultCharset());
+		this.writer = new OutputStreamWriter(this.getOutputStream(servletResponse), getCharset());
 
 		// adjust headers
 		if (this.headers != null) {

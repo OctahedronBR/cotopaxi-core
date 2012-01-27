@@ -16,11 +16,10 @@
  */
 package br.octahedron.cotopaxi.i18n;
 
-import static java.nio.charset.Charset.defaultCharset;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_BASE_FILE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_FOLDER;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_SUPPORTED_LOCALES;
-import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
+import static br.octahedron.cotopaxi.CotopaxiProperty.*;
 import static java.util.Arrays.asList;
 
 import java.io.File;
@@ -311,8 +310,7 @@ public class LocaleManager {
 		try {
 			File f = new File(resourcePath);
 			if (f.exists()) {
-				// FIXME need refactoring. use the same solution as the OutputStreamWriter and others
-				in = new InputStreamReader(new FileInputStream(f), defaultCharset());
+				in = new InputStreamReader(new FileInputStream(f), getCharset());
 			} else {
 				InputStream inStream = this.loader.getResourceAsStream(resourcePath);
 				if (inStream != null) {

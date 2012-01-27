@@ -16,6 +16,7 @@
  */
 package br.octahedron.cotopaxi;
 
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 
@@ -121,5 +122,14 @@ public enum CotopaxiProperty {
 
 	public static String getProperty(String property) {
 		return System.getProperty(property);
+	}
+	
+	public static Charset getCharset() {
+		String charset = System.getProperty("file.encoding");
+		if (charset!= null) {
+			return Charset.forName(charset);
+		} else {
+			return Charset.defaultCharset();
+		}
 	}
 }
