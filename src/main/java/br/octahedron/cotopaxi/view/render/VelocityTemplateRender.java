@@ -16,7 +16,7 @@
  */
 package br.octahedron.cotopaxi.view.render;
 
-import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
+import static br.octahedron.cotopaxi.CotopaxiProperty.*;
 import static br.octahedron.cotopaxi.CotopaxiProperty.TEMPLATE_FOLDER;
 import java.io.Writer;
 import java.util.Map;
@@ -51,9 +51,8 @@ public class VelocityTemplateRender implements TemplateRender {
 		}
 		Properties p = new Properties();
 		p.setProperty("velocimacro.library", this.templateFolder + VELOCIMACRO_LIBRARY);
-		// FIXME need refactoring. use the same solution as the OutputStreamWriter
-		p.setProperty("input.encoding", "utf-8");
-		p.setProperty("output.encoding", "utf-8");
+		p.setProperty("input.encoding", getCharset().toString());
+		p.setProperty("output.encoding", getCharset().toString());
 		engine.init(p);
 	}
 	
