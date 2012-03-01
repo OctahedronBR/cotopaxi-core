@@ -16,24 +16,38 @@
  */
 package br.octahedron.cotopaxi.controller.converter;
 
+import static br.octahedron.cotopaxi.CotopaxiProperty.getCharset;
+import static java.net.URLDecoder.decode;
+
+import java.io.UnsupportedEncodingException;
+
 import br.octahedron.cotopaxi.controller.Converter;
+import br.octahedron.util.Log;
 
 /**
  * A simple String converter that stripes HTML code.
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
- *
+ * 
  */
 public class SafeStringConverter implements Converter<String> {
+	
+	private static final Log logger = new Log(SafeStringConverter.class);
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see br.octahedron.cotopaxi.controller.Converter#convert(java.lang.String)
 	 */
 	@Override
 	public String convert(String input) {
-		if (input != null) {
-			// TODO poor implementation, improve it.
-			return input.replaceAll("\\<.*?\\>", "");
+		try {
+			if (input != null && !input.isEmpty()) {
+				return decode(input.replaceAll("\\<.*?\\>", ""), getCharset().name());
+			}
+		} catch (UnsupportedEncodingException ex) {
+			logger.debug(ex, "Unexpected error occurs converting String: %s", ex.getMessage());
+			throw new RuntimeException(ex);
 		}
 		return "";
 	}
