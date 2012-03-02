@@ -19,8 +19,10 @@ package br.octahedron.cotopaxi;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.util.TimeZone;
 
 import br.octahedron.cotopaxi.i18n.LocaleManager;
+import br.octahedron.util.DateUtil;
 
 /**
  * The CotopaxiFramework's properties and default values.
@@ -104,7 +106,13 @@ public enum CotopaxiProperty {
 	/**
 	 * The property used to binds internationalization {@link NumberFormat}. Default: numberFormat
 	 */
-	I18N_NUMBER_FORMAT_PROPERTY("numberFormat");
+	I18N_NUMBER_FORMAT_PROPERTY("numberFormat"),
+	/**
+	 * The system {@link TimeZone} to be used by {@link DateUtil} methods. Default: none/JVM TimeZone
+	 * 
+	 * The timezone property should indicates the time zone offset. Eg.: +0200, -0300, +0000
+	 */
+	SYSTEM_TIMEZONE(null);
 
 	private String defaultValue;
 

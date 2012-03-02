@@ -33,6 +33,7 @@ import br.octahedron.cotopaxi.inject.Inject;
 import br.octahedron.cotopaxi.interceptor.TemplateInterceptor;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
 
+import static br.octahedron.util.DateUtil.defaultDateFormat;
 /**
  * Interceptor for Internationalization. This Interceptor uses the {@link LocaleManager} to load the
  * right {@link LocaleMap} and inject it to template. The {@link LocaleMap} is bound to the
@@ -53,10 +54,7 @@ import br.octahedron.cotopaxi.view.response.TemplateResponse;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class I18NTemplateInterceptor extends TemplateInterceptor {
-
-	private static final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat();
-	private static final NumberFormat DEFAULT_NUMBER_FORMAT = new DecimalFormat();
-
+	
 	@Inject
 	private LocaleManager localeManager;
 
@@ -100,7 +98,7 @@ public class I18NTemplateInterceptor extends TemplateInterceptor {
 	 * @return The {@link DateFormat} to be injected to Template
 	 */
 	public DateFormat dateFormat(Locale lc) {
-		return DEFAULT_DATE_FORMAT;
+		return defaultDateFormat();
 	}
 
 	/**
@@ -115,7 +113,7 @@ public class I18NTemplateInterceptor extends TemplateInterceptor {
 	 * @return The {@link NumberFormat} to be injected to Template
 	 */
 	public NumberFormat numberFormat(Locale lc) {
-		return DEFAULT_NUMBER_FORMAT;
+		return NumberFormat.getInstance();
 	}
 
 }
