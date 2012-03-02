@@ -42,14 +42,23 @@ public class Log {
 		return last.getClassName();
 	}
 
+	/**
+	 * Create a new Log using the invoking class name as the log name.
+	 */
 	public Log() {
 		this(getCallerClassName());
 	}
 
+	/**
+	 * Create a new Log using the given class name.
+	 */
 	public Log(Class<?> klass) {
 		this(klass.getName());
 	}
 
+	/**
+	 * Creates a new Log with the given name.
+	 */
 	public Log(String name) {
 		this.name = name;
 		this.logger = Logger.getLogger(this.name);
@@ -112,13 +121,6 @@ public class Log {
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public void tdebug(String message, Throwable t) {
-		this.debug(t, message);
-	}
-
-	/**
 	 * info level
 	 */
 	public void info(String message) {
@@ -144,15 +146,6 @@ public class Log {
 	 */
 	public void info(Throwable t, String format, Object... params) {
 		this.log(INFO, t, format, params);
-	}
-
-	/**
-	 * info level
-	 * 
-	 * @deprecated
-	 */
-	public void tinfo(String message, Throwable t) {
-		this.info(t, message);
 	}
 
 	/**
@@ -184,15 +177,6 @@ public class Log {
 	}
 
 	/**
-	 * warning level
-	 * 
-	 * @deprecated
-	 */
-	public void twarning(String message, Throwable t) {
-		this.warning(t, message);
-	}
-
-	/**
 	 * error level
 	 */
 	public void error(String message) {
@@ -218,13 +202,5 @@ public class Log {
 	 */
 	public void error(Throwable t, String format, Object... params) {
 		this.log(SEVERE, t, format, params);
-	}
-
-	/**
-	 * error level
-	 * @deprecated
-	 */
-	public void terror(String message, Throwable t) {
-		this.error(t, message);
 	}
 }
