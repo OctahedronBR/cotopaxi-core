@@ -16,23 +16,22 @@
  */
 package br.octahedron.cotopaxi.interceptor;
 
-import br.octahedron.cotopaxi.controller.InputController;
 import br.octahedron.cotopaxi.controller.ControllerResponse;
-import br.octahedron.cotopaxi.view.response.RenderableResponse;
+import br.octahedron.cotopaxi.controller.InputController;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
 
 /**
- * An interceptor that intercepts the {@link RenderableResponse} processing. It intercepts the
+ * An interceptor that intercepts the {@link TemplateResponse} processing. It intercepts the
  * processing before the render, making possible decorate the writer to be used to render the
  * response or add attributes to output. This interceptors are globally and are executed for every
- * {@link RenderableResponse}.
+ * {@link TemplateResponse}.
  * 
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 public abstract class TemplateInterceptor extends InputController {
 
 	/**
-	 * Executes this interceptor, for the given {@link RenderableResponse}, before the response
+	 * Executes this interceptor, for the given {@link TemplateResponse}, before the response
 	 * be render. It permits this interceptor to add attributes to {@link ControllerResponse} output
 	 * and/or decorates the writer to be used to render response.
 	 * 
