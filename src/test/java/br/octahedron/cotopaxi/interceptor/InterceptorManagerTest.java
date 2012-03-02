@@ -23,8 +23,6 @@ import java.lang.annotation.Annotation;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.octahedron.cotopaxi.controller.ControllerContext;
-
 /**
  * @author Danilo Queiroz - DaniloQueiroz@octahedron.com.br
  * 
