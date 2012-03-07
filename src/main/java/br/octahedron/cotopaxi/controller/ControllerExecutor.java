@@ -19,7 +19,7 @@ package br.octahedron.cotopaxi.controller;
 import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_PROPERTY;
 import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_TEMPLATE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.NOT_FOUND_TEMPLATE;
-import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
+import static br.octahedron.cotopaxi.CotopaxiProperty.property;
 import static br.octahedron.cotopaxi.controller.ControllerContext.clearContext;
 import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
 import static br.octahedron.cotopaxi.controller.ControllerContext.setContext;
@@ -68,8 +68,8 @@ public class ControllerExecutor {
 		log.warning("Cannot found a controller for url %s - %s.", request.getRequestURI(), request.getMethod());
 		setContext(request, new ControllerDescriptor(nfex.getUrl(), request.getMethod(), "error", "NotFound"));
 		Map<String, Object> output = new HashMap<String, Object>();
-		output.put(getProperty(ERROR_PROPERTY), nfex);
-		return new TemplateResponse(getProperty(NOT_FOUND_TEMPLATE), 404, output, request.getLocale());
+		output.put(property(ERROR_PROPERTY), nfex);
+		return new TemplateResponse(property(NOT_FOUND_TEMPLATE), 404, output, request.getLocale());
 	}
 
 	/**
@@ -106,8 +106,8 @@ public class ControllerExecutor {
 				} else {
 					log.debug("Controller %s - %s already answered, controller NOT executed!", controller.getClass().getName(), method.getName());
 				}
-				if(context.forwarded()) {
-					return this.process(context.forward(),request); 
+				if (context.forwarded()) {
+					return this.process(context.forward(), request);
 				} else {
 					return context.getControllerResponse();
 				}
@@ -115,8 +115,8 @@ public class ControllerExecutor {
 		} catch (InvocationTargetException ex) {
 			log.warning(ex, "Unexpected error executing controller for %s. Message: %s", request.getRequestURI(), ex.getMessage());
 			Map<String, Object> output = new HashMap<String, Object>();
-			output.put(getProperty(ERROR_PROPERTY), ex);
-			return new TemplateResponse(getProperty(ERROR_TEMPLATE), 500, output, request.getLocale());
+			output.put(property(ERROR_PROPERTY), ex);
+			return new TemplateResponse(property(ERROR_TEMPLATE), 500, output, request.getLocale());
 		} catch (Exception ex) {
 			/*
 			 * Here means an access error to controller. It can be cause if controller method

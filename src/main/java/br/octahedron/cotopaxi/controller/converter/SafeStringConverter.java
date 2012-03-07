@@ -16,7 +16,7 @@
  */
 package br.octahedron.cotopaxi.controller.converter;
 
-import static br.octahedron.cotopaxi.CotopaxiProperty.getCharset;
+import static br.octahedron.cotopaxi.CotopaxiProperty.charset;
 import static java.net.URLDecoder.decode;
 
 import java.io.UnsupportedEncodingException;
@@ -43,7 +43,7 @@ public class SafeStringConverter implements Converter<String> {
 	public String convert(String input) {
 		try {
 			if (input != null && !input.isEmpty()) {
-				return decode(input.replaceAll("\\<.*?\\>", ""), getCharset().name());
+				return decode(input.replaceAll("\\<.*?\\>", ""), charset().name());
 			}
 		} catch (UnsupportedEncodingException ex) {
 			logger.debug(ex, "Unexpected error occurs converting String: %s", ex.getMessage());

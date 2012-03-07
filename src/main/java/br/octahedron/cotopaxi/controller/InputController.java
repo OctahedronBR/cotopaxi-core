@@ -222,7 +222,7 @@ public abstract class InputController {
 	 * 
 	 * @param name
 	 *            the cookie's name
-	 * @return the cookie's value if exists or <code>null</code> if theres no cookie with the given
+	 * @return the cookie's value if exists or <code>null</code> if there's no cookie with the given
 	 *         name
 	 */
 	protected final String cookie(String name) {

@@ -16,19 +16,23 @@
  */
 package br.octahedron.cotopaxi.view.response;
 
-import static br.octahedron.cotopaxi.CotopaxiProperty.getCharset;
+import static br.octahedron.cotopaxi.CotopaxiProperty.charset;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import br.octahedron.cotopaxi.controller.ControllerContext;
 import br.octahedron.cotopaxi.controller.ControllerResponse;
 
 /**
@@ -40,19 +44,53 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 
 	protected Writer writer;
 	protected int code;
-	protected Map<String, String> cookies;
+	protected Set<Cookie> cookies;
 	protected Map<String, String> headers;
 	protected Locale locale;
 	protected Map<String, Object> output;
 
-	public RenderableResponse(int code, Map<String, Object> output, Map<String, String> cookies, Map<String, String> headers, Locale locale) {
+	/**
+	 * @param code
+	 *            The HTTP response code
+	 * @param context
+	 *            The request {@link ControllerContext}
+	 */
+	protected RenderableResponse(int code, ControllerContext context) {
+		this(code, context.getOutput(), context.getCookies(), context.getHeaders(), context.getLocale());
+	}
+
+	/**
+	 * @param code
+	 *            The HTTP response code
+	 * @param output
+	 *            The output objects map
+	 * @param locale
+	 *            The output locale
+	 */
+	protected RenderableResponse(int code, Map<String, Object> output, Locale locale) {
+		this(code, output, new HashSet<Cookie>(), new HashMap<String, String>(), locale);
+	}
+
+	/**
+	 * @param code
+	 *            The HTTP response code
+	 * @param output
+	 *            The output objects map
+	 * @param cookies
+	 *            The response cookies
+	 * @param headers
+	 *            The response headers
+	 * @param locale
+	 *            The output locale
+	 */
+	protected RenderableResponse(int code, Map<String, Object> output, Set<Cookie> cookies, Map<String, String> headers, Locale locale) {
 		this.code = code;
 		this.output = output;
 		this.cookies = cookies;
 		this.headers = headers;
 		this.locale = locale;
 	}
-	
+
 	/**
 	 * Gets the {@link OutputStream} to be used to write output.
 	 * 
@@ -72,7 +110,7 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 	 */
 	@Override
 	public final void dispatch(HttpServletResponse servletResponse) throws IOException {
-		this.writer = new OutputStreamWriter(this.getOutputStream(servletResponse), getCharset());
+		this.writer = new OutputStreamWriter(this.getOutputStream(servletResponse), charset());
 
 		// adjust headers
 		if (this.headers != null) {
@@ -82,8 +120,8 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 		}
 		// adjust cookies
 		if (cookies != null) {
-			for (Entry<String, String> entry : cookies.entrySet()) {
-				servletResponse.addCookie(new Cookie(entry.getKey(), entry.getValue()));
+			for (Cookie c : cookies) {
+				servletResponse.addCookie(c);
 			}
 		}
 		// set locale
@@ -103,6 +141,8 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 		this.writer.close();
 		this.writer = null;
 	}
+	
+	
 
 	/**
 	 * Gets this response ContentType

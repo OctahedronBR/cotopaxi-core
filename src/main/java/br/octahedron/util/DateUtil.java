@@ -16,8 +16,8 @@
  */
 package br.octahedron.util;
 
-import static br.octahedron.cotopaxi.CotopaxiProperty.SYSTEM_TIMEZONE;
-import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
+import static br.octahedron.cotopaxi.CotopaxiProperty.TIMEZONE;
+import static br.octahedron.cotopaxi.CotopaxiProperty.property;
 import static java.lang.Integer.parseInt;
 
 import java.text.DateFormat;
@@ -41,23 +41,11 @@ public class DateUtil {
 		// static class
 	}
 
-	static {
-		/*
-		 * Sets the configured TimeZone
-		 */
-		String offset = getProperty(SYSTEM_TIMEZONE);
-		if (offset != null) {
-			int offsetMillis = parseInt(offset) * 36 * 1000;
-			TimeZone systemTz = new SimpleTimeZone(offsetMillis, "Cotopaxi/System");
-			defaultTimeZone(systemTz);
-		}
-	}
-
 	/**
 	 * Short date format: dd/MM/yy
 	 */
 	public static final String SHORT = "dd/MM/yy";
-	
+
 	/**
 	 * Long date format = "dd/MM/yy HH:mm:ss"
 	 */
@@ -69,7 +57,21 @@ public class DateUtil {
 	 * {@link DateUtil#LONG}
 	 */
 	public static String defaultFormat = LONG;
+	private static boolean loaded = false;
 	private static TimeZone defaultTz = null;
+
+	/**
+	 * 
+	 */
+	private static void load() {
+		String offset = property(TIMEZONE);
+		if (offset != null) {
+			int offsetMillis = parseInt(offset) * 36 * 1000;
+			TimeZone systemTz = new SimpleTimeZone(offsetMillis, "Cotopaxi/System");
+			defaultTimeZone(systemTz);
+		}
+		loaded = true;
+	}
 
 	/**
 	 * Gets the default {@link TimeZone} to be used to format / parse
@@ -78,13 +80,17 @@ public class DateUtil {
 	 *         default timezone
 	 */
 	public static TimeZone defaultTimeZone() {
+		if (!loaded) {
+			load();
+		}
 		return defaultTz;
 	}
 
 	/**
 	 * Sets the default {@link TimeZone} to be used to format / parse.
 	 * 
-	 * @param tz The default {@link TimeZone} to be set
+	 * @param tz
+	 *            The default {@link TimeZone} to be set
 	 * 
 	 * @throw {@link NullPointerException} if tz was null.
 	 */
@@ -119,7 +125,7 @@ public class DateUtil {
 	}
 
 	public static DateFormat dateFormat(String dateFormat) {
-		return dateFormat(dateFormat, defaultTz);
+		return dateFormat(dateFormat, defaultTimeZone());
 	}
 
 	public static DateFormat dateFormat(String dateFormat, TimeZone timeZone) {
@@ -156,7 +162,7 @@ public class DateUtil {
 	 * @see SimpleDateFormat
 	 */
 	public static String format(Date date, String format) {
-		return format(date, format, defaultTz);
+		return format(date, format, defaultTimeZone());
 	}
 
 	/**
@@ -292,11 +298,11 @@ public class DateUtil {
 	}
 
 	/**
-	 * Recupera uma data futura, dado o numero de dias.
+	 * Gets a future date, based on a given number of days.
 	 * 
 	 * @param numberOfDays
-	 *            o numero de dias ate a data que se deseja.
-	 * @return a data futura.
+	 *            The number of days, since now, for the future date.
+	 * @return the future date.
 	 * 
 	 * @see DateUtil#futureDate(int)
 	 */

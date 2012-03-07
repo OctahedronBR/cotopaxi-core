@@ -20,7 +20,7 @@ import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_TEMPLATE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.FORBIDDEN_TEMPLATE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.INVALID_TEMPLATE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.NOT_FOUND_TEMPLATE;
-import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
+import static br.octahedron.cotopaxi.CotopaxiProperty.property;
 import static br.octahedron.cotopaxi.controller.ControllerContext.getContext;
 
 import java.util.Iterator;
@@ -52,27 +52,6 @@ import br.octahedron.cotopaxi.view.response.TemplateResponse;
 public abstract class Controller extends InputController {
 
 	/**
-	 * Gets the output cookies map
-	 */
-	protected final Map<String, String> cookies() {
-		return getContext().getCookies();
-	}
-
-	/**
-	 * Gets the output headers map
-	 */
-	protected final Map<String, String> headers() {
-		return getContext().getHeaders();
-	}
-
-	/**
-	 * Gets the output objects map
-	 */
-	protected final Map<String, Object> output() {
-		return getContext().getOutput();
-	}
-
-	/**
 	 * Sets the response's locale
 	 * 
 	 * @param lc
@@ -84,7 +63,7 @@ public abstract class Controller extends InputController {
 
 	/**
 	 * Stores an object in the session. If already exists an object stored with the given key, it
-	 * will be overwritten
+	 * will be overwritten, if the value is <code>null</code>, the object will be removed.
 	 * 
 	 * @param key
 	 *            the object's key
@@ -111,7 +90,7 @@ public abstract class Controller extends InputController {
 	 *            the output's value
 	 */
 	protected final void out(String key, Object value) {
-		this.output().put(key, value);
+		getContext().addOutput(key, value);
 	}
 
 	/**
@@ -123,7 +102,7 @@ public abstract class Controller extends InputController {
 	 *            the header's value
 	 */
 	protected final void header(String name, String value) {
-		this.headers().put(name, value);
+		getContext().addHeader(name, value);
 	}
 
 	/**
@@ -135,7 +114,55 @@ public abstract class Controller extends InputController {
 	 *            the cookie's value
 	 */
 	protected final void cookie(String name, String value) {
-		this.cookies().put(name, value);
+		getContext().addCookie(name, value);
+	}
+
+	/**
+	 * Set's a response cookie
+	 * 
+	 * @param name
+	 *            a String specifying the name of the cookie
+	 * @param value
+	 *            a String specifying the value of the cookie
+	 * @param domain
+	 *            a String containing the domain name within which this cookie is visible; form is
+	 *            according to RFC 2109
+	 */
+	protected final void cookie(String name, String value, String domain) {
+		getContext().addCookie(name, value, domain);
+	}
+
+	/**
+	 * Set's a response cookie
+	 * 
+	 * @param name
+	 *            a String specifying the name of the cookie
+	 * @param value
+	 *            a String specifying the value of the cookie
+	 * @param maxAge
+	 *            an integer specifying the maximum age of the cookie in seconds; if negative, means
+	 *            the cookie is not stored; if zero, deletes the cookie
+	 */
+	protected final void cookie(String name, String value, int maxAge) {
+		getContext().addCookie(name, value, maxAge);
+	}
+
+	/**
+	 * Set's a response cookie
+	 * 
+	 * @param name
+	 *            a String specifying the name of the cookie
+	 * @param value
+	 *            a String specifying the value of the cookie
+	 * @param domain
+	 *            a String containing the domain name within which this cookie is visible; form is
+	 *            according to RFC 2109
+	 * @param maxAge
+	 *            an integer specifying the maximum age of the cookie in seconds; if negative, means
+	 *            the cookie is not stored; if zero, deletes the cookie
+	 */
+	protected final void cookie(String name, String value, String domain, int maxAge) {
+		getContext().addCookie(name, value, domain, maxAge);
 	}
 
 	/**
@@ -224,7 +251,7 @@ public abstract class Controller extends InputController {
 	 * Render the default SERVER ERROR (500) page
 	 */
 	protected final void error() {
-		this.render(getProperty(ERROR_TEMPLATE), 500);
+		this.render(property(ERROR_TEMPLATE), 500);
 	}
 
 	/**
@@ -240,7 +267,7 @@ public abstract class Controller extends InputController {
 	 * Render the default NOT FOUND (404) page
 	 */
 	protected final void notFound() {
-		this.render(getProperty(NOT_FOUND_TEMPLATE), 404);
+		this.render(property(NOT_FOUND_TEMPLATE), 404);
 	}
 
 	/**
@@ -256,7 +283,7 @@ public abstract class Controller extends InputController {
 	 * Render the default FORBIDDEN (403) page
 	 */
 	protected final void forbidden() {
-		this.render(getProperty(FORBIDDEN_TEMPLATE), 403);
+		this.render(property(FORBIDDEN_TEMPLATE), 403);
 	}
 
 	/**
@@ -272,7 +299,7 @@ public abstract class Controller extends InputController {
 	 * Render the default BAD REQUEST (400) page
 	 */
 	protected final void invalid() {
-		this.render(getProperty(INVALID_TEMPLATE), 400);
+		this.render(property(INVALID_TEMPLATE), 400);
 	}
 
 	/**

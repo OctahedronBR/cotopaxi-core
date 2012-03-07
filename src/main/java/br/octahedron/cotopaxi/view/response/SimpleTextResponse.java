@@ -38,7 +38,7 @@ public class SimpleTextResponse extends RenderableResponse {
 	}
 
 	public SimpleTextResponse(int code, ControllerContext context, String content) {
-		super(code, context.getOutput(), context.getCookies(), context.getHeaders(), context.getLocale());
+		super(code, context);
 		this.content = content;
 	}
 

@@ -16,7 +16,7 @@
  */
 package br.octahedron.cotopaxi.validation;
 
-import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
+import static br.octahedron.cotopaxi.CotopaxiProperty.property;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -116,7 +116,7 @@ public final class Validator {
 			}
 		}
 		log.debug("Invalid attributes: count %d - list %s", invalidMessages.size(), invalidMessages.keySet().toString());
-		this.out.add(getProperty(CotopaxiProperty.INVALID_PROPERTY), invalidMessages);
+		this.out.add(property(CotopaxiProperty.INVALID_PROPERTY), invalidMessages);
 		return valid;
 	}
 

@@ -17,9 +17,12 @@
 package br.octahedron.cotopaxi.controller;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -49,7 +52,7 @@ public final class ControllerContext {
 
 	// internal
 	private ControllerResponse controllerResp;
-	private Map<String, String> cookies;
+	private Set<Cookie> cookies;
 	private Map<String, String> headers;
 	private Map<String, Object> output;
 	private HttpServletRequest request;
@@ -83,6 +86,138 @@ public final class ControllerContext {
 	}
 
 	/**
+	 * Mark this controller/context to be forwarded to the given {@link ControllerDescriptor}
+	 * 
+	 * @param forwardDescriptor
+	 *            the {@link ControllerDescriptor} which this controller will be forwarded
+	 */
+	protected void forward(ControllerDescriptor forwardDescriptor) {
+		if (!this.isAnswered() && !this.forwarded()) {
+			this.forward = forwardDescriptor;
+		} else {
+			throw new IllegalStateException("Response already defined");
+		}
+	}
+
+	/**
+	 * Gets the forward {@link ControllerDescriptor}
+	 * 
+	 * @return the {@link ControllerDescriptor} to forward to
+	 */
+	protected ControllerDescriptor forward() {
+		this.controllerDesc = this.forward;
+		this.forward = null;
+		return this.controllerDesc;
+	}
+
+	/**
+	 * @param locale
+	 *            the locale to be used to render response.
+	 */
+	protected void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+
+	/**
+	 * Add a cookie.
+	 * 
+	 * @param name
+	 *            a String specifying the name of the cookie
+	 * @param value
+	 *            a String specifying the value of the cookie
+	 * 
+	 * @see Cookie
+	 */
+	protected void addCookie(String name, String value) {
+		this.addCookie(name, value, null, -1);
+	}
+
+	/**
+	 * Add a cookie.
+	 * 
+	 * @param name
+	 *            a String specifying the name of the cookie
+	 * @param value
+	 *            a String specifying the value of the cookie
+	 * @param domain
+	 *            a String containing the domain name within which this cookie is visible; form is
+	 *            according to RFC 2109
+	 * 
+	 * @see Cookie
+	 */
+	protected void addCookie(String name, String value, String domain) {
+		this.addCookie(name, value, domain, -1);
+	}
+
+	/**
+	 * Add a cookie.
+	 * 
+	 * @param name
+	 *            a String specifying the name of the cookie
+	 * @param value
+	 *            a String specifying the value of the cookie
+	 * @param maxAge
+	 *            an integer specifying the maximum age of the cookie in seconds; if negative, means
+	 *            the cookie is not stored; if zero, deletes the cookie
+	 * 
+	 * @see Cookie
+	 */
+	protected void addCookie(String name, String value, int maxAge) {
+		this.addCookie(name, value, null, maxAge);
+	}
+
+	/**
+	 * Adds a cookie.
+	 * 
+	 * @param name
+	 *            a String specifying the name of the cookie
+	 * @param value
+	 *            a String specifying the value of the cookie
+	 * @param domain
+	 *            a String containing the domain name within which this cookie is visible; form is
+	 *            according to RFC 2109
+	 * @param maxAge
+	 *            an integer specifying the maximum age of the cookie in seconds; if negative, means
+	 *            the cookie is not stored; if zero, deletes the cookie
+	 * 
+	 * @see Cookie
+	 */
+	protected void addCookie(String name, String value, String domain, int maxAge) {
+		Cookie c = new Cookie(name, value);
+		if (domain != null) {
+			c.setDomain(domain);
+		}
+		if (maxAge != -1) {
+			c.setMaxAge(maxAge);
+		}
+		this.getCookies().add(c);
+	}
+
+	/**
+	 * Adds a header.
+	 * 
+	 * @param name
+	 *            the name of the header
+	 * @param value
+	 *            the additional header value
+	 */
+	protected void addHeader(String name, String value) {
+		this.getHeaders().put(name, value);
+	}
+
+	/**
+	 * Adds an object to the output. This objects will be used to by the view to render output.
+	 * 
+	 * @param key
+	 *            the output's key
+	 * @param value
+	 *            the output's value
+	 */
+	protected void addOutput(String key, Object value) {
+		this.getOutput().put(key, value);
+	}
+
+	/**
 	 * @return the controllerDescriptor
 	 */
 	public ControllerDescriptor getControllerDescriptor() {
@@ -102,9 +237,9 @@ public final class ControllerContext {
 	/**
 	 * @return response's cookies
 	 */
-	public Map<String, String> getCookies() {
+	public Set<Cookie> getCookies() {
 		if (this.cookies == null) {
-			this.cookies = new HashMap<String, String>();
+			this.cookies = new HashSet<Cookie>();
 		}
 		return this.cookies;
 	}
@@ -141,14 +276,6 @@ public final class ControllerContext {
 	}
 
 	/**
-	 * @param locale
-	 *            the locale to be used to render response.
-	 */
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
-
-	/**
 	 * Checks if this controller was forwarded
 	 * 
 	 * @return <code>true</code> if it was, <code>false</code> if not
@@ -157,28 +284,4 @@ public final class ControllerContext {
 		return forward != null;
 	}
 
-	/**
-	 * Mark this controller/context to be forwarded to the given {@link ControllerDescriptor}
-	 * 
-	 * @param forwardDescriptor
-	 *            the {@link ControllerDescriptor} which this controller will be forwarded
-	 */
-	public void forward(ControllerDescriptor forwardDescriptor) {
-		if (!this.isAnswered() && !this.forwarded()) {
-			this.forward = forwardDescriptor;
-		} else {
-			throw new IllegalStateException("Response already defined");
-		}
-	}
-
-	/**
-	 * Gets the forward {@link ControllerDescriptor}
-	 * 
-	 * @return the {@link ControllerDescriptor} to forward to
-	 */
-	public ControllerDescriptor forward() {
-		this.controllerDesc = this.forward;
-		this.forward = null;
-		return this.controllerDesc;
-	}
 }

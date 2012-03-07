@@ -16,8 +16,10 @@
  */
 package br.octahedron.cotopaxi.view.render;
 
-import static br.octahedron.cotopaxi.CotopaxiProperty.*;
 import static br.octahedron.cotopaxi.CotopaxiProperty.TEMPLATE_FOLDER;
+import static br.octahedron.cotopaxi.CotopaxiProperty.charset;
+import static br.octahedron.cotopaxi.CotopaxiProperty.property;
+
 import java.io.Writer;
 import java.util.Map;
 import java.util.Properties;
@@ -39,31 +41,33 @@ import br.octahedron.util.Log;
 public class VelocityTemplateRender implements TemplateRender {
 
 	private static final Log log = new Log(VelocityTemplateRender.class);
-	private static final String VELOCIMACRO_LIBRARY = "macros.vm";  
-	
+	private static final String VELOCIMACRO_LIBRARY = "macros.vm";
+
 	private final VelocityEngine engine = new VelocityEngine();
 	private String templateFolder;
-	
+
 	public VelocityTemplateRender() {
-		this.templateFolder = getProperty(TEMPLATE_FOLDER);
+		this.templateFolder = property(TEMPLATE_FOLDER);
 		if (!this.templateFolder.endsWith("/")) {
 			this.templateFolder += '/';
 		}
 		Properties p = new Properties();
 		p.setProperty("velocimacro.library", this.templateFolder + VELOCIMACRO_LIBRARY);
-		p.setProperty("input.encoding", getCharset().toString());
-		p.setProperty("output.encoding", getCharset().toString());
+		p.setProperty("input.encoding", charset().toString());
+		p.setProperty("output.encoding", charset().toString());
 		engine.init(p);
 	}
-	
-	/* (non-Javadoc)
-	 * @see br.octahedron.cotopaxi.view.render.TemplateRender#render(java.lang.String, java.util.Map, java.io.Writer)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.octahedron.cotopaxi.view.render.TemplateRender#render(java.lang.String,
+	 * java.util.Map, java.io.Writer)
 	 */
-	public void render(String templatePath, Map<String,Object> output, Writer writer) {
+	public void render(String templatePath, Map<String, Object> output, Writer writer) {
 		log.info("Rendering template %s", templatePath);
 		VelocityContext context = new VelocityContext(output);
 		Template template = engine.getTemplate(this.templateFolder + templatePath);
 		template.merge(context, writer);
 	}
 }
-

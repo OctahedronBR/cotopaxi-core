@@ -16,13 +16,16 @@
  */
 package br.octahedron.cotopaxi.view.response;
 
+import static br.octahedron.cotopaxi.CotopaxiProperty.charset;
+
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
+import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import br.octahedron.cotopaxi.controller.ControllerContext;
@@ -44,20 +47,33 @@ public class TemplateResponse extends RenderableResponse {
 
 	private OutputStreamBuilder builder = null;
 	private String template;
-	
-	public TemplateResponse(String template, int code, Map<String, Object> output, Locale locale) {
-		super(code, output, new HashMap<String, String>(), new HashMap<String, String>(), locale);
-		this.template = template;
-	}
 
-	public TemplateResponse(String template, int code, Map<String, Object> output, Map<String, String> cookies, Map<String, String> headers,
-			Locale locale) {
-		super(code, output, cookies, headers, locale);
-		this.template = template;
-	}
-
+	/**
+	 * @param template
+	 *            The template to be rendered
+	 * @param code
+	 *            The HTTP result code
+	 * @param context
+	 *            The request {@link ControllerContext}
+	 */
 	public TemplateResponse(String template, int code, ControllerContext context) {
-		this(template, code, context.getOutput(), context.getCookies(), context.getHeaders(), context.getLocale());
+		super(code, context);
+		this.template = template;
+	}
+
+	/**
+	 * @param template
+	 *            The template to be rendered
+	 * @param code
+	 *            The HTTP result code
+	 * @param output
+	 *            The output objects map
+	 * @param locale
+	 *            The response locale
+	 */
+	public TemplateResponse(String template, int code, Map<String, Object> output, Locale locale) {
+		super(code, output, locale);
+		this.template = template;
 	}
 
 	/**
@@ -88,12 +104,12 @@ public class TemplateResponse extends RenderableResponse {
 	}
 
 	/**
-	 * Sets the {@link OutputStreamBuilder} to be used to create the Ou
+	 * Sets the {@link OutputStreamBuilder} to be used to create the {@link OutputStream}
 	 * 
-	 * @param gzipBuilder
+	 * @param outputStreamBuilder
 	 */
-	public void setOutputStreamBuilder(OutputStreamBuilder gzipBuilder) {
-		this.builder = gzipBuilder;
+	public void setOutputStreamBuilder(OutputStreamBuilder outputStreamBuilder) {
+		this.builder = outputStreamBuilder;
 	}
 
 	/**
@@ -113,14 +129,14 @@ public class TemplateResponse extends RenderableResponse {
 	}
 
 	/**
-	 * Adds a new object to output. If there's already exists an object for the given key, the
+	 * Adds a new header to output. If there's already exists a header for the given key, the
 	 * original one is kept.
 	 * 
 	 * @param key
-	 *            The object's key
+	 *            The headers's key
 	 * 
 	 * @param value
-	 *            The object's value
+	 *            The headers's value
 	 */
 	public void addHeader(String key, String value) {
 		if (!this.headers.containsKey(key)) {
@@ -129,28 +145,87 @@ public class TemplateResponse extends RenderableResponse {
 	}
 
 	/**
-	 * Adds a new object to output. If there's already exists an object for the given key, the
-	 * original one is kept.
+	 * Add a cookie.
 	 * 
-	 * @param key
-	 *            The object's key
-	 * 
+	 * @param name
+	 *            a String specifying the name of the cookie
 	 * @param value
-	 *            The object's value
+	 *            a String specifying the value of the cookie
+	 * 
+	 * @see Cookie
 	 */
-	public void addCookies(String key, String value) {
-		if (!this.cookies.containsKey(key)) {
-			this.cookies.put(key, value);
-		}
+	public void addCookie(String name, String value) {
+		this.addCookie(name, value, null, -1);
 	}
-	
+
+	/**
+	 * Add a cookie.
+	 * 
+	 * @param name
+	 *            a String specifying the name of the cookie
+	 * @param value
+	 *            a String specifying the value of the cookie
+	 * @param domain
+	 *            a String containing the domain name within which this cookie is visible; form is
+	 *            according to RFC 2109
+	 * 
+	 * @see Cookie
+	 */
+	public void addCookie(String name, String value, String domain) {
+		this.addCookie(name, value, domain, -1);
+	}
+
+	/**
+	 * Add a cookie.
+	 * 
+	 * @param name
+	 *            a String specifying the name of the cookie
+	 * @param value
+	 *            a String specifying the value of the cookie
+	 * @param maxAge
+	 *            an integer specifying the maximum age of the cookie in seconds; if negative, means
+	 *            the cookie is not stored; if zero, deletes the cookie
+	 * 
+	 * @see Cookie
+	 */
+	public void addCookie(String name, String value, int maxAge) {
+		this.addCookie(name, value, null, maxAge);
+	}
+
+	/**
+	 * Adds a cookie.
+	 * 
+	 * @param name
+	 *            a String specifying the name of the cookie
+	 * @param value
+	 *            a String specifying the value of the cookie
+	 * @param domain
+	 *            a String containing the domain name within which this cookie is visible; form is
+	 *            according to RFC 2109
+	 * @param maxAge
+	 *            an integer specifying the maximum age of the cookie in seconds; if negative, means
+	 *            the cookie is not stored; if zero, deletes the cookie
+	 * 
+	 * @see Cookie
+	 */
+	public void addCookie(String name, String value, String domain, int maxAge) {
+		Cookie c = new Cookie(name, value);
+		if (domain != null) {
+			c.setDomain(domain);
+		}
+		if (maxAge != -1) {
+			c.setMaxAge(maxAge);
+		}
+		this.cookies.add(c);
+	}
+
 	/**
 	 * Gets the current locale to be used to render this template
 	 */
 	public Locale getLocale() {
 		return this.locale;
 	}
-	
+
 	/**
 	 * Set's the locale to be used to render this template.
 	 */
@@ -163,7 +238,8 @@ public class TemplateResponse extends RenderableResponse {
 	 */
 	@Override
 	public String getContentType() {
-		return "text/html; charset=utf-8";
+		Charset cs = charset();
+		return "text/html; charset= " + cs.name();
 	}
 
 	/*

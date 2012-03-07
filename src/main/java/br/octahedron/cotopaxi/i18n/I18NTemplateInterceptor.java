@@ -19,7 +19,8 @@ package br.octahedron.cotopaxi.i18n;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_DATE_FORMAT_PROPERTY;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_NUMBER_FORMAT_PROPERTY;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_PROPERTY;
-import static br.octahedron.cotopaxi.CotopaxiProperty.getProperty;
+import static br.octahedron.cotopaxi.CotopaxiProperty.property;
+import static br.octahedron.util.DateUtil.defaultDateFormat;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -33,7 +34,6 @@ import br.octahedron.cotopaxi.inject.Inject;
 import br.octahedron.cotopaxi.interceptor.TemplateInterceptor;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
 
-import static br.octahedron.util.DateUtil.defaultDateFormat;
 /**
  * Interceptor for Internationalization. This Interceptor uses the {@link LocaleManager} to load the
  * right {@link LocaleMap} and inject it to template. The {@link LocaleMap} is bound to the
@@ -54,7 +54,7 @@ import static br.octahedron.util.DateUtil.defaultDateFormat;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  */
 public class I18NTemplateInterceptor extends TemplateInterceptor {
-	
+
 	@Inject
 	private LocaleManager localeManager;
 
@@ -81,9 +81,9 @@ public class I18NTemplateInterceptor extends TemplateInterceptor {
 			lcMap = this.localeManager.getLocaleMap(desc, this.locales());
 		}
 
-		response.addOutput(getProperty(I18N_PROPERTY), lcMap);
-		response.addOutput(getProperty(I18N_DATE_FORMAT_PROPERTY), this.dateFormat(lcMap.getLocale()));
-		response.addOutput(getProperty(I18N_NUMBER_FORMAT_PROPERTY), this.numberFormat(lcMap.getLocale()));
+		response.addOutput(property(I18N_PROPERTY), lcMap);
+		response.addOutput(property(I18N_DATE_FORMAT_PROPERTY), this.dateFormat(lcMap.getLocale()));
+		response.addOutput(property(I18N_NUMBER_FORMAT_PROPERTY), this.numberFormat(lcMap.getLocale()));
 	}
 
 	/**

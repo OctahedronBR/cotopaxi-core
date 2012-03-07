@@ -32,7 +32,7 @@ public class JSONResponse extends RenderableResponse {
 	 * 
 	 */
 	public JSONResponse(int code, ControllerContext context) {
-		super(code, context.getOutput(), context.getCookies(), context.getHeaders(), context.getLocale());
+		super(code, context);
 	}
 
 	/*

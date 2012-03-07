@@ -19,7 +19,8 @@ package br.octahedron.cotopaxi.i18n;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_BASE_FILE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_FOLDER;
 import static br.octahedron.cotopaxi.CotopaxiProperty.I18N_SUPPORTED_LOCALES;
-import static br.octahedron.cotopaxi.CotopaxiProperty.*;
+import static br.octahedron.cotopaxi.CotopaxiProperty.charset;
+import static br.octahedron.cotopaxi.CotopaxiProperty.property;
 import static java.util.Arrays.asList;
 
 import java.io.File;
@@ -92,8 +93,8 @@ import br.octahedron.util.Log;
 public class LocaleManager {
 
 	private static final Log logger = new Log(LocaleManager.class);
-	private static final String BASE_RESOURCE = getProperty(I18N_BASE_FILE);
-	private static final String BASE_FOLDER = getProperty(I18N_FOLDER);
+	private static final String BASE_RESOURCE = property(I18N_BASE_FILE);
+	private static final String BASE_FOLDER = property(I18N_FOLDER);
 
 	private static Collection<Locale> supportedLocales = new LinkedHashSet<Locale>();
 	private Map<String, ResourceBundle> cache = new HashMap<String, ResourceBundle>();
@@ -103,7 +104,7 @@ public class LocaleManager {
 		/*
 		 * Loads the supported locales from configuration file.
 		 */
-		String[] locales = getProperty(I18N_SUPPORTED_LOCALES).split(",");
+		String[] locales = property(I18N_SUPPORTED_LOCALES).split(",");
 		for (String l : locales) {
 			Locale lc = null;
 			l = l.trim();
@@ -123,7 +124,7 @@ public class LocaleManager {
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets a {@link LocaleMap} for the given {@link Controller} and locale. If there's no i18n
 	 * files for the given controller and/or locale, it will returns an empty {@link LocaleMap}.
@@ -310,7 +311,7 @@ public class LocaleManager {
 		try {
 			File f = new File(resourcePath);
 			if (f.exists()) {
-				in = new InputStreamReader(new FileInputStream(f), getCharset());
+				in = new InputStreamReader(new FileInputStream(f), charset());
 			} else {
 				InputStream inStream = this.loader.getResourceAsStream(resourcePath);
 				if (inStream != null) {
