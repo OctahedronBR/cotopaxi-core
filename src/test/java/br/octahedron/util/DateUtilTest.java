@@ -17,15 +17,14 @@
 package br.octahedron.util;
 
 import static br.octahedron.cotopaxi.CotopaxiProperty.TIMEZONE;
-import static org.junit.Assert.*;
-import static br.octahedron.util.DateUtil.*;
+import static br.octahedron.util.DateUtil.defaultTimeZone;
+import static org.junit.Assert.assertEquals;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
