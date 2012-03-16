@@ -44,15 +44,16 @@ public class VelocityTemplateRender implements TemplateRender {
 	private static final String VELOCIMACRO_LIBRARY = "macros.vm";
 
 	private final VelocityEngine engine = new VelocityEngine();
-	private String templateFolder;
 
 	public VelocityTemplateRender() {
-		this.templateFolder = property(TEMPLATE_FOLDER);
-		if (!this.templateFolder.endsWith("/")) {
-			this.templateFolder += '/';
+		String templateFolder = property(TEMPLATE_FOLDER);
+		if (!templateFolder.endsWith("/")) {
+			templateFolder += '/';
 		}
 		Properties p = new Properties();
-		p.setProperty("velocimacro.library", this.templateFolder + VELOCIMACRO_LIBRARY);
+		p.setProperty("resource.loader", "file, class");
+		p.setProperty("file.resource.loader.path", templateFolder);
+		p.setProperty("velocimacro.library", templateFolder + VELOCIMACRO_LIBRARY);
 		p.setProperty("input.encoding", charset().toString());
 		p.setProperty("output.encoding", charset().toString());
 		engine.init(p);
@@ -67,7 +68,7 @@ public class VelocityTemplateRender implements TemplateRender {
 	public void render(String templatePath, Map<String, Object> output, Writer writer) {
 		log.info("Rendering template %s", templatePath);
 		VelocityContext context = new VelocityContext(output);
-		Template template = engine.getTemplate(this.templateFolder + templatePath);
+		Template template = engine.getTemplate(templatePath);
 		template.merge(context, writer);
 	}
 }
