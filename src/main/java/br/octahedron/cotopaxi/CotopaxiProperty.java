@@ -39,6 +39,10 @@ import br.octahedron.util.DateUtil;
 public enum CotopaxiProperty {
 
 	/**
+	 * Indicates if the server is running on development mode 
+	 */
+	DEVELOPMENT_MODE("false"),
+	/**
 	 * The TemplateRender to be used to render templates. Default:
 	 * br.octahedron.cotopaxi.view.render.VelocityTemplateRender
 	 * 
