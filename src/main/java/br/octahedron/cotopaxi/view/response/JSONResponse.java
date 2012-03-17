@@ -39,7 +39,7 @@ public class JSONResponse extends RenderableResponse {
 	 * (non-Javadoc)
 	 */
 	@Override
-	public String getContentType() {
+	public String contentType() {
 		return "application/json";
 	}
 

@@ -36,8 +36,8 @@ import javax.servlet.http.HttpSession;
  */
 public abstract class InputController {
 
-	protected static final String USERNAME_KEY = "{CURRENT_USER_NAME}";
-	protected static final String USER_AUTHORIZED = "{IS_CURRENT_USER_AUTHORIZED}";
+	public static final String USERNAME_KEY = "{CURRENT_USER_NAME}";
+	public static final String USER_AUTHORIZED = "{IS_CURRENT_USER_AUTHORIZED}";
 
 	/**
 	 * Gets the {@link HttpServletRequest}
@@ -86,9 +86,9 @@ public abstract class InputController {
 	}
 
 	/**
-	 * Gets the requested relative URL
+	 * Gets the full requested URL
 	 * 
-	 * E.g.: /dashboard
+	 * E.g.: http://www.example.com/dashboard
 	 * 
 	 * @return the requested URL
 	 */

@@ -20,6 +20,7 @@ import static br.octahedron.cotopaxi.CotopaxiProperty.TEMPLATE_FOLDER;
 import static br.octahedron.cotopaxi.CotopaxiProperty.charset;
 import static br.octahedron.cotopaxi.CotopaxiProperty.property;
 
+import java.io.File;
 import java.io.Writer;
 import java.util.Map;
 import java.util.Properties;
@@ -53,10 +54,17 @@ public class VelocityTemplateRender implements TemplateRender {
 		Properties p = new Properties();
 		p.setProperty("resource.loader", "file, class");
 		p.setProperty("file.resource.loader.path", templateFolder);
-		p.setProperty("velocimacro.library", templateFolder + VELOCIMACRO_LIBRARY);
 		p.setProperty("input.encoding", charset().toString());
 		p.setProperty("output.encoding", charset().toString());
+		if (hasMacros(templateFolder)) {
+			p.setProperty("velocimacro.library", templateFolder + VELOCIMACRO_LIBRARY);
+		}
 		engine.init(p);
+	}
+
+	private static boolean hasMacros(String templateFolder) {
+		File f = new File(templateFolder, VELOCIMACRO_LIBRARY);
+		return f.exists();
 	}
 
 	/*

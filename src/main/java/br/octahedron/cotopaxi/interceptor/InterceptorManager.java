@@ -74,7 +74,8 @@ public class InterceptorManager {
 
 	/**
 	 * Execute the {@link ControllerInterceptor} for the given annotations.
-	 * @param context 
+	 * 
+	 * @param context
 	 * 
 	 * @param annotations
 	 *            the {@link Controller} method {@link Annotation}
@@ -87,7 +88,7 @@ public class InterceptorManager {
 				log.debug("Executing ControllerInterceptor %s with annotation %s", interceptor.getClass(), entry.getKey());
 				interceptor.execute(ann);
 			}
-			if(context != null && (context.isAnswered() || context.forwarded())) {
+			if (context != null && (context.isAnswered() || context.forwarded())) {
 				log.debug("Controller already answered/forwarded - aborting interceptors execution!");
 				break;
 			}
@@ -130,6 +131,17 @@ public class InterceptorManager {
 			log.debug("Executing FinalizerInterceptor finish %s", interceptor.getClass());
 			interceptor.finish();
 		}
+	}
+
+	/**
+	 * Reset all information registered at this class, bringing it back to initial state.
+	 * 
+	 * Calling this method can make application stop works properly.
+	 */
+	public void forceReset() {
+		this.controllerInterceptors.clear();
+		this.templateInterceptors.clear();
+		this.finalizerInterceptors.clear();
 	}
 
 }

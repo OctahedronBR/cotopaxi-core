@@ -43,7 +43,7 @@ public class SimpleTextResponse extends RenderableResponse {
 	}
 
 	@Override
-	protected String getContentType() {
+	protected String contentType() {
 		return "text/html";
 	}
 

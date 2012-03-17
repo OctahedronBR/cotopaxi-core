@@ -217,4 +217,16 @@ public class Router {
 	private boolean isStaticURL(String url) {
 		return !nonStaticPattern.matcher(url).matches();
 	}
+
+	/**
+	 * Reset all information registered at this router, bringing it back to initial state.
+	 * 
+	 * Calling this method can make application stop works properly.
+	 */
+	public void forceReset() {
+		this.cachedURLs.clear();
+		this.staticURLs.clear();
+		this.dynamicURLs.clear();
+		this.urlRoute.clear();
+	}
 }

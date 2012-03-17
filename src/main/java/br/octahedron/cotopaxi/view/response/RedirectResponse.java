@@ -36,6 +36,15 @@ public class RedirectResponse extends ServletGenericResponse {
 		this.url = url;
 	}
 
+	/**
+	 * Gets the url to redirect.
+	 * 
+	 * @return the url
+	 */
+	public String redirectUrl() {
+		return url;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 */

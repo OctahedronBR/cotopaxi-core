@@ -31,7 +31,16 @@ import java.io.InputStream;
 public class FileUtil {
 	
 	public static InputStream getInputStream(String filepath) throws FileNotFoundException {
-		return new FileInputStream(getFile(filepath));
+		try {
+			return new FileInputStream(getFile(filepath));
+		} catch (FileNotFoundException ex) {
+			InputStream in = ClassLoader.getSystemResourceAsStream(filepath);
+			if (in != null) {
+				return in;
+			} else {
+				throw ex;
+			}
+		}
 	}
 
 	public static File getFile(String filepath) {

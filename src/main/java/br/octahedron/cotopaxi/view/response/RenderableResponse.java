@@ -125,11 +125,11 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 			}
 		}
 		// set locale
-		servletResponse.setLocale(this.locale);
+		servletResponse.setLocale(this.locale());
 		// set content type
-		servletResponse.setContentType(this.getContentType());
+		servletResponse.setContentType(this.contentType());
 		// set status code
-		servletResponse.setStatus(this.code);
+		servletResponse.setStatus(this.code());
 
 		// render output
 		this.render();
@@ -141,13 +141,81 @@ public abstract class RenderableResponse extends ServletGenericResponse {
 		this.writer.close();
 		this.writer = null;
 	}
-	
-	
 
+	/**
+	 * @return the result code
+	 */
+	public int code() {
+		return code;
+	}
+	
+	/**
+	 * The response locale 
+	 * @return the locale
+	 */
+	public Locale locale() {
+		return locale;
+	}
+
+	/**
+	 * Gets the value of the given cookie, if exists. Method to be used by tests.
+	 * 
+	 * @param key
+	 *            The cookie's name/key.
+	 * @return the cookie's value, if exists a cookie with the given name/key or <code>null</code>,
+	 *         if there's no such cookie.
+	 */
+	public String cookie(String key) {
+		Cookie cookie = null;
+		for (Cookie ck : this.cookies) {
+			if (ck.getName().equals(key)) {
+				cookie = ck;
+				break;
+			}
+		}
+		if (cookie != null) {
+			return cookie.getValue();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Gets the value of the given header, if exists. Method to be used by tests.
+	 * 
+	 * @param key
+	 *            The header's name/key.
+	 * @return the header's value, if exists a header with the given name/key or <code>null</code>,
+	 *         if there's no such header.
+	 */
+	public String header(String key) {
+		return headers.get(key);
+	}
+
+	/**
+	 * Gets the value of the given output, if exists. Method to be used by tests.
+	 * 
+	 * @param key
+	 *            The output's name/key.
+	 * @return the output's value, if exists an output with the given name/key or <code>null</code>,
+	 *         if there's no such output.
+	 */
+	public Object output(String key) {
+		return output.get(key);
+	}
+	
 	/**
 	 * Gets this response ContentType
 	 */
-	protected abstract String getContentType();
+	@Deprecated
+	protected String getContentType() {
+		return this.contentType();
+	}
+	
+	/**
+	 * Gets this response ContentType
+	 */
+	protected abstract String contentType();
 
 	/**
 	 * Renders this response

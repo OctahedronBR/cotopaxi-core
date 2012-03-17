@@ -18,6 +18,7 @@ package br.octahedron.cotopaxi;
 
 import static br.octahedron.cotopaxi.CotopaxiProperty.TEMPLATE_RENDER;
 import static br.octahedron.cotopaxi.CotopaxiProperty.property;
+import static br.octahedron.cotopaxi.config.ConfigurationLoader.CONFIGURATION_FILENAME;
 import static br.octahedron.cotopaxi.inject.DependencyManager.registerDependency;
 
 import java.io.FileNotFoundException;
@@ -34,7 +35,10 @@ import br.octahedron.cotopaxi.config.ConfigurationSyntaxException;
 import br.octahedron.cotopaxi.controller.ControllerDescriptor;
 import br.octahedron.cotopaxi.controller.ControllerExecutor;
 import br.octahedron.cotopaxi.controller.ControllerResponse;
+import br.octahedron.cotopaxi.inject.DependencyManager;
+import br.octahedron.cotopaxi.interceptor.ControllerInterceptor;
 import br.octahedron.cotopaxi.interceptor.InterceptorManager;
+import br.octahedron.cotopaxi.interceptor.TemplateInterceptor;
 import br.octahedron.cotopaxi.route.NotFoundExeption;
 import br.octahedron.cotopaxi.route.Router;
 import br.octahedron.cotopaxi.view.render.TemplateRender;
@@ -51,8 +55,8 @@ public class CotopaxiServlet extends HttpServlet {
 	private static final long serialVersionUID = 8958499809792016589L;
 
 	private static final Log log = new Log(CotopaxiServlet.class);
-	private InterceptorManager interceptor = new InterceptorManager();
-	private Router router = new Router();
+	protected InterceptorManager interceptor;
+	private Router router;
 	private ControllerExecutor executor;
 
 	/*
@@ -63,16 +67,13 @@ public class CotopaxiServlet extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		try {
-			log.info("Loading cotopaxi configuration...");
-			Booter booter = new Bootloader.Booter();
-			ConfigurationLoader loader = new ConfigurationLoader(this.router, this.interceptor, booter);
-			loader.loadConfiguration();
+			this.router = new Router();
+			this.interceptor = new InterceptorManager();
 			this.executor = new ControllerExecutor(this.interceptor);
+			this.forceReload();
 			log.info("Cotopaxi is ready to serve...");
-			booter.boot();
-			registerDependency(TemplateRender.class.getName(), property(TEMPLATE_RENDER));
 		} catch (FileNotFoundException ex) {
-			log.error("Configuration file not found. Make sure the %s file exists", ConfigurationLoader.CONFIGURATION_FILENAME);
+			log.error("Configuration file not found. Make sure the %s file exists", CONFIGURATION_FILENAME);
 			throw new ServletException(ex);
 		} catch (ConfigurationSyntaxException ex) {
 			log.error("Error parsing configuration file: Invalid Syntax. Check you configuration file and try again");
@@ -83,6 +84,7 @@ public class CotopaxiServlet extends HttpServlet {
 		}
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		this.deliver(req, resp);
 	}
@@ -92,24 +94,65 @@ public class CotopaxiServlet extends HttpServlet {
 		this.deliver(req, resp);
 	}
 
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		this.deliver(req, resp);
+	}
+
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		this.deliver(req, resp);
+	}
+
+	// internal methods
+	
+	/**
+	 * Loads the configuration from file.
+	 * 
+	 * @param booter
+	 *            The system booter class
+	 * @throws FileNotFoundException
+	 *             If configuration file isn't found.
+	 * @throws ConfigurationSyntaxException
+	 *             If a syntax error is found at configuration file.
+	 */
+	protected void loadConfiguration() throws FileNotFoundException, ConfigurationSyntaxException, ClassNotFoundException,
+			InstantiationException, IllegalAccessException {
+		Booter booter = new Bootloader.Booter();
+		log.info("Loading cotopaxi configuration...");
+		registerDependency(TemplateRender.class.getName(), property(TEMPLATE_RENDER));
+		ConfigurationLoader loader = new ConfigurationLoader(this.router, this.interceptor, booter);
+		loader.loadConfiguration();
+		log.info("Configuration loaded...");
+		booter.boot();
+	}
+
+	/**
+	 * Resets the servlet/framework and dependencies to it initial state - previously to any configuration load.
+	 * 
+	 * Calling this method can make application stop works properly.
+	 */
+	public void forceReset(){
+		this.router.forceReset();
+		this.interceptor.forceReset();
+		this.executor.forceReset();
+		DependencyManager.forceReset();
+		CotopaxiProperty.forceReset();
+	}
+	
+	public void forceReload() throws FileNotFoundException, ConfigurationSyntaxException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		this.forceReset();
+		this.loadConfiguration();
+	}
+
 	/**
 	 * Dispatches a request/response.
 	 */
-	private void deliver(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		ControllerResponse controllerResponse = null;
-		try {
-			ControllerDescriptor controllerDesc = this.router.route(request);
-			controllerResponse = this.executor.execute(controllerDesc, request);
-		} catch (NotFoundExeption ex) {
-			controllerResponse = this.executor.execute(request, ex);
-		}
-
+	public void deliver(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		ControllerResponse controllerResponse = processRequest(request);
 		try {
 			if (controllerResponse != null) {
-				if (controllerResponse instanceof TemplateResponse) {
-					this.interceptor.preRender((TemplateResponse) controllerResponse);
-				}
-				controllerResponse.dispatch(response);
+				processResponse(response, controllerResponse);
 			} else {
 				log.error("Cannot determine a ControllerResponse for url %s.\nDid you call some \"render\" method?", request.getRequestURI());
 				throw new ServletException("Cannot determine a ControllerResponse for request. Did you call some \"render\" method?");
@@ -118,5 +161,37 @@ public class CotopaxiServlet extends HttpServlet {
 			this.interceptor.finish();
 		}
 
+	}
+
+	/**
+	 * Process the given request and returns a {@link ControllerResponse}. It will route the request
+	 * to a controller, call the executor to process it and return the {@link ControllerResponse}.
+	 * This method is also responsible by execute the necessaries {@link ControllerInterceptor}
+	 * 
+	 * @param request
+	 *            The request to be processed.
+	 * @return The {@link ControllerResponse} for this request.
+	 */
+	protected ControllerResponse processRequest(HttpServletRequest request) {
+		try {
+			ControllerDescriptor controllerDesc = this.router.route(request);
+			return this.executor.execute(controllerDesc, request);
+		} catch (NotFoundExeption ex) {
+			return this.executor.execute(request, ex);
+		}
+	}
+
+	/**
+	 * Process and dispatch the {@link ControllerResponse}. This method is also responsible by
+	 * execute the necessaries {@link TemplateInterceptor}.
+	 * 
+	 * @param response The {@link HttpServletResponse} to be used to dispatch the {@link ControllerResponse}
+	 * @param controllerResponse The {@link ControllerResponse} to be dispatched.
+	 */
+	protected void processResponse(HttpServletResponse response, ControllerResponse controllerResponse) throws IOException, ServletException {
+		if (controllerResponse instanceof TemplateResponse) {
+			this.interceptor.preRender((TemplateResponse) controllerResponse);
+		}
+		controllerResponse.dispatch(response);
 	}
 }

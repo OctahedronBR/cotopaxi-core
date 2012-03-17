@@ -88,7 +88,7 @@ public class ControllerExecutor {
 		return process(controllerDesc, request);
 	}
 
-	public ControllerResponse process(ControllerDescriptor controllerDesc, HttpServletRequest request) {
+	private ControllerResponse process(ControllerDescriptor controllerDesc, HttpServletRequest request) {
 		try {
 			ControllerContext context = getContext();
 			// controller isn't answered
@@ -152,5 +152,14 @@ public class ControllerExecutor {
 	 */
 	private Controller loadController(ControllerDescriptor controllerDesc) throws InstantiationException, ClassNotFoundException {
 		return (Controller) getInstance(ReflectionUtil.getClass(controllerDesc.getControllerClass()));
+	}
+
+	/**
+	 * Reset all information registered at this class, bringing it back to initial state.
+	 * 
+	 * Calling this method can make application stop works properly.
+	 */
+	public void forceReset() {
+		this.methodsCache.clear();
 	}
 }

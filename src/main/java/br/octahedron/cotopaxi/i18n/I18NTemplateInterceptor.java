@@ -74,7 +74,7 @@ public class I18NTemplateInterceptor extends TemplateInterceptor {
 		LocaleMap lcMap;
 		ControllerDescriptor desc = this.controllerDescriptor();
 
-		Locale lc = response.getLocale();
+		Locale lc = response.locale();
 		if (lc != null) {
 			lcMap = this.localeManager.getLocaleMap(desc, lc);
 		} else {

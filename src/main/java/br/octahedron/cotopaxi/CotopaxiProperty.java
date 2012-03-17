@@ -36,10 +36,14 @@ import br.octahedron.util.DateUtil;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
+/**
+ * @author Name - email
+ * 
+ */
 public enum CotopaxiProperty {
 
 	/**
-	 * Indicates if the server is running on development mode 
+	 * Indicates if the server is running on development mode
 	 */
 	DEVELOPMENT_MODE("false"),
 	/**
@@ -212,5 +216,14 @@ public enum CotopaxiProperty {
 	 */
 	public static Charset getCharset() {
 		return charset();
+	}
+
+	/**
+	 * Reset all the {@link CotopaxiProperty} to they default values.
+	 */
+	public static void forceReset() {
+		for (CotopaxiProperty prop : CotopaxiProperty.values()) {
+			System.clearProperty(prop.name());
+		}
 	}
 }

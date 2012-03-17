@@ -101,4 +101,14 @@ public class DependencyManager {
 	public static <T> void registerDependency(String ifClass, String implClass) throws ClassNotFoundException {
 		registerDependency((Class<T>)Class.forName(ifClass), (Class<? extends T>)Class.forName(implClass));
 	}
+
+	/**
+	 * Reset all information registered at this class, bringing it back to initial state.
+	 * 
+	 * Calling this method can make application stop works properly.
+	 */
+	public static void forceReset() {
+		instances.clear();
+		dependencies.clear();
+	}
 }

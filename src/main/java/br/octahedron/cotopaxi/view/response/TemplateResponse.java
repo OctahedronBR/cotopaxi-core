@@ -220,10 +220,10 @@ public class TemplateResponse extends RenderableResponse {
 	}
 
 	/**
-	 * Gets the current locale to be used to render this template
+	 * @return the template to be used by this response.
 	 */
-	public Locale getLocale() {
-		return this.locale;
+	public String template() {
+		return template;
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class TemplateResponse extends RenderableResponse {
 	 * (non-Javadoc)
 	 */
 	@Override
-	public String getContentType() {
+	public String contentType() {
 		Charset cs = charset();
 		return "text/html; charset= " + cs.name();
 	}
