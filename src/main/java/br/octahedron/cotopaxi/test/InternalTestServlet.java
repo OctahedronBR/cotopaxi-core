@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
+import br.octahedron.cotopaxi.CotopaxiProperty.RunningMode;
 import br.octahedron.cotopaxi.CotopaxiServlet;
 import br.octahedron.cotopaxi.controller.ControllerResponse;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
@@ -41,6 +42,8 @@ class InternalTestServlet extends CotopaxiServlet {
 
 	private InternalTestServlet() {
 		try {
+			setRunningMode(RunningMode.TEST);
+			
 			this.init();
 		} catch (ServletException ex) {
 			throw new ExceptionInInitializerError(ex);

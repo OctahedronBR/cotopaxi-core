@@ -39,10 +39,6 @@ import br.octahedron.util.DateUtil;
 public enum CotopaxiProperty {
 
 	/**
-	 * Indicates if the server is running on development mode
-	 */
-	DEVELOPMENT_MODE("false"),
-	/**
 	 * The TemplateRender to be used to render templates. Default:
 	 * br.octahedron.cotopaxi.view.render.VelocityTemplateRender
 	 * 
@@ -133,6 +129,13 @@ public enum CotopaxiProperty {
 	}
 
 	/**
+	 * The Running Modes for a Cotopaxi Application
+	 */
+	public enum RunningMode {
+		UNKNOWN, TEST, DEVELOPMENT, PRODUCTION;
+	}
+	
+	/**
 	 * Gets the current value for the given property. If the property wasn't defined, it will return
 	 * the default value.
 	 * 
@@ -174,6 +177,43 @@ public enum CotopaxiProperty {
 		}
 	}
 
+	protected static final String RUNNING_MODE_PROP = "ctpx.running.mode";
+
+	/**
+	 * Gets the application {@link RunningMode}
+	 * 
+	 * @return the application {@link RunningMode}
+	 */
+	public static RunningMode runningMode() {
+		String mode = property(RUNNING_MODE_PROP);
+		if (mode == null) {
+			discoverRunningMode();
+		}
+		return RunningMode.valueOf(property(RUNNING_MODE_PROP));
+	}
+
+	/**
+	 * Tries to discover the current running mode. It looks for platform specific environment
+	 * properties
+	 */
+	private static void discoverRunningMode() {
+		String gae = property("com.google.appengine.runtime.environment");
+		if (gae != null) {
+			System.setProperty(RUNNING_MODE_PROP, gae);
+		} else {
+			System.setProperty(RUNNING_MODE_PROP, "unknown");
+		}
+	}
+
+	/**
+	 * Reset all the {@link CotopaxiProperty} to they default values.
+	 */
+	public static void forceReset() {
+		for (CotopaxiProperty prop : CotopaxiProperty.values()) {
+			System.clearProperty(prop.name());
+		}
+	}
+
 	/**
 	 * Gets the current value for the given property. If the property wasn't defined, it will return
 	 * the default value, if the property is one of the {@link CotopaxiProperty} or
@@ -212,14 +252,5 @@ public enum CotopaxiProperty {
 	 */
 	public static Charset getCharset() {
 		return charset();
-	}
-
-	/**
-	 * Reset all the {@link CotopaxiProperty} to they default values.
-	 */
-	public static void forceReset() {
-		for (CotopaxiProperty prop : CotopaxiProperty.values()) {
-			System.clearProperty(prop.name());
-		}
 	}
 }

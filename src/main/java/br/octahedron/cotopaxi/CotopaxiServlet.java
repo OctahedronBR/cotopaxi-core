@@ -18,8 +18,10 @@ package br.octahedron.cotopaxi;
 
 import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_PROPERTY;
 import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_TEMPLATE;
+import static br.octahedron.cotopaxi.CotopaxiProperty.RUNNING_MODE_PROP;
 import static br.octahedron.cotopaxi.CotopaxiProperty.TEMPLATE_RENDER;
 import static br.octahedron.cotopaxi.CotopaxiProperty.property;
+import static br.octahedron.cotopaxi.CotopaxiProperty.runningMode;
 import static br.octahedron.cotopaxi.config.ConfigurationLoader.CONFIGURATION_FILENAME;
 import static br.octahedron.cotopaxi.inject.DependencyManager.registerDependency;
 
@@ -37,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.velocity.exception.VelocityException;
 
 import br.octahedron.cotopaxi.Bootloader.Booter;
+import br.octahedron.cotopaxi.CotopaxiProperty.RunningMode;
 import br.octahedron.cotopaxi.config.ConfigurationLoader;
 import br.octahedron.cotopaxi.config.ConfigurationSyntaxException;
 import br.octahedron.cotopaxi.controller.ControllerDescriptor;
@@ -51,7 +54,6 @@ import br.octahedron.cotopaxi.route.Router;
 import br.octahedron.cotopaxi.view.render.TemplateRender;
 import br.octahedron.cotopaxi.view.response.TemplateResponse;
 import br.octahedron.util.Log;
-
 /**
  * The Cotopaxi Framework entry point.
  * 
@@ -60,8 +62,12 @@ import br.octahedron.util.Log;
 public class CotopaxiServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 8958499809792016589L;
-
 	private static final Log log = new Log(CotopaxiServlet.class);
+	
+	protected static void setRunningMode(RunningMode mode) {
+		System.setProperty(RUNNING_MODE_PROP, mode.name());
+	}
+	
 	protected InterceptorManager interceptor;
 	private Router router;
 	private ControllerExecutor executor;
@@ -78,6 +84,7 @@ public class CotopaxiServlet extends HttpServlet {
 			this.interceptor = new InterceptorManager();
 			this.executor = new ControllerExecutor(this.interceptor);
 			this.forceReload();
+			log.info("Running Mode: %s", runningMode());
 			log.info("Cotopaxi is ready to serve...");
 		} catch (FileNotFoundException ex) {
 			log.error("Configuration file not found. Make sure the %s file exists", CONFIGURATION_FILENAME);
