@@ -16,6 +16,8 @@
  */
 package br.octahedron.cotopaxi;
 
+import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_PROPERTY;
+import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_TEMPLATE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.TEMPLATE_RENDER;
 import static br.octahedron.cotopaxi.CotopaxiProperty.property;
 import static br.octahedron.cotopaxi.config.ConfigurationLoader.CONFIGURATION_FILENAME;
@@ -23,11 +25,16 @@ import static br.octahedron.cotopaxi.inject.DependencyManager.registerDependency
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.velocity.exception.VelocityException;
 
 import br.octahedron.cotopaxi.Bootloader.Booter;
 import br.octahedron.cotopaxi.config.ConfigurationLoader;
@@ -105,7 +112,7 @@ public class CotopaxiServlet extends HttpServlet {
 	}
 
 	// internal methods
-	
+
 	/**
 	 * Loads the configuration from file.
 	 * 
@@ -116,31 +123,33 @@ public class CotopaxiServlet extends HttpServlet {
 	 * @throws ConfigurationSyntaxException
 	 *             If a syntax error is found at configuration file.
 	 */
-	protected void loadConfiguration() throws FileNotFoundException, ConfigurationSyntaxException, ClassNotFoundException,
-			InstantiationException, IllegalAccessException {
+	protected void loadConfiguration() throws FileNotFoundException, ConfigurationSyntaxException, ClassNotFoundException, InstantiationException,
+			IllegalAccessException {
 		Booter booter = new Bootloader.Booter();
 		log.info("Loading cotopaxi configuration...");
-		registerDependency(TemplateRender.class.getName(), property(TEMPLATE_RENDER));
 		ConfigurationLoader loader = new ConfigurationLoader(this.router, this.interceptor, booter);
 		loader.loadConfiguration();
+		registerDependency(TemplateRender.class.getName(), property(TEMPLATE_RENDER));
 		log.info("Configuration loaded...");
 		booter.boot();
 	}
 
 	/**
-	 * Resets the servlet/framework and dependencies to it initial state - previously to any configuration load.
+	 * Resets the servlet/framework and dependencies to it initial state - previously to any
+	 * configuration load.
 	 * 
 	 * Calling this method can make application stop works properly.
 	 */
-	public void forceReset(){
+	public void forceReset() {
 		this.router.forceReset();
 		this.interceptor.forceReset();
 		this.executor.forceReset();
 		DependencyManager.forceReset();
 		CotopaxiProperty.forceReset();
 	}
-	
-	public void forceReload() throws FileNotFoundException, ConfigurationSyntaxException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+
+	public void forceReload() throws FileNotFoundException, ConfigurationSyntaxException, ClassNotFoundException, InstantiationException,
+			IllegalAccessException {
 		this.forceReset();
 		this.loadConfiguration();
 	}
@@ -149,14 +158,27 @@ public class CotopaxiServlet extends HttpServlet {
 	 * Dispatches a request/response.
 	 */
 	public void deliver(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		ControllerResponse controllerResponse = processRequest(request);
 		try {
+			ControllerResponse controllerResponse = processRequest(request);
 			if (controllerResponse != null) {
 				processResponse(response, controllerResponse);
 			} else {
 				log.error("Cannot determine a ControllerResponse for url %s.\nDid you call some \"render\" method?", request.getRequestURI());
 				throw new ServletException("Cannot determine a ControllerResponse for request. Did you call some \"render\" method?");
 			}
+		} catch (Throwable t) {
+			log.warning(t, "Unexpected error executing controller for %s. Message: %s", request.getRequestURI(), t.getMessage());
+			Map<String, Object> output = new HashMap<String, Object>();
+			output.put(property(ERROR_PROPERTY), t);
+			ControllerResponse resp;
+			if (t instanceof Error) {
+				resp = new TemplateResponse("compilation_error.vm", 500, output, Locale.getDefault());
+			} else if (t instanceof VelocityException) {
+				resp = new TemplateResponse("template_error.vm", 500, output, Locale.getDefault());
+			} else {
+				resp = new TemplateResponse(property(ERROR_TEMPLATE), 500, output, request.getLocale());
+			}
+			processResponse(response, resp);
 		} finally {
 			this.interceptor.finish();
 		}
@@ -172,7 +194,7 @@ public class CotopaxiServlet extends HttpServlet {
 	 *            The request to be processed.
 	 * @return The {@link ControllerResponse} for this request.
 	 */
-	protected ControllerResponse processRequest(HttpServletRequest request) {
+	protected ControllerResponse processRequest(HttpServletRequest request) throws Throwable {
 		try {
 			ControllerDescriptor controllerDesc = this.router.route(request);
 			return this.executor.execute(controllerDesc, request);
@@ -185,8 +207,11 @@ public class CotopaxiServlet extends HttpServlet {
 	 * Process and dispatch the {@link ControllerResponse}. This method is also responsible by
 	 * execute the necessaries {@link TemplateInterceptor}.
 	 * 
-	 * @param response The {@link HttpServletResponse} to be used to dispatch the {@link ControllerResponse}
-	 * @param controllerResponse The {@link ControllerResponse} to be dispatched.
+	 * @param response
+	 *            The {@link HttpServletResponse} to be used to dispatch the
+	 *            {@link ControllerResponse}
+	 * @param controllerResponse
+	 *            The {@link ControllerResponse} to be dispatched.
 	 */
 	protected void processResponse(HttpServletResponse response, ControllerResponse controllerResponse) throws IOException, ServletException {
 		if (controllerResponse instanceof TemplateResponse) {

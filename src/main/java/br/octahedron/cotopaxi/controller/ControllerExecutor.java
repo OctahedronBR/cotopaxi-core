@@ -17,7 +17,6 @@
 package br.octahedron.cotopaxi.controller;
 
 import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_PROPERTY;
-import static br.octahedron.cotopaxi.CotopaxiProperty.ERROR_TEMPLATE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.NOT_FOUND_TEMPLATE;
 import static br.octahedron.cotopaxi.CotopaxiProperty.property;
 import static br.octahedron.cotopaxi.controller.ControllerContext.clearContext;
@@ -80,15 +79,16 @@ public class ControllerExecutor {
 	 * @param request
 	 *            The current request
 	 * @return The {@link ControllerResponse} for the given controller
+	 * @throws Throwable 
 	 */
-	public ControllerResponse execute(ControllerDescriptor controllerDesc, HttpServletRequest request) {
+	public ControllerResponse execute(ControllerDescriptor controllerDesc, HttpServletRequest request) throws Throwable {
 		// first of all, clear previous context
 		clearContext();
 		setContext(request, controllerDesc);
 		return process(controllerDesc, request);
 	}
 
-	private ControllerResponse process(ControllerDescriptor controllerDesc, HttpServletRequest request) {
+	private ControllerResponse process(ControllerDescriptor controllerDesc, HttpServletRequest request) throws Throwable {
 		try {
 			ControllerContext context = getContext();
 			// controller isn't answered
@@ -113,10 +113,7 @@ public class ControllerExecutor {
 				}
 			}
 		} catch (InvocationTargetException ex) {
-			log.warning(ex, "Unexpected error executing controller for %s. Message: %s", request.getRequestURI(), ex.getMessage());
-			Map<String, Object> output = new HashMap<String, Object>();
-			output.put(property(ERROR_PROPERTY), ex);
-			return new TemplateResponse(property(ERROR_TEMPLATE), 500, output, request.getLocale());
+			throw ex.getCause();
 		} catch (Exception ex) {
 			/*
 			 * Here means an access error to controller. It can be cause if controller method

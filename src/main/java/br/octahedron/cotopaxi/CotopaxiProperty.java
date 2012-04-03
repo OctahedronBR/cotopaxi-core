@@ -36,10 +36,6 @@ import br.octahedron.util.DateUtil;
  * @author Danilo Queiroz - daniloqueiroz@octahedron.com.br
  * 
  */
-/**
- * @author Name - email
- * 
- */
 public enum CotopaxiProperty {
 
 	/**

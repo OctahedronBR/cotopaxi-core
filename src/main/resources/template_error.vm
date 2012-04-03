@@ -1,0 +1,17 @@
+<!doctype html>  
+<html lang="en">  
+<head>  
+  <meta charset="utf-8">  
+  <title>Template Error</title>  
+</head>  
+<body>  
+    <header>
+    #if (${error.templateName})
+        <h2>$!{error.templateName} [line $!{error.lineNumber}, column $!{error.columnNumber}]</h2>
+        <h3>$!{error.invalidSyntax}</h3>
+    #else
+        <h2>${error.message}</h1>
+    #end
+    </header>
+</body>  
+</html>  

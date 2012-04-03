@@ -1,0 +1,20 @@
+<!doctype html>  
+<html lang="en">  
+<head>  
+  <meta charset="utf-8">  
+  <title>Compilation Error</title>  
+</head>  
+<body>  
+    <header>
+        <h2>${error.message}</h1>
+        <h3>${error.stackTrace[0]}</h2>
+    </header>
+    <div id="content">
+    	<ul>
+        #foreach( $stack in ${error.stackTrace} )
+            <li>${stack}</li>
+        #end
+        </ul>
+    </div>
+</body>  
+</html>  
