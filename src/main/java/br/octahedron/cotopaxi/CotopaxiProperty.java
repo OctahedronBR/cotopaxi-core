@@ -199,7 +199,7 @@ public enum CotopaxiProperty {
 	private static void discoverRunningMode() {
 		String gae = property("com.google.appengine.runtime.environment");
 		if (gae != null) {
-			System.setProperty(RUNNING_MODE_PROP, gae);
+			System.setProperty(RUNNING_MODE_PROP, gae.toUpperCase());
 		} else {
 			System.setProperty(RUNNING_MODE_PROP, "unknown");
 		}
