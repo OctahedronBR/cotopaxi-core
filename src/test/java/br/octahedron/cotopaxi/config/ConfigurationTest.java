@@ -22,8 +22,10 @@ import java.io.InputStream;
 import java.io.StringBufferInputStream;
 import java.util.NoSuchElementException;
 
+import org.junit.After;
 import org.junit.Test;
 
+import br.octahedron.cotopaxi.CotopaxiProperty;
 import br.octahedron.cotopaxi.config.ConfigurationParser.Token;
 import br.octahedron.cotopaxi.config.ConfigurationParser.TokenType;
 import br.octahedron.cotopaxi.interceptor.InterceptorManager;
@@ -35,6 +37,11 @@ import br.octahedron.cotopaxi.route.Router;
 @SuppressWarnings("deprecation")
 public class ConfigurationTest {
 
+	@After
+	public void tearDown() {
+		CotopaxiProperty.forceReset();
+	}
+	
 	@Test(expected = NoSuchElementException.class)
 	public void testParser() {
 		StringBufferInputStream in = new StringBufferInputStream("java.String\n# line comment\nAPPLICATION_BASE_URL http://localhost");

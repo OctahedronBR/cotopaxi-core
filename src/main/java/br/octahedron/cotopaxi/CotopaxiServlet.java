@@ -148,11 +148,11 @@ public class CotopaxiServlet extends HttpServlet {
 	 * Calling this method can make application stop works properly.
 	 */
 	public void forceReset() {
+		CotopaxiProperty.forceReset();
+		DependencyManager.forceReset();
 		this.router.forceReset();
 		this.interceptor.forceReset();
 		this.executor.forceReset();
-		DependencyManager.forceReset();
-		CotopaxiProperty.forceReset();
 	}
 
 	public void forceReload() throws FileNotFoundException, ConfigurationSyntaxException, ClassNotFoundException, InstantiationException,
