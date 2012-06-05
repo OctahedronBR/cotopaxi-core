@@ -134,7 +134,7 @@ public enum CotopaxiProperty {
 	public enum RunningMode {
 		UNKNOWN, TEST, DEVELOPMENT, PRODUCTION;
 	}
-	
+
 	/**
 	 * Gets the current value for the given property. If the property wasn't defined, it will return
 	 * the default value.
@@ -157,7 +157,33 @@ public enum CotopaxiProperty {
 	 * @return The current value for the given property
 	 */
 	public static String property(String property) {
-		return System.getProperty(property);
+		try {
+			CotopaxiProperty prop = CotopaxiProperty.valueOf(property);
+			return property(prop);
+		} catch (IllegalArgumentException ex) {
+			return System.getProperty(property);
+		}
+	}
+
+	/**
+	 * Gets the current value for the given property. If the property wasn't defined, it will return
+	 * the property default value, if the property is one of the {@link CotopaxiProperty} or the
+	 * given default value for other properties.
+	 * 
+	 * @param property
+	 *            The property name to retrieve the value
+	 * @param defaultValue
+	 *            The default value for the property, if the property isn't a
+	 *            {@link CotopaxiProperty}
+	 * @return The current value for the given property
+	 */
+	public static String property(String property, String defaultValue) {
+		try {
+			CotopaxiProperty prop = CotopaxiProperty.valueOf(property);
+			return property(prop);
+		} catch (IllegalArgumentException ex) {
+			return System.getProperty(property, defaultValue);
+		}
 	}
 
 	/**
