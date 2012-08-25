@@ -5,7 +5,7 @@
 
 	<groupId>br.octahedron.cotopaxi</groupId>
 	<artifactId>core</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 	<!-- Project Information -->
 	<name>Cotopaxi-Core</name>
