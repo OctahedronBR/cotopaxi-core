@@ -115,6 +115,16 @@ public class ConfigurationParserTest {
 		token = parser.nextToken();
 		assertEquals(TokenType.STRING, token.getTokenType());
 		assertEquals("index", token.getContent());
+		//	/users/{id}.json		get 	index
+		token = parser.nextToken();
+		assertEquals(TokenType.URL, token.getTokenType());
+		assertEquals("/users/{id}.json", token.getContent());
+		token = parser.nextToken();
+		assertEquals(TokenType.STRING, token.getTokenType());
+		assertEquals("get", token.getContent());
+		token = parser.nextToken();
+		assertEquals(TokenType.STRING, token.getTokenType());
+		assertEquals("index", token.getContent());
 	}
 	
 	@Test

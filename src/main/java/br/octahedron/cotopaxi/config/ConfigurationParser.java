@@ -29,7 +29,7 @@ public class ConfigurationParser {
 
 	public enum TokenType {
 		INTERCEPTORS("interceptors"), DEPENDENCIES("dependencies"), PROPERTIES("properties"), CONTROLLERS("controllers"), BOOTLOADERS("bootloaders"), URL(
-				"^((/[\\w_-]+(\\.[\\w_-]+)?)*(/\\{[a-zA-Z_0-9]+\\}(\\.[\\w_-]+)?)*)+/?$"), PROPERTY("(([A-Z]+[0-9]*)+_?([A-Z]+[0-9]*)+)*"), CLASS("(\\w+\\.)+\\w+"), STRING(
+				"^(/([\\w_-]+|\\{[\\w]+\\})*(\\.[\\w_-]+)?)+/?$"), PROPERTY("(([A-Z]+[0-9]*)+_?([A-Z]+[0-9]*)+)*"), CLASS("(\\w+\\.)+\\w+"), STRING(
 				"\\S+");
 
 		private Pattern pattern;
